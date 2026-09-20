@@ -1,0 +1,2448 @@
+{
+  "metadata": {
+    "generator": "ESM-ASTRA Experimental Benchmark Engine",
+    "problemStatement": "SIH26055 (Adaptive Scan Strategy for Electronic Warfare)",
+    "timestamp": "2026-09-14T22:34:04.860Z",
+    "masterSeed": 42,
+    "totalExperiments": 20,
+    "scenariosEvaluated": [
+      "PERIODIC",
+      "INTERMITTENT",
+      "FREQUENCY_AGILE",
+      "MULTI_EMITTER",
+      "MIXED"
+    ],
+    "runCountsEvaluated": [
+      10,
+      100,
+      500,
+      1000
+    ],
+    "reproducibility": {
+      "identicalReplayVerified": true,
+      "seedDivergenceVerified": true
+    }
+  },
+  "results": [
+    {
+      "scenario": "PERIODIC",
+      "runCount": 10,
+      "configHash": "87008bf70ec1bfcd",
+      "groundTruth": {
+        "totalBursts": 2,
+        "groundTruthBurstCount": 2,
+        "interceptionOpportunities": 4,
+        "interceptionOpportunityCount": 4,
+        "noiseOnlyDwells": 6,
+        "noiseOnlyDwellCount": 6
+      },
+      "adaptive": {
+        "scenario": "PERIODIC",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-87008bf70ec1bfcd",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 2,
+        "dwells": 10,
+        "eligible_opportunities": 4,
+        "noise_only_dwells": 6,
+        "detections_hits": 0,
+        "misses": 2,
+        "missed_opportunities": 4,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.18,
+          "median": 0.18,
+          "standardDeviation": 0.07,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      },
+      "openLoop": {
+        "scenario": "PERIODIC",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-87008bf70ec1bfcd",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 2,
+        "dwells": 10,
+        "eligible_opportunities": 4,
+        "noise_only_dwells": 6,
+        "detections_hits": 0,
+        "misses": 2,
+        "missed_opportunities": 4,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 0,
+          "median": 0,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.04,
+          "median": 0.04,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      }
+    },
+    {
+      "scenario": "PERIODIC",
+      "runCount": 100,
+      "configHash": "45599b09844e42e1",
+      "groundTruth": {
+        "totalBursts": 13,
+        "groundTruthBurstCount": 13,
+        "interceptionOpportunities": 26,
+        "interceptionOpportunityCount": 26,
+        "noiseOnlyDwells": 74,
+        "noiseOnlyDwellCount": 74
+      },
+      "adaptive": {
+        "scenario": "PERIODIC",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-45599b09844e42e1",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 13,
+        "dwells": 100,
+        "eligible_opportunities": 26,
+        "noise_only_dwells": 74,
+        "detections_hits": 13,
+        "misses": 4,
+        "missed_opportunities": 13,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 115,
+          "median": 195,
+          "standardDeviation": 94.87,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 13,
+          "median": 13,
+          "standardDeviation": 33.6,
+          "ci95": "[7.8%, 21%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 69.2,
+          "median": 69.2,
+          "standardDeviation": 46.2,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 82,
+          "median": 82,
+          "standardDeviation": 38.4,
+          "ci95": "[73.3%, 88.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.12,
+          "median": 0.04,
+          "standardDeviation": 0.17,
+          "ci95": "[0.09, 0.15]"
+        }
+      },
+      "openLoop": {
+        "scenario": "PERIODIC",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-45599b09844e42e1",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 13,
+        "dwells": 100,
+        "eligible_opportunities": 26,
+        "noise_only_dwells": 74,
+        "detections_hits": 5,
+        "misses": 8,
+        "missed_opportunities": 21,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 19.2,
+          "median": 19.2,
+          "standardDeviation": 39.4,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 123,
+          "median": 195,
+          "standardDeviation": 98.59,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 5,
+          "median": 5,
+          "standardDeviation": 21.8,
+          "ci95": "[2.2%, 11.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 38.5,
+          "median": 38.5,
+          "standardDeviation": 48.7,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 95,
+          "median": 95,
+          "standardDeviation": 21.8,
+          "ci95": "[88.8%, 97.8%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0.04,
+          "standardDeviation": 0.13,
+          "ci95": "[0.04, 0.1]"
+        }
+      }
+    },
+    {
+      "scenario": "PERIODIC",
+      "runCount": 500,
+      "configHash": "5f484513a1a967c1",
+      "groundTruth": {
+        "totalBursts": 63,
+        "groundTruthBurstCount": 63,
+        "interceptionOpportunities": 126,
+        "interceptionOpportunityCount": 126,
+        "noiseOnlyDwells": 374,
+        "noiseOnlyDwellCount": 374
+      },
+      "adaptive": {
+        "scenario": "PERIODIC",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-5f484513a1a967c1",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 63,
+        "dwells": 500,
+        "eligible_opportunities": 126,
+        "noise_only_dwells": 374,
+        "detections_hits": 65,
+        "misses": 6,
+        "missed_opportunities": 61,
+        "false_alarms": 4,
+        "detection_rate": {
+          "mean": 51.6,
+          "median": 51.6,
+          "standardDeviation": 50,
+          "ci95": "[42.9%, 60.1%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 147.63,
+          "median": 195,
+          "standardDeviation": 79.97,
+          "ci95": "[126.87, 168.39]"
+        },
+        "receiver_utilization": {
+          "mean": 13,
+          "median": 13,
+          "standardDeviation": 33.6,
+          "ci95": "[10.3%, 16.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 90.5,
+          "median": 90.5,
+          "standardDeviation": 29.4,
+          "ci95": "[80.7%, 95.6%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 86,
+          "median": 86,
+          "standardDeviation": 34.7,
+          "ci95": "[82.7%, 88.8%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.1,
+          "median": 0.06,
+          "standardDeviation": 0.16,
+          "ci95": "[0.09, 0.11]"
+        }
+      },
+      "openLoop": {
+        "scenario": "PERIODIC",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-5f484513a1a967c1",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 63,
+        "dwells": 500,
+        "eligible_opportunities": 126,
+        "noise_only_dwells": 374,
+        "detections_hits": 25,
+        "misses": 38,
+        "missed_opportunities": 101,
+        "false_alarms": 4,
+        "detection_rate": {
+          "mean": 19.8,
+          "median": 19.8,
+          "standardDeviation": 39.9,
+          "ci95": "[13.8%, 27.7%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 108.6,
+          "median": 195,
+          "standardDeviation": 91.78,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 5,
+          "median": 5,
+          "standardDeviation": 21.8,
+          "ci95": "[3.4%, 7.3%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 39.7,
+          "median": 39.7,
+          "standardDeviation": 48.9,
+          "ci95": "[28.5%, 52%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 95,
+          "median": 95,
+          "standardDeviation": 21.8,
+          "ci95": "[92.7%, 96.6%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0.04,
+          "standardDeviation": 0.13,
+          "ci95": "[0.06, 0.08]"
+        }
+      }
+    },
+    {
+      "scenario": "PERIODIC",
+      "runCount": 1000,
+      "configHash": "49ca788b3f4c89d9",
+      "groundTruth": {
+        "totalBursts": 125,
+        "groundTruthBurstCount": 125,
+        "interceptionOpportunities": 250,
+        "interceptionOpportunityCount": 250,
+        "noiseOnlyDwells": 750,
+        "noiseOnlyDwellCount": 750
+      },
+      "adaptive": {
+        "scenario": "PERIODIC",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-49ca788b3f4c89d9",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 125,
+        "dwells": 1000,
+        "eligible_opportunities": 250,
+        "noise_only_dwells": 750,
+        "detections_hits": 142,
+        "misses": 6,
+        "missed_opportunities": 108,
+        "false_alarms": 8,
+        "detection_rate": {
+          "mean": 56.8,
+          "median": 56.8,
+          "standardDeviation": 49.5,
+          "ci95": "[50.6%, 62.8%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 126.93,
+          "median": 195,
+          "standardDeviation": 87.66,
+          "ci95": "[111.18, 142.68]"
+        },
+        "receiver_utilization": {
+          "mean": 14.2,
+          "median": 14.2,
+          "standardDeviation": 34.9,
+          "ci95": "[12.2%, 16.5%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 95.2,
+          "median": 95.2,
+          "standardDeviation": 21.4,
+          "ci95": "[89.9%, 97.8%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 85.3,
+          "median": 85.3,
+          "standardDeviation": 35.4,
+          "ci95": "[83%, 87.4%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.11,
+          "median": 0.07,
+          "standardDeviation": 0.17,
+          "ci95": "[0.1, 0.12]"
+        }
+      },
+      "openLoop": {
+        "scenario": "PERIODIC",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-49ca788b3f4c89d9",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 125,
+        "dwells": 1000,
+        "eligible_opportunities": 250,
+        "noise_only_dwells": 750,
+        "detections_hits": 50,
+        "misses": 75,
+        "missed_opportunities": 200,
+        "false_alarms": 8,
+        "detection_rate": {
+          "mean": 20,
+          "median": 20,
+          "standardDeviation": 40,
+          "ci95": "[15.5%, 25.4%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 105,
+          "median": 105,
+          "standardDeviation": 90.91,
+          "ci95": "[79.8, 130.2]"
+        },
+        "receiver_utilization": {
+          "mean": 5,
+          "median": 5,
+          "standardDeviation": 21.8,
+          "ci95": "[3.8%, 6.5%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 40,
+          "median": 40,
+          "standardDeviation": 49,
+          "ci95": "[31.8%, 48.8%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 95,
+          "median": 95,
+          "standardDeviation": 21.8,
+          "ci95": "[93.5%, 96.2%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0.04,
+          "standardDeviation": 0.13,
+          "ci95": "[0.06, 0.08]"
+        }
+      }
+    },
+    {
+      "scenario": "INTERMITTENT",
+      "runCount": 10,
+      "configHash": "659bb050fb22358f",
+      "groundTruth": {
+        "totalBursts": 1,
+        "groundTruthBurstCount": 1,
+        "interceptionOpportunities": 2,
+        "interceptionOpportunityCount": 2,
+        "noiseOnlyDwells": 8,
+        "noiseOnlyDwellCount": 8
+      },
+      "adaptive": {
+        "scenario": "INTERMITTENT",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-659bb050fb22358f",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 1,
+        "dwells": 10,
+        "eligible_opportunities": 2,
+        "noise_only_dwells": 8,
+        "detections_hits": 1,
+        "misses": 0,
+        "missed_opportunities": 1,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 10,
+          "median": 10,
+          "standardDeviation": 30,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 40,
+          "median": 40,
+          "standardDeviation": 49,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.21,
+          "median": 0.25,
+          "standardDeviation": 0.11,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      },
+      "openLoop": {
+        "scenario": "INTERMITTENT",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-659bb050fb22358f",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 1,
+        "dwells": 10,
+        "eligible_opportunities": 2,
+        "noise_only_dwells": 8,
+        "detections_hits": 1,
+        "misses": 0,
+        "missed_opportunities": 1,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 10,
+          "median": 10,
+          "standardDeviation": 30,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 90,
+          "median": 90,
+          "standardDeviation": 30,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.1,
+          "median": 0.04,
+          "standardDeviation": 0.19,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      }
+    },
+    {
+      "scenario": "INTERMITTENT",
+      "runCount": 100,
+      "configHash": "d9dba6c3f8c89aa8",
+      "groundTruth": {
+        "totalBursts": 8,
+        "groundTruthBurstCount": 8,
+        "interceptionOpportunities": 17,
+        "interceptionOpportunityCount": 17,
+        "noiseOnlyDwells": 83,
+        "noiseOnlyDwellCount": 83
+      },
+      "adaptive": {
+        "scenario": "INTERMITTENT",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-d9dba6c3f8c89aa8",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 8,
+        "dwells": 100,
+        "eligible_opportunities": 17,
+        "noise_only_dwells": 83,
+        "detections_hits": 5,
+        "misses": 5,
+        "missed_opportunities": 12,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 29.4,
+          "median": 29.4,
+          "standardDeviation": 45.6,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 75,
+          "median": 15,
+          "standardDeviation": 103.92,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 5,
+          "median": 5,
+          "standardDeviation": 21.8,
+          "ci95": "[2.2%, 11.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 37.5,
+          "median": 37.5,
+          "standardDeviation": 48.4,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 89,
+          "median": 89,
+          "standardDeviation": 31.3,
+          "ci95": "[81.4%, 93.7%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0.02,
+          "standardDeviation": 0.15,
+          "ci95": "[0.04, 0.1]"
+        }
+      },
+      "openLoop": {
+        "scenario": "INTERMITTENT",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-d9dba6c3f8c89aa8",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 8,
+        "dwells": 100,
+        "eligible_opportunities": 17,
+        "noise_only_dwells": 83,
+        "detections_hits": 7,
+        "misses": 1,
+        "missed_opportunities": 10,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 41.2,
+          "median": 41.2,
+          "standardDeviation": 49.2,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 7,
+          "median": 7,
+          "standardDeviation": 25.5,
+          "ci95": "[3.4%, 13.7%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 87.5,
+          "median": 87.5,
+          "standardDeviation": 33.1,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 93,
+          "median": 93,
+          "standardDeviation": 25.5,
+          "ci95": "[86.3%, 96.6%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.08,
+          "median": 0.04,
+          "standardDeviation": 0.15,
+          "ci95": "[0.05, 0.11]"
+        }
+      }
+    },
+    {
+      "scenario": "INTERMITTENT",
+      "runCount": 500,
+      "configHash": "70473bfe0fd26ba8",
+      "groundTruth": {
+        "totalBursts": 43,
+        "groundTruthBurstCount": 43,
+        "interceptionOpportunities": 85,
+        "interceptionOpportunityCount": 85,
+        "noiseOnlyDwells": 415,
+        "noiseOnlyDwellCount": 415
+      },
+      "adaptive": {
+        "scenario": "INTERMITTENT",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-70473bfe0fd26ba8",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 43,
+        "dwells": 500,
+        "eligible_opportunities": 85,
+        "noise_only_dwells": 415,
+        "detections_hits": 36,
+        "misses": 14,
+        "missed_opportunities": 49,
+        "false_alarms": 4,
+        "detection_rate": {
+          "mean": 42.4,
+          "median": 42.4,
+          "standardDeviation": 49.4,
+          "ci95": "[32.4%, 53%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 95.69,
+          "median": 15,
+          "standardDeviation": 91.1,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 7.2,
+          "median": 7.2,
+          "standardDeviation": 25.8,
+          "ci95": "[5.2%, 9.8%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 67.4,
+          "median": 67.4,
+          "standardDeviation": 46.9,
+          "ci95": "[52.5%, 79.5%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 91.6,
+          "median": 91.6,
+          "standardDeviation": 27.7,
+          "ci95": "[88.8%, 93.7%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0,
+          "standardDeviation": 0.17,
+          "ci95": "[0.06, 0.08]"
+        }
+      },
+      "openLoop": {
+        "scenario": "INTERMITTENT",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-70473bfe0fd26ba8",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 43,
+        "dwells": 500,
+        "eligible_opportunities": 85,
+        "noise_only_dwells": 415,
+        "detections_hits": 21,
+        "misses": 22,
+        "missed_opportunities": 64,
+        "false_alarms": 4,
+        "detection_rate": {
+          "mean": 24.7,
+          "median": 24.7,
+          "standardDeviation": 43.1,
+          "ci95": "[16.8%, 34.8%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 100.71,
+          "median": 15,
+          "standardDeviation": 108.29,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 4.2,
+          "median": 4.2,
+          "standardDeviation": 20.1,
+          "ci95": "[2.8%, 6.3%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 48.8,
+          "median": 48.8,
+          "standardDeviation": 50,
+          "ci95": "[34.6%, 63.2%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 95.8,
+          "median": 95.8,
+          "standardDeviation": 20.1,
+          "ci95": "[93.7%, 97.2%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.07,
+          "median": 0.04,
+          "standardDeviation": 0.12,
+          "ci95": "[0.06, 0.08]"
+        }
+      }
+    },
+    {
+      "scenario": "INTERMITTENT",
+      "runCount": 1000,
+      "configHash": "fab3478ae0714404",
+      "groundTruth": {
+        "totalBursts": 86,
+        "groundTruthBurstCount": 86,
+        "interceptionOpportunities": 164,
+        "interceptionOpportunityCount": 164,
+        "noiseOnlyDwells": 836,
+        "noiseOnlyDwellCount": 836
+      },
+      "adaptive": {
+        "scenario": "INTERMITTENT",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-fab3478ae0714404",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 86,
+        "dwells": 1000,
+        "eligible_opportunities": 164,
+        "noise_only_dwells": 836,
+        "detections_hits": 72,
+        "misses": 26,
+        "missed_opportunities": 92,
+        "false_alarms": 9,
+        "detection_rate": {
+          "mean": 43.9,
+          "median": 43.9,
+          "standardDeviation": 49.6,
+          "ci95": "[36.5%, 51.6%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 87,
+          "median": 15,
+          "standardDeviation": 94.9,
+          "ci95": "[62.99, 111.01]"
+        },
+        "receiver_utilization": {
+          "mean": 7.2,
+          "median": 7.2,
+          "standardDeviation": 25.8,
+          "ci95": "[5.8%, 9%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 69.8,
+          "median": 69.8,
+          "standardDeviation": 45.9,
+          "ci95": "[59.4%, 78.5%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 92.2,
+          "median": 92.2,
+          "standardDeviation": 26.8,
+          "ci95": "[90.4%, 93.7%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.06,
+          "median": 0,
+          "standardDeviation": 0.17,
+          "ci95": "[0.05, 0.07]"
+        }
+      },
+      "openLoop": {
+        "scenario": "INTERMITTENT",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-fab3478ae0714404",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 86,
+        "dwells": 1000,
+        "eligible_opportunities": 164,
+        "noise_only_dwells": 836,
+        "detections_hits": 37,
+        "misses": 49,
+        "missed_opportunities": 127,
+        "false_alarms": 9,
+        "detection_rate": {
+          "mean": 22.6,
+          "median": 22.6,
+          "standardDeviation": 41.8,
+          "ci95": "[16.8%, 29.5%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 107.43,
+          "median": 15,
+          "standardDeviation": 117.13,
+          "ci95": "[69.69, 145.17]"
+        },
+        "receiver_utilization": {
+          "mean": 3.7,
+          "median": 3.7,
+          "standardDeviation": 18.9,
+          "ci95": "[2.7%, 5.1%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 43,
+          "median": 43,
+          "standardDeviation": 49.5,
+          "ci95": "[33.1%, 53.6%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 96.3,
+          "median": 96.3,
+          "standardDeviation": 18.9,
+          "ci95": "[94.9%, 97.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.06,
+          "median": 0.04,
+          "standardDeviation": 0.11,
+          "ci95": "[0.05, 0.07]"
+        }
+      }
+    },
+    {
+      "scenario": "FREQUENCY_AGILE",
+      "runCount": 10,
+      "configHash": "550e48f65ef03bcd",
+      "groundTruth": {
+        "totalBursts": 2,
+        "groundTruthBurstCount": 2,
+        "interceptionOpportunities": 10,
+        "interceptionOpportunityCount": 10,
+        "noiseOnlyDwells": 0,
+        "noiseOnlyDwellCount": 0
+      },
+      "adaptive": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-550e48f65ef03bcd",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 2,
+        "dwells": 10,
+        "eligible_opportunities": 10,
+        "noise_only_dwells": 0,
+        "detections_hits": 3,
+        "misses": 1,
+        "missed_opportunities": 7,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 30,
+          "median": 30,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 555,
+          "median": 555,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 30,
+          "median": 30,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.23,
+          "median": 0.25,
+          "standardDeviation": 0.16,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      },
+      "openLoop": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-550e48f65ef03bcd",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 2,
+        "dwells": 10,
+        "eligible_opportunities": 10,
+        "noise_only_dwells": 0,
+        "detections_hits": 2,
+        "misses": 0,
+        "missed_opportunities": 8,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 20,
+          "median": 20,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 285,
+          "median": 285,
+          "standardDeviation": 381.84,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 20,
+          "median": 20,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 80,
+          "median": 80,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.16,
+          "median": 0.04,
+          "standardDeviation": 0.25,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      }
+    },
+    {
+      "scenario": "FREQUENCY_AGILE",
+      "runCount": 100,
+      "configHash": "cd2be6c394f25551",
+      "groundTruth": {
+        "totalBursts": 16,
+        "groundTruthBurstCount": 16,
+        "interceptionOpportunities": 88,
+        "interceptionOpportunityCount": 88,
+        "noiseOnlyDwells": 12,
+        "noiseOnlyDwellCount": 12
+      },
+      "adaptive": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-cd2be6c394f25551",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 16,
+        "dwells": 100,
+        "eligible_opportunities": 88,
+        "noise_only_dwells": 12,
+        "detections_hits": 54,
+        "misses": 0,
+        "missed_opportunities": 34,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 61.4,
+          "median": 61.4,
+          "standardDeviation": 48.7,
+          "ci95": "[50.9%, 70.9%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 217.5,
+          "median": 195,
+          "standardDeviation": 184.45,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 54,
+          "median": 54,
+          "standardDeviation": 49.8,
+          "ci95": "[44.3%, 63.4%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 68,
+          "median": 68,
+          "standardDeviation": 46.6,
+          "ci95": "[58.3%, 76.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.2,
+          "median": 0.11,
+          "standardDeviation": 0.19,
+          "ci95": "[0.16, 0.24]"
+        }
+      },
+      "openLoop": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-cd2be6c394f25551",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 16,
+        "dwells": 100,
+        "eligible_opportunities": 88,
+        "noise_only_dwells": 12,
+        "detections_hits": 18,
+        "misses": 0,
+        "missed_opportunities": 70,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 20.5,
+          "median": 20.5,
+          "standardDeviation": 40.3,
+          "ci95": "[13.3%, 30%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 296.25,
+          "median": 195,
+          "standardDeviation": 207.52,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 18,
+          "median": 18,
+          "standardDeviation": 38.4,
+          "ci95": "[11.7%, 26.7%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 100,
+          "median": 100,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 82,
+          "median": 82,
+          "standardDeviation": 38.4,
+          "ci95": "[73.3%, 88.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.15,
+          "median": 0.04,
+          "standardDeviation": 0.23,
+          "ci95": "[0.1, 0.2]"
+        }
+      }
+    },
+    {
+      "scenario": "FREQUENCY_AGILE",
+      "runCount": 500,
+      "configHash": "d59c909f5a79906d",
+      "groundTruth": {
+        "totalBursts": 69,
+        "groundTruthBurstCount": 69,
+        "interceptionOpportunities": 397,
+        "interceptionOpportunityCount": 397,
+        "noiseOnlyDwells": 103,
+        "noiseOnlyDwellCount": 103
+      },
+      "adaptive": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-d59c909f5a79906d",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 69,
+        "dwells": 500,
+        "eligible_opportunities": 397,
+        "noise_only_dwells": 103,
+        "detections_hits": 209,
+        "misses": 3,
+        "missed_opportunities": 188,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 52.6,
+          "median": 52.6,
+          "standardDeviation": 49.9,
+          "ci95": "[47.7%, 57.5%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 216.82,
+          "median": 195,
+          "standardDeviation": 215.34,
+          "ci95": "[164.87, 268.77]"
+        },
+        "receiver_utilization": {
+          "mean": 41.8,
+          "median": 41.8,
+          "standardDeviation": 49.3,
+          "ci95": "[37.6%, 46.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 95.7,
+          "median": 95.7,
+          "standardDeviation": 20.4,
+          "ci95": "[88%, 98.5%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 62,
+          "median": 62,
+          "standardDeviation": 48.5,
+          "ci95": "[57.7%, 66.1%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.22,
+          "median": 0.2,
+          "standardDeviation": 0.14,
+          "ci95": "[0.21, 0.23]"
+        }
+      },
+      "openLoop": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-d59c909f5a79906d",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 69,
+        "dwells": 500,
+        "eligible_opportunities": 397,
+        "noise_only_dwells": 103,
+        "detections_hits": 81,
+        "misses": 2,
+        "missed_opportunities": 316,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 20.4,
+          "median": 20.4,
+          "standardDeviation": 40.3,
+          "ci95": "[16.7%, 24.6%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 305.15,
+          "median": 375,
+          "standardDeviation": 232.28,
+          "ci95": "[249.53, 360.77]"
+        },
+        "receiver_utilization": {
+          "mean": 16.2,
+          "median": 16.2,
+          "standardDeviation": 36.8,
+          "ci95": "[13.2%, 19.7%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 97.1,
+          "median": 97.1,
+          "standardDeviation": 16.8,
+          "ci95": "[90%, 99.2%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 83.8,
+          "median": 83.8,
+          "standardDeviation": 36.8,
+          "ci95": "[80.3%, 86.8%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.14,
+          "median": 0.04,
+          "standardDeviation": 0.22,
+          "ci95": "[0.12, 0.16]"
+        }
+      }
+    },
+    {
+      "scenario": "FREQUENCY_AGILE",
+      "runCount": 1000,
+      "configHash": "e31f1728bf56f313",
+      "groundTruth": {
+        "totalBursts": 133,
+        "groundTruthBurstCount": 133,
+        "interceptionOpportunities": 791,
+        "interceptionOpportunityCount": 791,
+        "noiseOnlyDwells": 209,
+        "noiseOnlyDwellCount": 209
+      },
+      "adaptive": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-e31f1728bf56f313",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 133,
+        "dwells": 1000,
+        "eligible_opportunities": 791,
+        "noise_only_dwells": 209,
+        "detections_hits": 391,
+        "misses": 7,
+        "missed_opportunities": 400,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 49.4,
+          "median": 49.4,
+          "standardDeviation": 50,
+          "ci95": "[46%, 52.9%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 219.29,
+          "median": 195,
+          "standardDeviation": 242.41,
+          "ci95": "[176.96, 261.62]"
+        },
+        "receiver_utilization": {
+          "mean": 39.1,
+          "median": 39.1,
+          "standardDeviation": 48.8,
+          "ci95": "[36.1%, 42.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 94.7,
+          "median": 94.7,
+          "standardDeviation": 22.3,
+          "ci95": "[89.5%, 97.4%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 59.6,
+          "median": 59.6,
+          "standardDeviation": 49.1,
+          "ci95": "[56.5%, 62.6%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.21,
+          "median": 0.23,
+          "standardDeviation": 0.12,
+          "ci95": "[0.2, 0.22]"
+        }
+      },
+      "openLoop": {
+        "scenario": "FREQUENCY_AGILE",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-e31f1728bf56f313",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 133,
+        "dwells": 1000,
+        "eligible_opportunities": 791,
+        "noise_only_dwells": 209,
+        "detections_hits": 159,
+        "misses": 4,
+        "missed_opportunities": 632,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 20.1,
+          "median": 20.1,
+          "standardDeviation": 40.1,
+          "ci95": "[17.5%, 23%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 333.14,
+          "median": 375,
+          "standardDeviation": 242.87,
+          "ci95": "[291.23, 375.05]"
+        },
+        "receiver_utilization": {
+          "mean": 15.9,
+          "median": 15.9,
+          "standardDeviation": 36.6,
+          "ci95": "[13.8%, 18.3%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 97,
+          "median": 97,
+          "standardDeviation": 17.1,
+          "ci95": "[92.5%, 98.8%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 84.1,
+          "median": 84.1,
+          "standardDeviation": 36.6,
+          "ci95": "[81.7%, 86.2%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.14,
+          "median": 0.04,
+          "standardDeviation": 0.22,
+          "ci95": "[0.13, 0.15]"
+        }
+      }
+    },
+    {
+      "scenario": "MULTI_EMITTER",
+      "runCount": 10,
+      "configHash": "88f05e66f655985f",
+      "groundTruth": {
+        "totalBursts": 13,
+        "groundTruthBurstCount": 13,
+        "interceptionOpportunities": 9,
+        "interceptionOpportunityCount": 9,
+        "noiseOnlyDwells": 1,
+        "noiseOnlyDwellCount": 1
+      },
+      "adaptive": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-88f05e66f655985f",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 13,
+        "dwells": 10,
+        "eligible_opportunities": 9,
+        "noise_only_dwells": 1,
+        "detections_hits": 2,
+        "misses": 11,
+        "missed_opportunities": 7,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 22.2,
+          "median": 22.2,
+          "standardDeviation": 41.6,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 20,
+          "median": 20,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 15.4,
+          "median": 15.4,
+          "standardDeviation": 36.1,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 30,
+          "median": 30,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.25,
+          "median": 0.25,
+          "standardDeviation": 0.12,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      },
+      "openLoop": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-88f05e66f655985f",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 13,
+        "dwells": 10,
+        "eligible_opportunities": 9,
+        "noise_only_dwells": 1,
+        "detections_hits": 2,
+        "misses": 11,
+        "missed_opportunities": 7,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 22.2,
+          "median": 22.2,
+          "standardDeviation": 41.6,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 20,
+          "median": 20,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 15.4,
+          "median": 15.4,
+          "standardDeviation": 36.1,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 80,
+          "median": 80,
+          "standardDeviation": 40,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.16,
+          "median": 0.04,
+          "standardDeviation": 0.25,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      }
+    },
+    {
+      "scenario": "MULTI_EMITTER",
+      "runCount": 100,
+      "configHash": "ce93ecaac1bc1dda",
+      "groundTruth": {
+        "totalBursts": 98,
+        "groundTruthBurstCount": 98,
+        "interceptionOpportunities": 70,
+        "interceptionOpportunityCount": 70,
+        "noiseOnlyDwells": 30,
+        "noiseOnlyDwellCount": 30
+      },
+      "adaptive": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-ce93ecaac1bc1dda",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 98,
+        "dwells": 100,
+        "eligible_opportunities": 70,
+        "noise_only_dwells": 30,
+        "detections_hits": 16,
+        "misses": 82,
+        "missed_opportunities": 54,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 22.9,
+          "median": 22.9,
+          "standardDeviation": 42,
+          "ci95": "[14.6%, 34%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 16,
+          "median": 16,
+          "standardDeviation": 36.7,
+          "ci95": "[10.1%, 24.4%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 16.3,
+          "median": 16.3,
+          "standardDeviation": 37,
+          "ci95": "[10.3%, 24.9%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 77,
+          "median": 77,
+          "standardDeviation": 42.1,
+          "ci95": "[67.8%, 84.2%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.15,
+          "median": 0.08,
+          "standardDeviation": 0.18,
+          "ci95": "[0.11, 0.19]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-ce93ecaac1bc1dda",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 98,
+        "dwells": 100,
+        "eligible_opportunities": 70,
+        "noise_only_dwells": 30,
+        "detections_hits": 19,
+        "misses": 79,
+        "missed_opportunities": 51,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 27.1,
+          "median": 27.1,
+          "standardDeviation": 44.5,
+          "ci95": "[18.1%, 38.5%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 19,
+          "median": 19,
+          "standardDeviation": 39.2,
+          "ci95": "[12.5%, 27.8%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 19.4,
+          "median": 19.4,
+          "standardDeviation": 39.5,
+          "ci95": "[12.8%, 28.3%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 81,
+          "median": 81,
+          "standardDeviation": 39.2,
+          "ci95": "[72.2%, 87.5%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.15,
+          "median": 0.04,
+          "standardDeviation": 0.24,
+          "ci95": "[0.1, 0.2]"
+        }
+      }
+    },
+    {
+      "scenario": "MULTI_EMITTER",
+      "runCount": 500,
+      "configHash": "7e031637e4e09521",
+      "groundTruth": {
+        "totalBursts": 472,
+        "groundTruthBurstCount": 472,
+        "interceptionOpportunities": 339,
+        "interceptionOpportunityCount": 339,
+        "noiseOnlyDwells": 161,
+        "noiseOnlyDwellCount": 161
+      },
+      "adaptive": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-7e031637e4e09521",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 472,
+        "dwells": 500,
+        "eligible_opportunities": 339,
+        "noise_only_dwells": 161,
+        "detections_hits": 151,
+        "misses": 321,
+        "missed_opportunities": 188,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 44.5,
+          "median": 44.5,
+          "standardDeviation": 49.7,
+          "ci95": "[39.3%, 49.9%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "[15, 15]"
+        },
+        "receiver_utilization": {
+          "mean": 30.2,
+          "median": 30.2,
+          "standardDeviation": 45.9,
+          "ci95": "[26.3%, 34.4%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 32,
+          "median": 32,
+          "standardDeviation": 46.6,
+          "ci95": "[27.9%, 36.3%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 68.4,
+          "median": 68.4,
+          "standardDeviation": 46.5,
+          "ci95": "[64.2%, 72.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.19,
+          "median": 0.16,
+          "standardDeviation": 0.18,
+          "ci95": "[0.17, 0.21]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-7e031637e4e09521",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 472,
+        "dwells": 500,
+        "eligible_opportunities": 339,
+        "noise_only_dwells": 161,
+        "detections_hits": 99,
+        "misses": 373,
+        "missed_opportunities": 240,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 29.2,
+          "median": 29.2,
+          "standardDeviation": 45.5,
+          "ci95": "[24.6%, 34.3%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "[15, 15]"
+        },
+        "receiver_utilization": {
+          "mean": 19.8,
+          "median": 19.8,
+          "standardDeviation": 39.8,
+          "ci95": "[16.5%, 23.5%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 21,
+          "median": 21,
+          "standardDeviation": 40.7,
+          "ci95": "[17.5%, 24.9%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 80.2,
+          "median": 80.2,
+          "standardDeviation": 39.8,
+          "ci95": "[76.5%, 83.5%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.16,
+          "median": 0.04,
+          "standardDeviation": 0.24,
+          "ci95": "[0.14, 0.18]"
+        }
+      }
+    },
+    {
+      "scenario": "MULTI_EMITTER",
+      "runCount": 1000,
+      "configHash": "7911fd3b80d85520",
+      "groundTruth": {
+        "totalBursts": 982,
+        "groundTruthBurstCount": 982,
+        "interceptionOpportunities": 702,
+        "interceptionOpportunityCount": 702,
+        "noiseOnlyDwells": 298,
+        "noiseOnlyDwellCount": 298
+      },
+      "adaptive": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-7911fd3b80d85520",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 982,
+        "dwells": 1000,
+        "eligible_opportunities": 702,
+        "noise_only_dwells": 298,
+        "detections_hits": 368,
+        "misses": 614,
+        "missed_opportunities": 334,
+        "false_alarms": 3,
+        "detection_rate": {
+          "mean": 52.4,
+          "median": 52.4,
+          "standardDeviation": 49.9,
+          "ci95": "[48.7%, 56.1%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "[15, 15]"
+        },
+        "receiver_utilization": {
+          "mean": 36.8,
+          "median": 36.8,
+          "standardDeviation": 48.2,
+          "ci95": "[33.9%, 39.8%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 37.5,
+          "median": 37.5,
+          "standardDeviation": 48.4,
+          "ci95": "[34.5%, 40.5%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 62.5,
+          "median": 62.5,
+          "standardDeviation": 48.4,
+          "ci95": "[59.5%, 65.4%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.2,
+          "median": 0.23,
+          "standardDeviation": 0.15,
+          "ci95": "[0.19, 0.21]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MULTI_EMITTER",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-7911fd3b80d85520",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 982,
+        "dwells": 1000,
+        "eligible_opportunities": 702,
+        "noise_only_dwells": 298,
+        "detections_hits": 211,
+        "misses": 771,
+        "missed_opportunities": 491,
+        "false_alarms": 3,
+        "detection_rate": {
+          "mean": 30.1,
+          "median": 30.1,
+          "standardDeviation": 45.9,
+          "ci95": "[26.8%, 33.5%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 15,
+          "median": 15,
+          "standardDeviation": 0,
+          "ci95": "[15, 15]"
+        },
+        "receiver_utilization": {
+          "mean": 21.1,
+          "median": 21.1,
+          "standardDeviation": 40.8,
+          "ci95": "[18.7%, 23.7%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 21.5,
+          "median": 21.5,
+          "standardDeviation": 41.1,
+          "ci95": "[19%, 24.2%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 78.9,
+          "median": 78.9,
+          "standardDeviation": 40.8,
+          "ci95": "[76.3%, 81.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.17,
+          "median": 0.04,
+          "standardDeviation": 0.24,
+          "ci95": "[0.16, 0.18]"
+        }
+      }
+    },
+    {
+      "scenario": "MIXED",
+      "runCount": 10,
+      "configHash": "e796e31dd8a81f82",
+      "groundTruth": {
+        "totalBursts": 4,
+        "groundTruthBurstCount": 4,
+        "interceptionOpportunities": 10,
+        "interceptionOpportunityCount": 10,
+        "noiseOnlyDwells": 0,
+        "noiseOnlyDwellCount": 0
+      },
+      "adaptive": {
+        "scenario": "MIXED",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-e796e31dd8a81f82",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 4,
+        "dwells": 10,
+        "eligible_opportunities": 10,
+        "noise_only_dwells": 0,
+        "detections_hits": 5,
+        "misses": 1,
+        "missed_opportunities": 5,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 195,
+          "median": 15,
+          "standardDeviation": 311.77,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 50,
+          "median": 50,
+          "standardDeviation": 50,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 75,
+          "median": 75,
+          "standardDeviation": 43.3,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 60,
+          "median": 60,
+          "standardDeviation": 49,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.2,
+          "median": 0.25,
+          "standardDeviation": 0.12,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      },
+      "openLoop": {
+        "scenario": "MIXED",
+        "run_count": 10,
+        "seed_config_id": "SEED-42-e796e31dd8a81f82",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 4,
+        "dwells": 10,
+        "eligible_opportunities": 10,
+        "noise_only_dwells": 0,
+        "detections_hits": 3,
+        "misses": 1,
+        "missed_opportunities": 7,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 30,
+          "median": 30,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "mean_intercept_time": {
+          "mean": 315,
+          "median": 375,
+          "standardDeviation": 274.95,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 30,
+          "median": 30,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "scan_efficiency": {
+          "mean": 75,
+          "median": 75,
+          "standardDeviation": 43.3,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "prediction_accuracy": {
+          "mean": 70,
+          "median": 70,
+          "standardDeviation": 45.8,
+          "ci95": "INSUFFICIENT SAMPLE",
+          "status": "INSUFFICIENT SAMPLE"
+        },
+        "brier_score": {
+          "mean": 0.22,
+          "median": 0.04,
+          "standardDeviation": 0.29,
+          "ci95": "INSUFFICIENT SAMPLE"
+        }
+      }
+    },
+    {
+      "scenario": "MIXED",
+      "runCount": 100,
+      "configHash": "f513b122755316b9",
+      "groundTruth": {
+        "totalBursts": 45,
+        "groundTruthBurstCount": 45,
+        "interceptionOpportunities": 89,
+        "interceptionOpportunityCount": 89,
+        "noiseOnlyDwells": 11,
+        "noiseOnlyDwellCount": 11
+      },
+      "adaptive": {
+        "scenario": "MIXED",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-f513b122755316b9",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 45,
+        "dwells": 100,
+        "eligible_opportunities": 89,
+        "noise_only_dwells": 11,
+        "detections_hits": 49,
+        "misses": 18,
+        "missed_opportunities": 40,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 55.1,
+          "median": 55.1,
+          "standardDeviation": 49.7,
+          "ci95": "[44.7%, 65%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 88.33,
+          "median": 15,
+          "standardDeviation": 134.51,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 49,
+          "median": 49,
+          "standardDeviation": 50,
+          "ci95": "[39.4%, 58.7%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 60,
+          "median": 60,
+          "standardDeviation": 49,
+          "ci95": "[45.5%, 73%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 68,
+          "median": 68,
+          "standardDeviation": 46.6,
+          "ci95": "[58.3%, 76.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.21,
+          "median": 0.14,
+          "standardDeviation": 0.19,
+          "ci95": "[0.17, 0.25]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MIXED",
+        "run_count": 100,
+        "seed_config_id": "SEED-42-f513b122755316b9",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 45,
+        "dwells": 100,
+        "eligible_opportunities": 89,
+        "noise_only_dwells": 11,
+        "detections_hits": 24,
+        "misses": 23,
+        "missed_opportunities": 65,
+        "false_alarms": 0,
+        "detection_rate": {
+          "mean": 27,
+          "median": 27,
+          "standardDeviation": 44.4,
+          "ci95": "[18.8%, 37%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 178.64,
+          "median": 195,
+          "standardDeviation": 174.86,
+          "ci95": "INSUFFICIENT SAMPLE"
+        },
+        "receiver_utilization": {
+          "mean": 24,
+          "median": 24,
+          "standardDeviation": 42.7,
+          "ci95": "[16.7%, 33.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 48.9,
+          "median": 48.9,
+          "standardDeviation": 50,
+          "ci95": "[35%, 63%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 76,
+          "median": 76,
+          "standardDeviation": 42.7,
+          "ci95": "[66.8%, 83.3%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.18,
+          "median": 0.04,
+          "standardDeviation": 0.26,
+          "ci95": "[0.13, 0.23]"
+        }
+      }
+    },
+    {
+      "scenario": "MIXED",
+      "runCount": 500,
+      "configHash": "1b50245e54bb9191",
+      "groundTruth": {
+        "totalBursts": 215,
+        "groundTruthBurstCount": 215,
+        "interceptionOpportunities": 419,
+        "interceptionOpportunityCount": 419,
+        "noiseOnlyDwells": 81,
+        "noiseOnlyDwellCount": 81
+      },
+      "adaptive": {
+        "scenario": "MIXED",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-1b50245e54bb9191",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 215,
+        "dwells": 500,
+        "eligible_opportunities": 419,
+        "noise_only_dwells": 81,
+        "detections_hits": 219,
+        "misses": 87,
+        "missed_opportunities": 200,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 52.3,
+          "median": 52.3,
+          "standardDeviation": 49.9,
+          "ci95": "[47.5%, 57%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 128.91,
+          "median": 15,
+          "standardDeviation": 152.99,
+          "ci95": "[102.41, 155.41]"
+        },
+        "receiver_utilization": {
+          "mean": 43.8,
+          "median": 43.8,
+          "standardDeviation": 49.6,
+          "ci95": "[39.5%, 48.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 59.5,
+          "median": 59.5,
+          "standardDeviation": 49.1,
+          "ci95": "[52.9%, 65.9%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 60,
+          "median": 60,
+          "standardDeviation": 49,
+          "ci95": "[55.6%, 64.2%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.22,
+          "median": 0.18,
+          "standardDeviation": 0.15,
+          "ci95": "[0.21, 0.23]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MIXED",
+        "run_count": 500,
+        "seed_config_id": "SEED-42-1b50245e54bb9191",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 215,
+        "dwells": 500,
+        "eligible_opportunities": 419,
+        "noise_only_dwells": 81,
+        "detections_hits": 107,
+        "misses": 118,
+        "missed_opportunities": 312,
+        "false_alarms": 1,
+        "detection_rate": {
+          "mean": 25.5,
+          "median": 25.5,
+          "standardDeviation": 43.6,
+          "ci95": "[21.6%, 29.9%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 154.18,
+          "median": 15,
+          "standardDeviation": 184.64,
+          "ci95": "[117.44, 190.92]"
+        },
+        "receiver_utilization": {
+          "mean": 21.4,
+          "median": 21.4,
+          "standardDeviation": 41,
+          "ci95": "[18%, 25.2%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 45.1,
+          "median": 45.1,
+          "standardDeviation": 49.8,
+          "ci95": "[38.6%, 51.8%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 78.6,
+          "median": 78.6,
+          "standardDeviation": 41,
+          "ci95": "[74.8%, 82%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.17,
+          "median": 0.04,
+          "standardDeviation": 0.25,
+          "ci95": "[0.15, 0.19]"
+        }
+      }
+    },
+    {
+      "scenario": "MIXED",
+      "runCount": 1000,
+      "configHash": "3858ae260c2e35b8",
+      "groundTruth": {
+        "totalBursts": 419,
+        "groundTruthBurstCount": 419,
+        "interceptionOpportunities": 820,
+        "interceptionOpportunityCount": 820,
+        "noiseOnlyDwells": 180,
+        "noiseOnlyDwellCount": 180
+      },
+      "adaptive": {
+        "scenario": "MIXED",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-3858ae260c2e35b8",
+        "scheduler": "Recency-Augmented UCB1",
+        "ground_truth_bursts": 419,
+        "dwells": 1000,
+        "eligible_opportunities": 820,
+        "noise_only_dwells": 180,
+        "detections_hits": 422,
+        "misses": 179,
+        "missed_opportunities": 398,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 51.5,
+          "median": 51.5,
+          "standardDeviation": 50,
+          "ci95": "[48%, 54.9%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 108.75,
+          "median": 15,
+          "standardDeviation": 136.73,
+          "ci95": "[91.45, 126.05]"
+        },
+        "receiver_utilization": {
+          "mean": 42.2,
+          "median": 42.2,
+          "standardDeviation": 49.4,
+          "ci95": "[39.2%, 45.3%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 57.3,
+          "median": 57.3,
+          "standardDeviation": 49.5,
+          "ci95": "[52.5%, 61.9%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 59.8,
+          "median": 59.8,
+          "standardDeviation": 49,
+          "ci95": "[56.7%, 62.8%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.22,
+          "median": 0.21,
+          "standardDeviation": 0.13,
+          "ci95": "[0.21, 0.23]"
+        }
+      },
+      "openLoop": {
+        "scenario": "MIXED",
+        "run_count": 1000,
+        "seed_config_id": "SEED-42-3858ae260c2e35b8",
+        "scheduler": "Open-Loop Baseline",
+        "ground_truth_bursts": 419,
+        "dwells": 1000,
+        "eligible_opportunities": 820,
+        "noise_only_dwells": 180,
+        "detections_hits": 213,
+        "misses": 231,
+        "missed_opportunities": 607,
+        "false_alarms": 2,
+        "detection_rate": {
+          "mean": 26,
+          "median": 26,
+          "standardDeviation": 43.9,
+          "ci95": "[23.1%, 29.1%]",
+          "status": "MEASURED"
+        },
+        "mean_intercept_time": {
+          "mean": 164.36,
+          "median": 15,
+          "standardDeviation": 199.87,
+          "ci95": "[135.79, 192.93]"
+        },
+        "receiver_utilization": {
+          "mean": 21.3,
+          "median": 21.3,
+          "standardDeviation": 40.9,
+          "ci95": "[18.9%, 23.9%]",
+          "status": "MEASURED"
+        },
+        "scan_efficiency": {
+          "mean": 44.9,
+          "median": 44.9,
+          "standardDeviation": 49.7,
+          "ci95": "[40.2%, 49.7%]",
+          "status": "MEASURED"
+        },
+        "prediction_accuracy": {
+          "mean": 78.7,
+          "median": 78.7,
+          "standardDeviation": 40.9,
+          "ci95": "[76.1%, 81.1%]",
+          "status": "MEASURED"
+        },
+        "brier_score": {
+          "mean": 0.17,
+          "median": 0.04,
+          "standardDeviation": 0.25,
+          "ci95": "[0.15, 0.19]"
+        }
+      }
+    }
+  ]
+}
