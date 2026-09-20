@@ -1,0 +1,4213 @@
+{
+  "metadata": {
+    "generator": "ESM-ASTRA Independent Repeated-Run Benchmark Engine",
+    "problemStatement": "SIH26055 (Adaptive Scan Strategy for Electronic Warfare)",
+    "timestamp": "2026-09-14T22:39:07.407Z",
+    "masterSeed": 42,
+    "dwellsPerRun": 200,
+    "scenariosEvaluated": [
+      "PERIODIC",
+      "INTERMITTENT",
+      "FREQUENCY_AGILE",
+      "MULTI_EMITTER",
+      "MIXED"
+    ],
+    "independentRunCounts": [
+      10,
+      100,
+      500,
+      1000
+    ],
+    "reproducibility": {
+      "identicalReplayVerified": true,
+      "seedDivergenceVerified": true
+    }
+  },
+  "scenarios": [
+    {
+      "scenario": "PERIODIC",
+      "runCounts": {
+        "10": {
+          "independentRunCount": 10,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 56,
+              "median": 56,
+              "stdDev": 0,
+              "ci95": "[56, 56]",
+              "lower": 56,
+              "upper": 56,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 84,
+              "median": 84,
+              "stdDev": 0,
+              "ci95": "[84, 84]",
+              "lower": 84,
+              "upper": 84,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 135,
+              "median": 135,
+              "stdDev": 0,
+              "ci95": "[135, 135]",
+              "lower": 135,
+              "upper": 135,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.79,
+              "median": 1.65,
+              "stdDev": 0.95,
+              "ci95": "[1.11, 2.47]",
+              "lower": 1.11,
+              "upper": 2.47,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 14,
+              "median": 14,
+              "stdDev": 0,
+              "ci95": "[14, 14]",
+              "lower": 14,
+              "upper": 14,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 83.5,
+              "median": 83.5,
+              "stdDev": 0,
+              "ci95": "[83.5, 83.5]",
+              "lower": 83.5,
+              "upper": 83.5,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.11,
+              "median": 0.11,
+              "stdDev": 0,
+              "ci95": "[0.11, 0.11]",
+              "lower": 0.11,
+              "upper": 0.11,
+              "sampleSize": 10
+            },
+            "meanHits": 28,
+            "meanMisses": 4,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 20,
+              "median": 20,
+              "stdDev": 0,
+              "ci95": "[20, 20]",
+              "lower": 20,
+              "upper": 20,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 40,
+              "median": 40,
+              "stdDev": 0,
+              "ci95": "[40, 40]",
+              "lower": 40,
+              "upper": 40,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 105,
+              "median": 105,
+              "stdDev": 0,
+              "ci95": "[105, 105]",
+              "lower": 105,
+              "upper": 105,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.79,
+              "median": 1.65,
+              "stdDev": 0.95,
+              "ci95": "[1.11, 2.47]",
+              "lower": 1.11,
+              "upper": 2.47,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 5,
+              "median": 5,
+              "stdDev": 0,
+              "ci95": "[5, 5]",
+              "lower": 5,
+              "upper": 5,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 95,
+              "median": 95,
+              "stdDev": 0,
+              "ci95": "[95, 95]",
+              "lower": 95,
+              "upper": 95,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 10
+            },
+            "meanHits": 10,
+            "meanMisses": 15,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 36,
+              "median": 36,
+              "stdDev": 0,
+              "ci95": "[36, 36]",
+              "lower": 36,
+              "upper": 36,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 44,
+              "median": 44,
+              "stdDev": 0,
+              "ci95": "[44, 44]",
+              "lower": 44,
+              "upper": 44,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 30,
+              "median": 30,
+              "stdDev": 0,
+              "ci95": "[30, 30]",
+              "lower": 30,
+              "upper": 30,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 9,
+              "median": 9,
+              "stdDev": 0,
+              "ci95": "[9, 9]",
+              "lower": 9,
+              "upper": 9,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": -11.5,
+              "median": -11.5,
+              "stdDev": 0,
+              "ci95": "[-11.5, -11.5]",
+              "lower": -11.5,
+              "upper": -11.5,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 10
+            }
+          }
+        },
+        "100": {
+          "independentRunCount": 100,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 56,
+              "median": 56,
+              "stdDev": 0,
+              "ci95": "[56, 56]",
+              "lower": 56,
+              "upper": 56,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 84,
+              "median": 84,
+              "stdDev": 0,
+              "ci95": "[84, 84]",
+              "lower": 84,
+              "upper": 84,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 135,
+              "median": 135,
+              "stdDev": 0,
+              "ci95": "[135, 135]",
+              "lower": 135,
+              "upper": 135,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.43,
+              "median": 1.3,
+              "stdDev": 0.95,
+              "ci95": "[1.24, 1.62]",
+              "lower": 1.24,
+              "upper": 1.62,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 14,
+              "median": 14,
+              "stdDev": 0,
+              "ci95": "[14, 14]",
+              "lower": 14,
+              "upper": 14,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 83.5,
+              "median": 83.5,
+              "stdDev": 0,
+              "ci95": "[83.5, 83.5]",
+              "lower": 83.5,
+              "upper": 83.5,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.11,
+              "median": 0.11,
+              "stdDev": 0,
+              "ci95": "[0.11, 0.11]",
+              "lower": 0.11,
+              "upper": 0.11,
+              "sampleSize": 100
+            },
+            "meanHits": 28,
+            "meanMisses": 4,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 20,
+              "median": 20,
+              "stdDev": 0,
+              "ci95": "[20, 20]",
+              "lower": 20,
+              "upper": 20,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 40,
+              "median": 40,
+              "stdDev": 0,
+              "ci95": "[40, 40]",
+              "lower": 40,
+              "upper": 40,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 105,
+              "median": 105,
+              "stdDev": 0,
+              "ci95": "[105, 105]",
+              "lower": 105,
+              "upper": 105,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.43,
+              "median": 1.3,
+              "stdDev": 0.95,
+              "ci95": "[1.24, 1.62]",
+              "lower": 1.24,
+              "upper": 1.62,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 5,
+              "median": 5,
+              "stdDev": 0,
+              "ci95": "[5, 5]",
+              "lower": 5,
+              "upper": 5,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 95,
+              "median": 95,
+              "stdDev": 0,
+              "ci95": "[95, 95]",
+              "lower": 95,
+              "upper": 95,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 100
+            },
+            "meanHits": 10,
+            "meanMisses": 15,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 36,
+              "median": 36,
+              "stdDev": 0,
+              "ci95": "[36, 36]",
+              "lower": 36,
+              "upper": 36,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 44,
+              "median": 44,
+              "stdDev": 0,
+              "ci95": "[44, 44]",
+              "lower": 44,
+              "upper": 44,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 30,
+              "median": 30,
+              "stdDev": 0,
+              "ci95": "[30, 30]",
+              "lower": 30,
+              "upper": 30,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 9,
+              "median": 9,
+              "stdDev": 0,
+              "ci95": "[9, 9]",
+              "lower": 9,
+              "upper": 9,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": -11.5,
+              "median": -11.5,
+              "stdDev": 0,
+              "ci95": "[-11.5, -11.5]",
+              "lower": -11.5,
+              "upper": -11.5,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 100
+            }
+          }
+        },
+        "500": {
+          "independentRunCount": 500,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 56,
+              "median": 56,
+              "stdDev": 0,
+              "ci95": "[56, 56]",
+              "lower": 56,
+              "upper": 56,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 84,
+              "median": 84,
+              "stdDev": 0,
+              "ci95": "[84, 84]",
+              "lower": 84,
+              "upper": 84,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 135,
+              "median": 135,
+              "stdDev": 0,
+              "ci95": "[135, 135]",
+              "lower": 135,
+              "upper": 135,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.5,
+              "median": 1.3,
+              "stdDev": 0.98,
+              "ci95": "[1.41, 1.59]",
+              "lower": 1.41,
+              "upper": 1.59,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 14,
+              "median": 14,
+              "stdDev": 0,
+              "ci95": "[14, 14]",
+              "lower": 14,
+              "upper": 14,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 83.5,
+              "median": 83.5,
+              "stdDev": 0,
+              "ci95": "[83.5, 83.5]",
+              "lower": 83.5,
+              "upper": 83.5,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.11,
+              "median": 0.11,
+              "stdDev": 0,
+              "ci95": "[0.11, 0.11]",
+              "lower": 0.11,
+              "upper": 0.11,
+              "sampleSize": 500
+            },
+            "meanHits": 28,
+            "meanMisses": 4,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 20,
+              "median": 20,
+              "stdDev": 0,
+              "ci95": "[20, 20]",
+              "lower": 20,
+              "upper": 20,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 40,
+              "median": 40,
+              "stdDev": 0,
+              "ci95": "[40, 40]",
+              "lower": 40,
+              "upper": 40,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 105,
+              "median": 105,
+              "stdDev": 0,
+              "ci95": "[105, 105]",
+              "lower": 105,
+              "upper": 105,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.5,
+              "median": 1.3,
+              "stdDev": 0.98,
+              "ci95": "[1.41, 1.59]",
+              "lower": 1.41,
+              "upper": 1.59,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 5,
+              "median": 5,
+              "stdDev": 0,
+              "ci95": "[5, 5]",
+              "lower": 5,
+              "upper": 5,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 95,
+              "median": 95,
+              "stdDev": 0,
+              "ci95": "[95, 95]",
+              "lower": 95,
+              "upper": 95,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 500
+            },
+            "meanHits": 10,
+            "meanMisses": 15,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 36,
+              "median": 36,
+              "stdDev": 0,
+              "ci95": "[36, 36]",
+              "lower": 36,
+              "upper": 36,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 44,
+              "median": 44,
+              "stdDev": 0,
+              "ci95": "[44, 44]",
+              "lower": 44,
+              "upper": 44,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 30,
+              "median": 30,
+              "stdDev": 0,
+              "ci95": "[30, 30]",
+              "lower": 30,
+              "upper": 30,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 9,
+              "median": 9,
+              "stdDev": 0,
+              "ci95": "[9, 9]",
+              "lower": 9,
+              "upper": 9,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": -11.5,
+              "median": -11.5,
+              "stdDev": 0,
+              "ci95": "[-11.5, -11.5]",
+              "lower": -11.5,
+              "upper": -11.5,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 500
+            }
+          }
+        },
+        "1000": {
+          "independentRunCount": 1000,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 56,
+              "median": 56,
+              "stdDev": 0,
+              "ci95": "[56, 56]",
+              "lower": 56,
+              "upper": 56,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 84,
+              "median": 84,
+              "stdDev": 0,
+              "ci95": "[84, 84]",
+              "lower": 84,
+              "upper": 84,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 135,
+              "median": 135,
+              "stdDev": 0,
+              "ci95": "[135, 135]",
+              "lower": 135,
+              "upper": 135,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.52,
+              "median": 1.3,
+              "stdDev": 0.98,
+              "ci95": "[1.46, 1.58]",
+              "lower": 1.46,
+              "upper": 1.58,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 14,
+              "median": 14,
+              "stdDev": 0,
+              "ci95": "[14, 14]",
+              "lower": 14,
+              "upper": 14,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 83.5,
+              "median": 83.5,
+              "stdDev": 0,
+              "ci95": "[83.5, 83.5]",
+              "lower": 83.5,
+              "upper": 83.5,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.11,
+              "median": 0.11,
+              "stdDev": 0,
+              "ci95": "[0.11, 0.11]",
+              "lower": 0.11,
+              "upper": 0.11,
+              "sampleSize": 1000
+            },
+            "meanHits": 28,
+            "meanMisses": 4,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 20,
+              "median": 20,
+              "stdDev": 0,
+              "ci95": "[20, 20]",
+              "lower": 20,
+              "upper": 20,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 40,
+              "median": 40,
+              "stdDev": 0,
+              "ci95": "[40, 40]",
+              "lower": 40,
+              "upper": 40,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 105,
+              "median": 105,
+              "stdDev": 0,
+              "ci95": "[105, 105]",
+              "lower": 105,
+              "upper": 105,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.52,
+              "median": 1.3,
+              "stdDev": 0.98,
+              "ci95": "[1.46, 1.58]",
+              "lower": 1.46,
+              "upper": 1.58,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 5,
+              "median": 5,
+              "stdDev": 0,
+              "ci95": "[5, 5]",
+              "lower": 5,
+              "upper": 5,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 95,
+              "median": 95,
+              "stdDev": 0,
+              "ci95": "[95, 95]",
+              "lower": 95,
+              "upper": 95,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 1000
+            },
+            "meanHits": 10,
+            "meanMisses": 15,
+            "meanBursts": 25,
+            "meanOpps": 50
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 36,
+              "median": 36,
+              "stdDev": 0,
+              "ci95": "[36, 36]",
+              "lower": 36,
+              "upper": 36,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 44,
+              "median": 44,
+              "stdDev": 0,
+              "ci95": "[44, 44]",
+              "lower": 44,
+              "upper": 44,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 30,
+              "median": 30,
+              "stdDev": 0,
+              "ci95": "[30, 30]",
+              "lower": 30,
+              "upper": 30,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 9,
+              "median": 9,
+              "stdDev": 0,
+              "ci95": "[9, 9]",
+              "lower": 9,
+              "upper": 9,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": -11.5,
+              "median": -11.5,
+              "stdDev": 0,
+              "ci95": "[-11.5, -11.5]",
+              "lower": -11.5,
+              "upper": -11.5,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 1000
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "INTERMITTENT",
+      "runCounts": {
+        "10": {
+          "independentRunCount": 10,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 39.5,
+              "median": 39.35,
+              "stdDev": 7.5,
+              "ci95": "[34.14, 44.86]",
+              "lower": 34.14,
+              "upper": 44.86,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 50.82,
+              "median": 51.45,
+              "stdDev": 8.98,
+              "ci95": "[44.4, 57.24]",
+              "lower": 44.4,
+              "upper": 57.24,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 125.3,
+              "median": 116.43,
+              "stdDev": 34.97,
+              "ci95": "[100.29, 150.31]",
+              "lower": 100.29,
+              "upper": 150.31,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.66,
+              "median": 1.75,
+              "stdDev": 0.96,
+              "ci95": "[0.97, 2.35]",
+              "lower": 0.97,
+              "upper": 2.35,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 6.25,
+              "median": 5.75,
+              "stdDev": 1.36,
+              "ci95": "[5.28, 7.22]",
+              "lower": 5.28,
+              "upper": 7.22,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 91,
+              "median": 91.25,
+              "stdDev": 1.29,
+              "ci95": "[90.08, 91.92]",
+              "lower": 90.08,
+              "upper": 91.92,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.08]",
+              "lower": 0.06,
+              "upper": 0.08,
+              "sampleSize": 10
+            },
+            "meanHits": 12.5,
+            "meanMisses": 8.1,
+            "meanBursts": 16.4,
+            "meanOpps": 31.6
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 21.69,
+              "median": 19.7,
+              "stdDev": 5.56,
+              "ci95": "[17.71, 25.67]",
+              "lower": 17.71,
+              "upper": 25.67,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 41.91,
+              "median": 40,
+              "stdDev": 11.6,
+              "ci95": "[33.61, 50.21]",
+              "lower": 33.61,
+              "upper": 50.21,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 126.01,
+              "median": 120,
+              "stdDev": 51.16,
+              "ci95": "[89.41, 162.61]",
+              "lower": 89.41,
+              "upper": 162.61,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.66,
+              "median": 1.75,
+              "stdDev": 0.96,
+              "ci95": "[0.97, 2.35]",
+              "lower": 0.97,
+              "upper": 2.35,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 3.45,
+              "median": 3,
+              "stdDev": 1.04,
+              "ci95": "[2.71, 4.19]",
+              "lower": 2.71,
+              "upper": 4.19,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 96.55,
+              "median": 97,
+              "stdDev": 1.04,
+              "ci95": "[95.81, 97.29]",
+              "lower": 95.81,
+              "upper": 97.29,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.05, 0.07]",
+              "lower": 0.05,
+              "upper": 0.07,
+              "sampleSize": 10
+            },
+            "meanHits": 6.9,
+            "meanMisses": 9.5,
+            "meanBursts": 16.4,
+            "meanOpps": 31.6
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 17.81,
+              "median": 17.1,
+              "stdDev": 9.26,
+              "ci95": "[11.19, 24.43]",
+              "lower": 11.19,
+              "upper": 24.43,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 8.91,
+              "median": 5.6,
+              "stdDev": 13.17,
+              "ci95": "[-0.51, 18.33]",
+              "lower": -0.51,
+              "upper": 18.33,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": -0.71,
+              "median": 10.18,
+              "stdDev": 33.48,
+              "ci95": "[-24.66, 23.24]",
+              "lower": -24.66,
+              "upper": 23.24,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 2.8,
+              "median": 2.75,
+              "stdDev": 1.38,
+              "ci95": "[1.81, 3.79]",
+              "lower": 1.81,
+              "upper": 3.79,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": -5.55,
+              "median": -5.75,
+              "stdDev": 1.3,
+              "ci95": "[-6.48, -4.62]",
+              "lower": -6.48,
+              "upper": -4.62,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.01,
+              "median": 0.01,
+              "stdDev": 0.01,
+              "ci95": "[0, 0.02]",
+              "lower": 0,
+              "upper": 0.02,
+              "sampleSize": 10
+            }
+          }
+        },
+        "100": {
+          "independentRunCount": 100,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 41.28,
+              "median": 41.3,
+              "stdDev": 10.46,
+              "ci95": "[39.2, 43.36]",
+              "lower": 39.2,
+              "upper": 43.36,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 55.99,
+              "median": 56.3,
+              "stdDev": 13.72,
+              "ci95": "[53.27, 58.71]",
+              "lower": 53.27,
+              "upper": 58.71,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 125.06,
+              "median": 120.43,
+              "stdDev": 41.53,
+              "ci95": "[116.82, 133.3]",
+              "lower": 116.82,
+              "upper": 133.3,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.5,
+              "median": 1.2,
+              "stdDev": 0.97,
+              "ci95": "[1.31, 1.69]",
+              "lower": 1.31,
+              "upper": 1.69,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 6.93,
+              "median": 7,
+              "stdDev": 2.06,
+              "ci95": "[6.52, 7.34]",
+              "lower": 6.52,
+              "upper": 7.34,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 90.33,
+              "median": 90.5,
+              "stdDev": 2.2,
+              "ci95": "[89.89, 90.77]",
+              "lower": 89.89,
+              "upper": 90.77,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.01,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 100
+            },
+            "meanHits": 13.9,
+            "meanMisses": 7.3,
+            "meanBursts": 16.6,
+            "meanOpps": 33.3
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 20.12,
+              "median": 19.4,
+              "stdDev": 5.78,
+              "ci95": "[18.97, 21.27]",
+              "lower": 18.97,
+              "upper": 21.27,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 40.48,
+              "median": 40,
+              "stdDev": 12.44,
+              "ci95": "[38.01, 42.95]",
+              "lower": 38.01,
+              "upper": 42.95,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 137.39,
+              "median": 135,
+              "stdDev": 61.52,
+              "ci95": "[125.18, 149.6]",
+              "lower": 125.18,
+              "upper": 149.6,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.5,
+              "median": 1.2,
+              "stdDev": 0.97,
+              "ci95": "[1.31, 1.69]",
+              "lower": 1.31,
+              "upper": 1.69,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 3.35,
+              "median": 3.5,
+              "stdDev": 1.02,
+              "ci95": "[3.15, 3.55]",
+              "lower": 3.15,
+              "upper": 3.55,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 96.65,
+              "median": 96.5,
+              "stdDev": 1.02,
+              "ci95": "[96.45, 96.85]",
+              "lower": 96.45,
+              "upper": 96.85,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 100
+            },
+            "meanHits": 6.7,
+            "meanMisses": 9.9,
+            "meanBursts": 16.6,
+            "meanOpps": 33.3
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 21.16,
+              "median": 19.55,
+              "stdDev": 11.73,
+              "ci95": "[18.83, 23.49]",
+              "lower": 18.83,
+              "upper": 23.49,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 15.51,
+              "median": 16.7,
+              "stdDev": 15.93,
+              "ci95": "[12.35, 18.67]",
+              "lower": 12.35,
+              "upper": 18.67,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": -12.33,
+              "median": -11.54,
+              "stdDev": 65.74,
+              "ci95": "[-25.37, 0.71]",
+              "lower": -25.37,
+              "upper": 0.71,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 3.58,
+              "median": 3.5,
+              "stdDev": 2.11,
+              "ci95": "[3.16, 4]",
+              "lower": 3.16,
+              "upper": 4,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": -6.33,
+              "median": -6,
+              "stdDev": 2.22,
+              "ci95": "[-6.77, -5.89]",
+              "lower": -6.77,
+              "upper": -5.89,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.01,
+              "median": 0.01,
+              "stdDev": 0.01,
+              "ci95": "[0.01, 0.01]",
+              "lower": 0.01,
+              "upper": 0.01,
+              "sampleSize": 100
+            }
+          }
+        },
+        "500": {
+          "independentRunCount": 500,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 39.39,
+              "median": 39.35,
+              "stdDev": 11.92,
+              "ci95": "[38.34, 40.44]",
+              "lower": 38.34,
+              "upper": 40.44,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 52.54,
+              "median": 52.9,
+              "stdDev": 14.38,
+              "ci95": "[51.28, 53.8]",
+              "lower": 51.28,
+              "upper": 53.8,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 123.2,
+              "median": 121.94,
+              "stdDev": 49.26,
+              "ci95": "[118.87, 127.53]",
+              "lower": 118.87,
+              "upper": 127.53,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.55,
+              "median": 1.2,
+              "stdDev": 1,
+              "ci95": "[1.46, 1.64]",
+              "lower": 1.46,
+              "upper": 1.64,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 6.55,
+              "median": 6.5,
+              "stdDev": 2.24,
+              "ci95": "[6.35, 6.75]",
+              "lower": 6.35,
+              "upper": 6.75,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 90.74,
+              "median": 91,
+              "stdDev": 2.36,
+              "ci95": "[90.53, 90.95]",
+              "lower": 90.53,
+              "upper": 90.95,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.02,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 500
+            },
+            "meanHits": 13.1,
+            "meanMisses": 7.9,
+            "meanBursts": 16.6,
+            "meanOpps": 33
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.74,
+              "median": 19.1,
+              "stdDev": 6.18,
+              "ci95": "[19.2, 20.28]",
+              "lower": 19.2,
+              "upper": 20.28,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 39.37,
+              "median": 38.2,
+              "stdDev": 12.84,
+              "ci95": "[38.24, 40.5]",
+              "lower": 38.24,
+              "upper": 40.5,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 133.66,
+              "median": 129.55,
+              "stdDev": 58.41,
+              "ci95": "[128.53, 138.79]",
+              "lower": 128.53,
+              "upper": 138.79,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.55,
+              "median": 1.2,
+              "stdDev": 1,
+              "ci95": "[1.46, 1.64]",
+              "lower": 1.46,
+              "upper": 1.64,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 3.26,
+              "median": 3,
+              "stdDev": 1.06,
+              "ci95": "[3.17, 3.35]",
+              "lower": 3.17,
+              "upper": 3.35,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 96.74,
+              "median": 97,
+              "stdDev": 1.06,
+              "ci95": "[96.65, 96.83]",
+              "lower": 96.65,
+              "upper": 96.83,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 500
+            },
+            "meanHits": 6.5,
+            "meanMisses": 10.1,
+            "meanBursts": 16.6,
+            "meanOpps": 33
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 19.64,
+              "median": 19.2,
+              "stdDev": 12.82,
+              "ci95": "[18.51, 20.77]",
+              "lower": 18.51,
+              "upper": 20.77,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 13.18,
+              "median": 12.9,
+              "stdDev": 16.99,
+              "ci95": "[11.69, 14.67]",
+              "lower": 11.69,
+              "upper": 14.67,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": -10.46,
+              "median": -12.86,
+              "stdDev": 66.2,
+              "ci95": "[-16.28, -4.64]",
+              "lower": -16.28,
+              "upper": -4.64,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 3.29,
+              "median": 3,
+              "stdDev": 2.24,
+              "ci95": "[3.09, 3.49]",
+              "lower": 3.09,
+              "upper": 3.49,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": -6,
+              "median": -6,
+              "stdDev": 2.34,
+              "ci95": "[-6.21, -5.79]",
+              "lower": -6.21,
+              "upper": -5.79,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.01,
+              "median": 0.01,
+              "stdDev": 0.02,
+              "ci95": "[0.01, 0.01]",
+              "lower": 0.01,
+              "upper": 0.01,
+              "sampleSize": 500
+            }
+          }
+        },
+        "1000": {
+          "independentRunCount": 1000,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 38.37,
+              "median": 37.9,
+              "stdDev": 11.76,
+              "ci95": "[37.64, 39.1]",
+              "lower": 37.64,
+              "upper": 39.1,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 51.84,
+              "median": 52.9,
+              "stdDev": 14.74,
+              "ci95": "[50.93, 52.75]",
+              "lower": 50.93,
+              "upper": 52.75,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 126.61,
+              "median": 123,
+              "stdDev": 50.75,
+              "ci95": "[123.46, 129.76]",
+              "lower": 123.46,
+              "upper": 129.76,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.53,
+              "median": 1.2,
+              "stdDev": 0.96,
+              "ci95": "[1.47, 1.59]",
+              "lower": 1.47,
+              "upper": 1.59,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 6.37,
+              "median": 6,
+              "stdDev": 2.19,
+              "ci95": "[6.23, 6.51]",
+              "lower": 6.23,
+              "upper": 6.51,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 90.93,
+              "median": 91,
+              "stdDev": 2.29,
+              "ci95": "[90.79, 91.07]",
+              "lower": 90.79,
+              "upper": 91.07,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.02,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 1000
+            },
+            "meanHits": 12.7,
+            "meanMisses": 8,
+            "meanBursts": 16.6,
+            "meanOpps": 33
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.77,
+              "median": 19.4,
+              "stdDev": 6.08,
+              "ci95": "[19.39, 20.15]",
+              "lower": 19.39,
+              "upper": 20.15,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 39.35,
+              "median": 38.9,
+              "stdDev": 12.52,
+              "ci95": "[38.57, 40.13]",
+              "lower": 38.57,
+              "upper": 40.13,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 134.4,
+              "median": 135,
+              "stdDev": 56.97,
+              "ci95": "[130.87, 137.93]",
+              "lower": 130.87,
+              "upper": 137.93,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.53,
+              "median": 1.2,
+              "stdDev": 0.96,
+              "ci95": "[1.47, 1.59]",
+              "lower": 1.47,
+              "upper": 1.59,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 3.26,
+              "median": 3,
+              "stdDev": 1.03,
+              "ci95": "[3.2, 3.32]",
+              "lower": 3.2,
+              "upper": 3.32,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 96.74,
+              "median": 97,
+              "stdDev": 1.03,
+              "ci95": "[96.68, 96.8]",
+              "lower": 96.68,
+              "upper": 96.8,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 1000
+            },
+            "meanHits": 6.5,
+            "meanMisses": 10.1,
+            "meanBursts": 16.6,
+            "meanOpps": 33
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 18.6,
+              "median": 18.5,
+              "stdDev": 12.54,
+              "ci95": "[17.82, 19.38]",
+              "lower": 17.82,
+              "upper": 19.38,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 12.49,
+              "median": 12.5,
+              "stdDev": 16.71,
+              "ci95": "[11.45, 13.53]",
+              "lower": 11.45,
+              "upper": 13.53,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": -7.8,
+              "median": -7.5,
+              "stdDev": 67.43,
+              "ci95": "[-11.98, -3.62]",
+              "lower": -11.98,
+              "upper": -3.62,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 3.11,
+              "median": 3,
+              "stdDev": 2.18,
+              "ci95": "[2.97, 3.25]",
+              "lower": 2.97,
+              "upper": 3.25,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": -5.82,
+              "median": -5.5,
+              "stdDev": 2.25,
+              "ci95": "[-5.96, -5.68]",
+              "lower": -5.96,
+              "upper": -5.68,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.01,
+              "median": 0.01,
+              "stdDev": 0.01,
+              "ci95": "[0.01, 0.01]",
+              "lower": 0.01,
+              "upper": 0.01,
+              "sampleSize": 1000
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "FREQUENCY_AGILE",
+      "runCounts": {
+        "10": {
+          "independentRunCount": 10,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 54.41,
+              "median": 54.25,
+              "stdDev": 6.14,
+              "ci95": "[50.02, 58.8]",
+              "lower": 50.02,
+              "upper": 58.8,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 90.66,
+              "median": 91.3,
+              "stdDev": 5.35,
+              "ci95": "[86.83, 94.49]",
+              "lower": 86.83,
+              "upper": 94.49,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 258.36,
+              "median": 254.34,
+              "stdDev": 50.84,
+              "ci95": "[221.99, 294.73]",
+              "lower": 221.99,
+              "upper": 294.73,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 2.12,
+              "median": 2.05,
+              "stdDev": 2.12,
+              "ci95": "[0.6, 3.64]",
+              "lower": 0.6,
+              "upper": 3.64,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 42.75,
+              "median": 42.75,
+              "stdDev": 6.12,
+              "ci95": "[38.37, 47.13]",
+              "lower": 38.37,
+              "upper": 47.13,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 65.55,
+              "median": 64,
+              "stdDev": 5.23,
+              "ci95": "[61.81, 69.29]",
+              "lower": 61.81,
+              "upper": 69.29,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.19, 0.21]",
+              "lower": 0.19,
+              "upper": 0.21,
+              "sampleSize": 10
+            },
+            "meanHits": 85.5,
+            "meanMisses": 2.4,
+            "meanBursts": 26.1,
+            "meanOpps": 156.9
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.63,
+              "median": 19.95,
+              "stdDev": 1.18,
+              "ci95": "[18.79, 20.47]",
+              "lower": 18.79,
+              "upper": 20.47,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 93.47,
+              "median": 96,
+              "stdDev": 5.48,
+              "ci95": "[89.55, 97.39]",
+              "lower": 89.55,
+              "upper": 97.39,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 383,
+              "median": 392.43,
+              "stdDev": 44.94,
+              "ci95": "[350.85, 415.15]",
+              "lower": 350.85,
+              "upper": 415.15,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 2.12,
+              "median": 2.05,
+              "stdDev": 2.12,
+              "ci95": "[0.6, 3.64]",
+              "lower": 0.6,
+              "upper": 3.64,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 15.4,
+              "median": 15.25,
+              "stdDev": 1.41,
+              "ci95": "[14.39, 16.41]",
+              "lower": 14.39,
+              "upper": 16.41,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 84.6,
+              "median": 84.75,
+              "stdDev": 1.41,
+              "ci95": "[83.59, 85.61]",
+              "lower": 83.59,
+              "upper": 85.61,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.13,
+              "median": 0.13,
+              "stdDev": 0.01,
+              "ci95": "[0.12, 0.14]",
+              "lower": 0.12,
+              "upper": 0.14,
+              "sampleSize": 10
+            },
+            "meanHits": 30.8,
+            "meanMisses": 1.7,
+            "meanBursts": 26.1,
+            "meanOpps": 156.9
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 34.78,
+              "median": 34.05,
+              "stdDev": 5.56,
+              "ci95": "[30.8, 38.76]",
+              "lower": 30.8,
+              "upper": 38.76,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": -2.81,
+              "median": -3.6,
+              "stdDev": 6.95,
+              "ci95": "[-7.78, 2.16]",
+              "lower": -7.78,
+              "upper": 2.16,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": -124.64,
+              "median": -112.34,
+              "stdDev": 56.44,
+              "ci95": "[-165.01, -84.27]",
+              "lower": -165.01,
+              "upper": -84.27,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 27.35,
+              "median": 26,
+              "stdDev": 5.14,
+              "ci95": "[23.67, 31.03]",
+              "lower": 23.67,
+              "upper": 31.03,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": -19.05,
+              "median": -21,
+              "stdDev": 5.99,
+              "ci95": "[-23.33, -14.77]",
+              "lower": -23.33,
+              "upper": -14.77,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.02,
+              "ci95": "[0.06, 0.08]",
+              "lower": 0.06,
+              "upper": 0.08,
+              "sampleSize": 10
+            }
+          }
+        },
+        "100": {
+          "independentRunCount": 100,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 55.91,
+              "median": 56.15,
+              "stdDev": 5.2,
+              "ci95": "[54.88, 56.94]",
+              "lower": 54.88,
+              "upper": 56.94,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 92.84,
+              "median": 92.6,
+              "stdDev": 5.39,
+              "ci95": "[91.77, 93.91]",
+              "lower": 91.77,
+              "upper": 93.91,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 247.82,
+              "median": 236.54,
+              "stdDev": 52.72,
+              "ci95": "[237.36, 258.28]",
+              "lower": 237.36,
+              "upper": 258.28,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.59,
+              "median": 1.5,
+              "stdDev": 1.78,
+              "ci95": "[1.24, 1.94]",
+              "lower": 1.24,
+              "upper": 1.94,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 42.8,
+              "median": 43,
+              "stdDev": 5.01,
+              "ci95": "[41.81, 43.79]",
+              "lower": 41.81,
+              "upper": 43.79,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 65.89,
+              "median": 65.75,
+              "stdDev": 4.66,
+              "ci95": "[64.97, 66.81]",
+              "lower": 64.97,
+              "upper": 66.81,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.2, 0.2]",
+              "lower": 0.2,
+              "upper": 0.2,
+              "sampleSize": 100
+            },
+            "meanHits": 85.6,
+            "meanMisses": 1.9,
+            "meanBursts": 26,
+            "meanOpps": 153.2
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.94,
+              "median": 19.9,
+              "stdDev": 1.02,
+              "ci95": "[19.74, 20.14]",
+              "lower": 19.74,
+              "upper": 20.14,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 95.06,
+              "median": 96,
+              "stdDev": 3.98,
+              "ci95": "[94.27, 95.85]",
+              "lower": 94.27,
+              "upper": 95.85,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 361.9,
+              "median": 375,
+              "stdDev": 52.95,
+              "ci95": "[351.39, 372.41]",
+              "lower": 351.39,
+              "upper": 372.41,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.59,
+              "median": 1.5,
+              "stdDev": 1.78,
+              "ci95": "[1.24, 1.94]",
+              "lower": 1.24,
+              "upper": 1.94,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 15.28,
+              "median": 15,
+              "stdDev": 1.53,
+              "ci95": "[14.98, 15.58]",
+              "lower": 14.98,
+              "upper": 15.58,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 84.72,
+              "median": 85,
+              "stdDev": 1.53,
+              "ci95": "[84.42, 85.02]",
+              "lower": 84.42,
+              "upper": 85.02,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.13,
+              "median": 0.13,
+              "stdDev": 0.01,
+              "ci95": "[0.13, 0.13]",
+              "lower": 0.13,
+              "upper": 0.13,
+              "sampleSize": 100
+            },
+            "meanHits": 30.6,
+            "meanMisses": 1.3,
+            "meanBursts": 26,
+            "meanOpps": 153.2
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 35.97,
+              "median": 35.5,
+              "stdDev": 5.39,
+              "ci95": "[34.9, 37.04]",
+              "lower": 34.9,
+              "upper": 37.04,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": -2.22,
+              "median": 0,
+              "stdDev": 5.84,
+              "ci95": "[-3.38, -1.06]",
+              "lower": -3.38,
+              "upper": -1.06,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": -114.09,
+              "median": -123.17,
+              "stdDev": 69.05,
+              "ci95": "[-127.79, -100.39]",
+              "lower": -127.79,
+              "upper": -100.39,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 27.52,
+              "median": 27.5,
+              "stdDev": 4.46,
+              "ci95": "[26.64, 28.4]",
+              "lower": 26.64,
+              "upper": 28.4,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": -18.83,
+              "median": -19,
+              "stdDev": 5.12,
+              "ci95": "[-19.85, -17.81]",
+              "lower": -19.85,
+              "upper": -17.81,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.02,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 100
+            }
+          }
+        },
+        "500": {
+          "independentRunCount": 500,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 55.25,
+              "median": 55.2,
+              "stdDev": 4.98,
+              "ci95": "[54.81, 55.69]",
+              "lower": 54.81,
+              "upper": 55.69,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 93.15,
+              "median": 93.1,
+              "stdDev": 5.1,
+              "ci95": "[92.7, 93.6]",
+              "lower": 92.7,
+              "upper": 93.6,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 252.94,
+              "median": 252.44,
+              "stdDev": 54.2,
+              "ci95": "[248.18, 257.7]",
+              "lower": 248.18,
+              "upper": 257.7,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.54,
+              "median": 0,
+              "stdDev": 1.95,
+              "ci95": "[1.37, 1.71]",
+              "lower": 1.37,
+              "upper": 1.71,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 42.85,
+              "median": 42.5,
+              "stdDev": 5.23,
+              "ci95": "[42.39, 43.31]",
+              "lower": 42.39,
+              "upper": 43.31,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 65.28,
+              "median": 65,
+              "stdDev": 4.43,
+              "ci95": "[64.89, 65.67]",
+              "lower": 64.89,
+              "upper": 65.67,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.21,
+              "stdDev": 0.01,
+              "ci95": "[0.21, 0.21]",
+              "lower": 0.21,
+              "upper": 0.21,
+              "sampleSize": 500
+            },
+            "meanHits": 85.7,
+            "meanMisses": 1.8,
+            "meanBursts": 26.2,
+            "meanOpps": 155.1
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.95,
+              "median": 19.9,
+              "stdDev": 1.1,
+              "ci95": "[19.85, 20.05]",
+              "lower": 19.85,
+              "upper": 20.05,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 95.36,
+              "median": 96.2,
+              "stdDev": 3.92,
+              "ci95": "[95.02, 95.7]",
+              "lower": 95.02,
+              "upper": 95.7,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 359.25,
+              "median": 361.67,
+              "stdDev": 51.71,
+              "ci95": "[354.71, 363.79]",
+              "lower": 354.71,
+              "upper": 363.79,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.54,
+              "median": 0,
+              "stdDev": 1.95,
+              "ci95": "[1.37, 1.71]",
+              "lower": 1.37,
+              "upper": 1.71,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 15.47,
+              "median": 15.5,
+              "stdDev": 1.56,
+              "ci95": "[15.33, 15.61]",
+              "lower": 15.33,
+              "upper": 15.61,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 84.53,
+              "median": 84.5,
+              "stdDev": 1.56,
+              "ci95": "[84.39, 84.67]",
+              "lower": 84.39,
+              "upper": 84.67,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.13,
+              "median": 0.13,
+              "stdDev": 0.01,
+              "ci95": "[0.13, 0.13]",
+              "lower": 0.13,
+              "upper": 0.13,
+              "sampleSize": 500
+            },
+            "meanHits": 30.9,
+            "meanMisses": 1.2,
+            "meanBursts": 26.2,
+            "meanOpps": 155.1
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 35.3,
+              "median": 35.3,
+              "stdDev": 5.11,
+              "ci95": "[34.85, 35.75]",
+              "lower": 34.85,
+              "upper": 35.75,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": -2.21,
+              "median": 0,
+              "stdDev": 5.97,
+              "ci95": "[-2.73, -1.69]",
+              "lower": -2.73,
+              "upper": -1.69,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": -106.31,
+              "median": -104.4,
+              "stdDev": 69.36,
+              "ci95": "[-112.41, -100.21]",
+              "lower": -112.41,
+              "upper": -100.21,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 27.38,
+              "median": 27.5,
+              "stdDev": 4.53,
+              "ci95": "[26.98, 27.78]",
+              "lower": 26.98,
+              "upper": 27.78,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": -19.24,
+              "median": -19.5,
+              "stdDev": 4.95,
+              "ci95": "[-19.67, -18.81]",
+              "lower": -19.67,
+              "upper": -18.81,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.01,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 500
+            }
+          }
+        },
+        "1000": {
+          "independentRunCount": 1000,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 54.98,
+              "median": 55,
+              "stdDev": 5.05,
+              "ci95": "[54.67, 55.29]",
+              "lower": 54.67,
+              "upper": 55.29,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 92.91,
+              "median": 92.9,
+              "stdDev": 5.13,
+              "ci95": "[92.59, 93.23]",
+              "lower": 92.59,
+              "upper": 93.23,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 253.7,
+              "median": 252.6,
+              "stdDev": 54.28,
+              "ci95": "[250.33, 257.07]",
+              "lower": 250.33,
+              "upper": 257.07,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.57,
+              "median": 0,
+              "stdDev": 1.95,
+              "ci95": "[1.45, 1.69]",
+              "lower": 1.45,
+              "upper": 1.69,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 42.79,
+              "median": 42.5,
+              "stdDev": 5.15,
+              "ci95": "[42.47, 43.11]",
+              "lower": 42.47,
+              "upper": 43.11,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 65.43,
+              "median": 65,
+              "stdDev": 4.33,
+              "ci95": "[65.16, 65.7]",
+              "lower": 65.16,
+              "upper": 65.7,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.21,
+              "stdDev": 0.01,
+              "ci95": "[0.21, 0.21]",
+              "lower": 0.21,
+              "upper": 0.21,
+              "sampleSize": 1000
+            },
+            "meanHits": 85.6,
+            "meanMisses": 1.9,
+            "meanBursts": 26.3,
+            "meanOpps": 155.7
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 19.96,
+              "median": 19.9,
+              "stdDev": 1.1,
+              "ci95": "[19.89, 20.03]",
+              "lower": 19.89,
+              "upper": 20.03,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 95.21,
+              "median": 96.2,
+              "stdDev": 4.07,
+              "ci95": "[94.96, 95.46]",
+              "lower": 94.96,
+              "upper": 95.46,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 359.81,
+              "median": 361.15,
+              "stdDev": 49.18,
+              "ci95": "[356.76, 362.86]",
+              "lower": 356.76,
+              "upper": 362.86,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.57,
+              "median": 0,
+              "stdDev": 1.95,
+              "ci95": "[1.45, 1.69]",
+              "lower": 1.45,
+              "upper": 1.69,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 15.54,
+              "median": 15.5,
+              "stdDev": 1.57,
+              "ci95": "[15.44, 15.64]",
+              "lower": 15.44,
+              "upper": 15.64,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 84.46,
+              "median": 84.5,
+              "stdDev": 1.57,
+              "ci95": "[84.36, 84.56]",
+              "lower": 84.36,
+              "upper": 84.56,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.13,
+              "median": 0.13,
+              "stdDev": 0.01,
+              "ci95": "[0.13, 0.13]",
+              "lower": 0.13,
+              "upper": 0.13,
+              "sampleSize": 1000
+            },
+            "meanHits": 31.1,
+            "meanMisses": 1.3,
+            "meanBursts": 26.3,
+            "meanOpps": 155.7
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 35.03,
+              "median": 35.05,
+              "stdDev": 5.17,
+              "ci95": "[34.71, 35.35]",
+              "lower": 34.71,
+              "upper": 35.35,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": -2.3,
+              "median": 0,
+              "stdDev": 6.06,
+              "ci95": "[-2.68, -1.92]",
+              "lower": -2.68,
+              "upper": -1.92,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": -106.11,
+              "median": -106.54,
+              "stdDev": 70.48,
+              "ci95": "[-110.48, -101.74]",
+              "lower": -110.48,
+              "upper": -101.74,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 27.25,
+              "median": 27,
+              "stdDev": 4.49,
+              "ci95": "[26.97, 27.53]",
+              "lower": 26.97,
+              "upper": 27.53,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": -19.04,
+              "median": -19.5,
+              "stdDev": 4.81,
+              "ci95": "[-19.34, -18.74]",
+              "lower": -19.34,
+              "upper": -18.74,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.07,
+              "median": 0.07,
+              "stdDev": 0.01,
+              "ci95": "[0.07, 0.07]",
+              "lower": 0.07,
+              "upper": 0.07,
+              "sampleSize": 1000
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "MULTI_EMITTER",
+      "runCounts": {
+        "10": {
+          "independentRunCount": 10,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 42.85,
+              "median": 42.6,
+              "stdDev": 5.71,
+              "ci95": "[38.77, 46.93]",
+              "lower": 38.77,
+              "upper": 46.93,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 30.51,
+              "median": 30.25,
+              "stdDev": 3.08,
+              "ci95": "[28.31, 32.71]",
+              "lower": 28.31,
+              "upper": 32.71,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.17,
+              "median": 0.8,
+              "stdDev": 1.37,
+              "ci95": "[0.19, 2.15]",
+              "lower": 0.19,
+              "upper": 2.15,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 31.05,
+              "median": 30.25,
+              "stdDev": 4.37,
+              "ci95": "[27.92, 34.18]",
+              "lower": 27.92,
+              "upper": 34.18,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 65.85,
+              "median": 64.75,
+              "stdDev": 3.04,
+              "ci95": "[63.68, 68.02]",
+              "lower": 63.68,
+              "upper": 68.02,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.19, 0.21]",
+              "lower": 0.19,
+              "upper": 0.21,
+              "sampleSize": 10
+            },
+            "meanHits": 62.1,
+            "meanMisses": 140.7,
+            "meanBursts": 202.8,
+            "meanOpps": 144.9
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 28.54,
+              "median": 29.5,
+              "stdDev": 3.66,
+              "ci95": "[25.92, 31.16]",
+              "lower": 25.92,
+              "upper": 31.16,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 20.37,
+              "median": 20.45,
+              "stdDev": 2.55,
+              "ci95": "[18.55, 22.19]",
+              "lower": 18.55,
+              "upper": 22.19,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 1.17,
+              "median": 0.8,
+              "stdDev": 1.37,
+              "ci95": "[0.19, 2.15]",
+              "lower": 0.19,
+              "upper": 2.15,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 20.7,
+              "median": 21.25,
+              "stdDev": 3.01,
+              "ci95": "[18.55, 22.85]",
+              "lower": 18.55,
+              "upper": 22.85,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 79.3,
+              "median": 78.75,
+              "stdDev": 3.01,
+              "ci95": "[77.15, 81.45]",
+              "lower": 77.15,
+              "upper": 81.45,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.17,
+              "stdDev": 0.02,
+              "ci95": "[0.15, 0.17]",
+              "lower": 0.15,
+              "upper": 0.17,
+              "sampleSize": 10
+            },
+            "meanHits": 41.4,
+            "meanMisses": 161.4,
+            "meanBursts": 202.8,
+            "meanOpps": 144.9
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 14.31,
+              "median": 14.15,
+              "stdDev": 6.29,
+              "ci95": "[9.81, 18.81]",
+              "lower": 9.81,
+              "upper": 18.81,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 10.14,
+              "median": 9.75,
+              "stdDev": 4.24,
+              "ci95": "[7.11, 13.17]",
+              "lower": 7.11,
+              "upper": 13.17,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 10.35,
+              "median": 10.25,
+              "stdDev": 4.5,
+              "ci95": "[7.13, 13.57]",
+              "lower": 7.13,
+              "upper": 13.57,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": -13.45,
+              "median": -12.75,
+              "stdDev": 4.13,
+              "ci95": "[-16.4, -10.5]",
+              "lower": -16.4,
+              "upper": -10.5,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.03,
+              "median": 0.03,
+              "stdDev": 0.02,
+              "ci95": "[0.02, 0.04]",
+              "lower": 0.02,
+              "upper": 0.04,
+              "sampleSize": 10
+            }
+          }
+        },
+        "100": {
+          "independentRunCount": 100,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 44.61,
+              "median": 44.35,
+              "stdDev": 4.78,
+              "ci95": "[43.66, 45.56]",
+              "lower": 43.66,
+              "upper": 45.56,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 32.21,
+              "median": 32.2,
+              "stdDev": 3.14,
+              "ci95": "[31.59, 32.83]",
+              "lower": 31.59,
+              "upper": 32.83,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.31,
+              "median": 1.4,
+              "stdDev": 1.59,
+              "ci95": "[0.99, 1.63]",
+              "lower": 0.99,
+              "upper": 1.63,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 32.3,
+              "median": 31.75,
+              "stdDev": 3.85,
+              "ci95": "[31.54, 33.06]",
+              "lower": 31.54,
+              "upper": 33.06,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 64.97,
+              "median": 65,
+              "stdDev": 2.71,
+              "ci95": "[64.43, 65.51]",
+              "lower": 64.43,
+              "upper": 65.51,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.2, 0.2]",
+              "lower": 0.2,
+              "upper": 0.2,
+              "sampleSize": 100
+            },
+            "meanHits": 64.6,
+            "meanMisses": 135.7,
+            "meanBursts": 200.3,
+            "meanOpps": 144.7
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 28.23,
+              "median": 28.45,
+              "stdDev": 3.21,
+              "ci95": "[27.59, 28.87]",
+              "lower": 27.59,
+              "upper": 28.87,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 20.39,
+              "median": 20.55,
+              "stdDev": 2.22,
+              "ci95": "[19.95, 20.83]",
+              "lower": 19.95,
+              "upper": 20.83,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.31,
+              "median": 1.4,
+              "stdDev": 1.59,
+              "ci95": "[0.99, 1.63]",
+              "lower": 0.99,
+              "upper": 1.63,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 20.45,
+              "median": 20.75,
+              "stdDev": 2.65,
+              "ci95": "[19.92, 20.98]",
+              "lower": 19.92,
+              "upper": 20.98,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 79.55,
+              "median": 79.25,
+              "stdDev": 2.65,
+              "ci95": "[79.02, 80.08]",
+              "lower": 79.02,
+              "upper": 80.08,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.02,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 100
+            },
+            "meanHits": 40.9,
+            "meanMisses": 159.4,
+            "meanBursts": 200.3,
+            "meanOpps": 144.7
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 16.38,
+              "median": 16.15,
+              "stdDev": 5.23,
+              "ci95": "[15.34, 17.42]",
+              "lower": 15.34,
+              "upper": 17.42,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 11.82,
+              "median": 11.75,
+              "stdDev": 3.7,
+              "ci95": "[11.09, 12.55]",
+              "lower": 11.09,
+              "upper": 12.55,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 11.85,
+              "median": 11.5,
+              "stdDev": 3.78,
+              "ci95": "[11.1, 12.6]",
+              "lower": 11.1,
+              "upper": 12.6,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": -14.58,
+              "median": -14.75,
+              "stdDev": 3.67,
+              "ci95": "[-15.31, -13.85]",
+              "lower": -15.31,
+              "upper": -13.85,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.03,
+              "median": 0.03,
+              "stdDev": 0.02,
+              "ci95": "[0.03, 0.03]",
+              "lower": 0.03,
+              "upper": 0.03,
+              "sampleSize": 100
+            }
+          }
+        },
+        "500": {
+          "independentRunCount": 500,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 44.23,
+              "median": 44.3,
+              "stdDev": 4.96,
+              "ci95": "[43.79, 44.67]",
+              "lower": 43.79,
+              "upper": 44.67,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 31.88,
+              "median": 31.8,
+              "stdDev": 3.47,
+              "ci95": "[31.58, 32.18]",
+              "lower": 31.58,
+              "upper": 32.18,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.4,
+              "median": 1.6,
+              "stdDev": 1.61,
+              "ci95": "[1.26, 1.54]",
+              "lower": 1.26,
+              "upper": 1.54,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 31.88,
+              "median": 32,
+              "stdDev": 4.01,
+              "ci95": "[31.53, 32.23]",
+              "lower": 31.53,
+              "upper": 32.23,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 65.45,
+              "median": 65,
+              "stdDev": 3.27,
+              "ci95": "[65.16, 65.74]",
+              "lower": 65.16,
+              "upper": 65.74,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.2, 0.2]",
+              "lower": 0.2,
+              "upper": 0.2,
+              "sampleSize": 500
+            },
+            "meanHits": 63.8,
+            "meanMisses": 136.1,
+            "meanBursts": 199.9,
+            "meanOpps": 144.1
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 27.94,
+              "median": 27.95,
+              "stdDev": 3.32,
+              "ci95": "[27.65, 28.23]",
+              "lower": 27.65,
+              "upper": 28.23,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 20.13,
+              "median": 20.3,
+              "stdDev": 2.27,
+              "ci95": "[19.93, 20.33]",
+              "lower": 19.93,
+              "upper": 20.33,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.4,
+              "median": 1.6,
+              "stdDev": 1.61,
+              "ci95": "[1.26, 1.54]",
+              "lower": 1.26,
+              "upper": 1.54,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 20.12,
+              "median": 20,
+              "stdDev": 2.54,
+              "ci95": "[19.9, 20.34]",
+              "lower": 19.9,
+              "upper": 20.34,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 79.88,
+              "median": 80,
+              "stdDev": 2.54,
+              "ci95": "[79.66, 80.1]",
+              "lower": 79.66,
+              "upper": 80.1,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.02,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 500
+            },
+            "meanHits": 40.2,
+            "meanMisses": 159.6,
+            "meanBursts": 199.9,
+            "meanOpps": 144.1
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 16.28,
+              "median": 16.35,
+              "stdDev": 5.66,
+              "ci95": "[15.78, 16.78]",
+              "lower": 15.78,
+              "upper": 16.78,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 11.75,
+              "median": 11.7,
+              "stdDev": 4.09,
+              "ci95": "[11.39, 12.11]",
+              "lower": 11.39,
+              "upper": 12.11,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 11.76,
+              "median": 11.5,
+              "stdDev": 4.17,
+              "ci95": "[11.39, 12.13]",
+              "lower": 11.39,
+              "upper": 12.13,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": -14.43,
+              "median": -14.5,
+              "stdDev": 3.81,
+              "ci95": "[-14.76, -14.1]",
+              "lower": -14.76,
+              "upper": -14.1,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0.02,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 500
+            }
+          }
+        },
+        "1000": {
+          "independentRunCount": 1000,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 44.24,
+              "median": 44.4,
+              "stdDev": 4.99,
+              "ci95": "[43.93, 44.55]",
+              "lower": 43.93,
+              "upper": 44.55,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 31.87,
+              "median": 31.9,
+              "stdDev": 3.48,
+              "ci95": "[31.65, 32.09]",
+              "lower": 31.65,
+              "upper": 32.09,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.42,
+              "median": 1.6,
+              "stdDev": 1.56,
+              "ci95": "[1.32, 1.52]",
+              "lower": 1.32,
+              "upper": 1.52,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 31.82,
+              "median": 32,
+              "stdDev": 4,
+              "ci95": "[31.57, 32.07]",
+              "lower": 31.57,
+              "upper": 32.07,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 65.57,
+              "median": 65.5,
+              "stdDev": 3.24,
+              "ci95": "[65.37, 65.77]",
+              "lower": 65.37,
+              "upper": 65.77,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.2,
+              "median": 0.2,
+              "stdDev": 0.01,
+              "ci95": "[0.2, 0.2]",
+              "lower": 0.2,
+              "upper": 0.2,
+              "sampleSize": 1000
+            },
+            "meanHits": 63.6,
+            "meanMisses": 136,
+            "meanBursts": 199.6,
+            "meanOpps": 143.8
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 27.81,
+              "median": 27.9,
+              "stdDev": 3.31,
+              "ci95": "[27.6, 28.02]",
+              "lower": 27.6,
+              "upper": 28.02,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 20.03,
+              "median": 20.1,
+              "stdDev": 2.26,
+              "ci95": "[19.89, 20.17]",
+              "lower": 19.89,
+              "upper": 20.17,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 15,
+              "median": 15,
+              "stdDev": 0,
+              "ci95": "[15, 15]",
+              "lower": 15,
+              "upper": 15,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.42,
+              "median": 1.6,
+              "stdDev": 1.56,
+              "ci95": "[1.32, 1.52]",
+              "lower": 1.32,
+              "upper": 1.52,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 19.99,
+              "median": 20,
+              "stdDev": 2.55,
+              "ci95": "[19.83, 20.15]",
+              "lower": 19.83,
+              "upper": 20.15,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 80.01,
+              "median": 80,
+              "stdDev": 2.55,
+              "ci95": "[79.85, 80.17]",
+              "lower": 79.85,
+              "upper": 80.17,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.02,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 1000
+            },
+            "meanHits": 40,
+            "meanMisses": 159.6,
+            "meanBursts": 199.6,
+            "meanOpps": 143.8
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 16.43,
+              "median": 16.7,
+              "stdDev": 5.74,
+              "ci95": "[16.07, 16.79]",
+              "lower": 16.07,
+              "upper": 16.79,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 11.84,
+              "median": 11.95,
+              "stdDev": 4.15,
+              "ci95": "[11.58, 12.1]",
+              "lower": 11.58,
+              "upper": 12.1,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 11.83,
+              "median": 12,
+              "stdDev": 4.2,
+              "ci95": "[11.57, 12.09]",
+              "lower": 11.57,
+              "upper": 12.09,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": -14.44,
+              "median": -14.5,
+              "stdDev": 3.86,
+              "ci95": "[-14.68, -14.2]",
+              "lower": -14.68,
+              "upper": -14.2,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.04,
+              "median": 0.04,
+              "stdDev": 0.02,
+              "ci95": "[0.04, 0.04]",
+              "lower": 0.04,
+              "upper": 0.04,
+              "sampleSize": 1000
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "MIXED",
+      "runCounts": {
+        "10": {
+          "independentRunCount": 10,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 53.52,
+              "median": 52.45,
+              "stdDev": 4.39,
+              "ci95": "[50.38, 56.66]",
+              "lower": 50.38,
+              "upper": 56.66,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 54.69,
+              "median": 55.85,
+              "stdDev": 4.03,
+              "ci95": "[51.81, 57.57]",
+              "lower": 51.81,
+              "upper": 57.57,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 123.86,
+              "median": 125,
+              "stdDev": 20.1,
+              "ci95": "[109.48, 138.24]",
+              "lower": 109.48,
+              "upper": 138.24,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0.99,
+              "median": 0,
+              "stdDev": 2.01,
+              "ci95": "[-0.45, 2.43]",
+              "lower": -0.45,
+              "upper": 2.43,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 41,
+              "median": 42,
+              "stdDev": 5.51,
+              "ci95": "[37.06, 44.94]",
+              "lower": 37.06,
+              "upper": 44.94,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 63.15,
+              "median": 62.75,
+              "stdDev": 3.48,
+              "ci95": "[60.66, 65.64]",
+              "lower": 60.66,
+              "upper": 65.64,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.22,
+              "stdDev": 0.01,
+              "ci95": "[0.2, 0.22]",
+              "lower": 0.2,
+              "upper": 0.22,
+              "sampleSize": 10
+            },
+            "meanHits": 82,
+            "meanMisses": 37.7,
+            "meanBursts": 83.2,
+            "meanOpps": 153.1
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 25.99,
+              "median": 25.75,
+              "stdDev": 1.65,
+              "ci95": "[24.81, 27.17]",
+              "lower": 24.81,
+              "upper": 27.17,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 43.44,
+              "median": 43.5,
+              "stdDev": 2.85,
+              "ci95": "[41.4, 45.48]",
+              "lower": 41.4,
+              "upper": 45.48,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": 167.19,
+              "median": 164.06,
+              "stdDev": 23.05,
+              "ci95": "[150.7, 183.68]",
+              "lower": 150.7,
+              "upper": 183.68,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0.99,
+              "median": 0,
+              "stdDev": 2.01,
+              "ci95": "[-0.45, 2.43]",
+              "lower": -0.45,
+              "upper": 2.43,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 19.9,
+              "median": 19.5,
+              "stdDev": 2.41,
+              "ci95": "[18.18, 21.62]",
+              "lower": 18.18,
+              "upper": 21.62,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": 80.1,
+              "median": 80.5,
+              "stdDev": 2.41,
+              "ci95": "[78.38, 81.82]",
+              "lower": 78.38,
+              "upper": 81.82,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.01,
+              "ci95": "[0.15, 0.17]",
+              "lower": 0.15,
+              "upper": 0.17,
+              "sampleSize": 10
+            },
+            "meanHits": 39.8,
+            "meanMisses": 47.1,
+            "meanBursts": 83.2,
+            "meanOpps": 153.1
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 27.53,
+              "median": 27,
+              "stdDev": 3.84,
+              "ci95": "[24.78, 30.28]",
+              "lower": 24.78,
+              "upper": 30.28,
+              "sampleSize": 10
+            },
+            "sensitivity": {
+              "mean": 11.25,
+              "median": 12.25,
+              "stdDev": 4.93,
+              "ci95": "[7.72, 14.78]",
+              "lower": 7.72,
+              "upper": 14.78,
+              "sampleSize": 10
+            },
+            "mit": {
+              "mean": -43.34,
+              "median": -47.41,
+              "stdDev": 31.96,
+              "ci95": "[-66.2, -20.48]",
+              "lower": -66.2,
+              "upper": -20.48,
+              "sampleSize": 10
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 10
+            },
+            "utilization": {
+              "mean": 21.1,
+              "median": 21,
+              "stdDev": 3.82,
+              "ci95": "[18.37, 23.83]",
+              "lower": 18.37,
+              "upper": 23.83,
+              "sampleSize": 10
+            },
+            "predAcc": {
+              "mean": -16.95,
+              "median": -17.75,
+              "stdDev": 5.09,
+              "ci95": "[-20.59, -13.31]",
+              "lower": -20.59,
+              "upper": -13.31,
+              "sampleSize": 10
+            },
+            "brier": {
+              "mean": 0.05,
+              "median": 0.06,
+              "stdDev": 0.02,
+              "ci95": "[0.04, 0.06]",
+              "lower": 0.04,
+              "upper": 0.06,
+              "sampleSize": 10
+            }
+          }
+        },
+        "100": {
+          "independentRunCount": 100,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 53.44,
+              "median": 53.5,
+              "stdDev": 4.03,
+              "ci95": "[52.64, 54.24]",
+              "lower": 52.64,
+              "upper": 54.24,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 55.41,
+              "median": 55.7,
+              "stdDev": 5.07,
+              "ci95": "[54.4, 56.42]",
+              "lower": 54.4,
+              "upper": 56.42,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 116.83,
+              "median": 116.86,
+              "stdDev": 22.13,
+              "ci95": "[112.44, 121.22]",
+              "lower": 112.44,
+              "upper": 121.22,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.38,
+              "median": 0,
+              "stdDev": 1.81,
+              "ci95": "[1.02, 1.74]",
+              "lower": 1.02,
+              "upper": 1.74,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 41.66,
+              "median": 41,
+              "stdDev": 4.6,
+              "ci95": "[40.75, 42.57]",
+              "lower": 40.75,
+              "upper": 42.57,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 63.58,
+              "median": 63.5,
+              "stdDev": 3.42,
+              "ci95": "[62.9, 64.26]",
+              "lower": 62.9,
+              "upper": 64.26,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.21,
+              "stdDev": 0.01,
+              "ci95": "[0.21, 0.21]",
+              "lower": 0.21,
+              "upper": 0.21,
+              "sampleSize": 100
+            },
+            "meanHits": 83.3,
+            "meanMisses": 37.4,
+            "meanBursts": 83.8,
+            "meanOpps": 155.7
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 25.15,
+              "median": 25.2,
+              "stdDev": 1.59,
+              "ci95": "[24.83, 25.47]",
+              "lower": 24.83,
+              "upper": 25.47,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 42.94,
+              "median": 42.5,
+              "stdDev": 3.8,
+              "ci95": "[42.19, 43.69]",
+              "lower": 42.19,
+              "upper": 43.69,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": 161.77,
+              "median": 162.54,
+              "stdDev": 28.74,
+              "ci95": "[156.07, 167.47]",
+              "lower": 156.07,
+              "upper": 167.47,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 1.38,
+              "median": 0,
+              "stdDev": 1.81,
+              "ci95": "[1.02, 1.74]",
+              "lower": 1.02,
+              "upper": 1.74,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 19.58,
+              "median": 19.5,
+              "stdDev": 1.77,
+              "ci95": "[19.23, 19.93]",
+              "lower": 19.23,
+              "upper": 19.93,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": 80.42,
+              "median": 80.5,
+              "stdDev": 1.77,
+              "ci95": "[80.07, 80.77]",
+              "lower": 80.07,
+              "upper": 80.77,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.01,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 100
+            },
+            "meanHits": 39.2,
+            "meanMisses": 47.9,
+            "meanBursts": 83.8,
+            "meanOpps": 155.7
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 28.29,
+              "median": 28.65,
+              "stdDev": 4.05,
+              "ci95": "[27.49, 29.09]",
+              "lower": 27.49,
+              "upper": 29.09,
+              "sampleSize": 100
+            },
+            "sensitivity": {
+              "mean": 12.47,
+              "median": 12.3,
+              "stdDev": 4.99,
+              "ci95": "[11.48, 13.46]",
+              "lower": 11.48,
+              "upper": 13.46,
+              "sampleSize": 100
+            },
+            "mit": {
+              "mean": -44.94,
+              "median": -44.87,
+              "stdDev": 38.1,
+              "ci95": "[-52.5, -37.38]",
+              "lower": -52.5,
+              "upper": -37.38,
+              "sampleSize": 100
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 100
+            },
+            "utilization": {
+              "mean": 22.07,
+              "median": 22,
+              "stdDev": 3.76,
+              "ci95": "[21.32, 22.82]",
+              "lower": 21.32,
+              "upper": 22.82,
+              "sampleSize": 100
+            },
+            "predAcc": {
+              "mean": -16.84,
+              "median": -17,
+              "stdDev": 4.23,
+              "ci95": "[-17.68, -16]",
+              "lower": -17.68,
+              "upper": -16,
+              "sampleSize": 100
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 100
+            }
+          }
+        },
+        "500": {
+          "independentRunCount": 500,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 53.02,
+              "median": 53,
+              "stdDev": 4.38,
+              "ci95": "[52.64, 53.4]",
+              "lower": 52.64,
+              "upper": 53.4,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 55.5,
+              "median": 55.4,
+              "stdDev": 5.33,
+              "ci95": "[55.03, 55.97]",
+              "lower": 55.03,
+              "upper": 55.97,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 120.21,
+              "median": 118.4,
+              "stdDev": 21.26,
+              "ci95": "[118.34, 122.08]",
+              "lower": 118.34,
+              "upper": 122.08,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.6,
+              "median": 0,
+              "stdDev": 2.01,
+              "ci95": "[1.42, 1.78]",
+              "lower": 1.42,
+              "upper": 1.78,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 41.38,
+              "median": 41,
+              "stdDev": 4.93,
+              "ci95": "[40.95, 41.81]",
+              "lower": 40.95,
+              "upper": 41.81,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 63.34,
+              "median": 63,
+              "stdDev": 3.72,
+              "ci95": "[63.01, 63.67]",
+              "lower": 63.01,
+              "upper": 63.67,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.21,
+              "stdDev": 0.01,
+              "ci95": "[0.21, 0.21]",
+              "lower": 0.21,
+              "upper": 0.21,
+              "sampleSize": 500
+            },
+            "meanHits": 82.8,
+            "meanMisses": 37.2,
+            "meanBursts": 83.7,
+            "meanOpps": 155.8
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 25.38,
+              "median": 25.4,
+              "stdDev": 1.66,
+              "ci95": "[25.23, 25.53]",
+              "lower": 25.23,
+              "upper": 25.53,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 43.41,
+              "median": 43.2,
+              "stdDev": 3.62,
+              "ci95": "[43.09, 43.73]",
+              "lower": 43.09,
+              "upper": 43.73,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": 161.16,
+              "median": 161.1,
+              "stdDev": 31.32,
+              "ci95": "[158.41, 163.91]",
+              "lower": 158.41,
+              "upper": 163.91,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 1.6,
+              "median": 0,
+              "stdDev": 2.01,
+              "ci95": "[1.42, 1.78]",
+              "lower": 1.42,
+              "upper": 1.78,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 19.78,
+              "median": 20,
+              "stdDev": 1.84,
+              "ci95": "[19.62, 19.94]",
+              "lower": 19.62,
+              "upper": 19.94,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": 80.22,
+              "median": 80,
+              "stdDev": 1.84,
+              "ci95": "[80.06, 80.38]",
+              "lower": 80.06,
+              "upper": 80.38,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.01,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 500
+            },
+            "meanHits": 39.6,
+            "meanMisses": 47.4,
+            "meanBursts": 83.7,
+            "meanOpps": 155.8
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 27.64,
+              "median": 27.75,
+              "stdDev": 4.58,
+              "ci95": "[27.24, 28.04]",
+              "lower": 27.24,
+              "upper": 28.04,
+              "sampleSize": 500
+            },
+            "sensitivity": {
+              "mean": 12.09,
+              "median": 12.3,
+              "stdDev": 5.12,
+              "ci95": "[11.64, 12.54]",
+              "lower": 11.64,
+              "upper": 12.54,
+              "sampleSize": 500
+            },
+            "mit": {
+              "mean": -40.95,
+              "median": -39.63,
+              "stdDev": 38.29,
+              "ci95": "[-44.31, -37.59]",
+              "lower": -44.31,
+              "upper": -37.59,
+              "sampleSize": 500
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 500
+            },
+            "utilization": {
+              "mean": 21.6,
+              "median": 21.25,
+              "stdDev": 4.19,
+              "ci95": "[21.23, 21.97]",
+              "lower": 21.23,
+              "upper": 21.97,
+              "sampleSize": 500
+            },
+            "predAcc": {
+              "mean": -16.88,
+              "median": -17.5,
+              "stdDev": 4.42,
+              "ci95": "[-17.27, -16.49]",
+              "lower": -17.27,
+              "upper": -16.49,
+              "sampleSize": 500
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 500
+            }
+          }
+        },
+        "1000": {
+          "independentRunCount": 1000,
+          "dwellsPerRun": 200,
+          "masterSeed": 42,
+          "adaptive": {
+            "detectionRate": {
+              "mean": 52.87,
+              "median": 52.9,
+              "stdDev": 4.45,
+              "ci95": "[52.59, 53.15]",
+              "lower": 52.59,
+              "upper": 53.15,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 55.46,
+              "median": 55.5,
+              "stdDev": 5.4,
+              "ci95": "[55.12, 55.8]",
+              "lower": 55.12,
+              "upper": 55.8,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 120.24,
+              "median": 119.65,
+              "stdDev": 21.65,
+              "ci95": "[118.9, 121.58]",
+              "lower": 118.9,
+              "upper": 121.58,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.51,
+              "median": 0,
+              "stdDev": 1.89,
+              "ci95": "[1.39, 1.63]",
+              "lower": 1.39,
+              "upper": 1.63,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 41.19,
+              "median": 41,
+              "stdDev": 4.96,
+              "ci95": "[40.88, 41.5]",
+              "lower": 40.88,
+              "upper": 41.5,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 63.21,
+              "median": 63,
+              "stdDev": 3.65,
+              "ci95": "[62.98, 63.44]",
+              "lower": 62.98,
+              "upper": 63.44,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.21,
+              "median": 0.22,
+              "stdDev": 0.01,
+              "ci95": "[0.21, 0.21]",
+              "lower": 0.21,
+              "upper": 0.21,
+              "sampleSize": 1000
+            },
+            "meanHits": 82.4,
+            "meanMisses": 37.3,
+            "meanBursts": 83.7,
+            "meanOpps": 155.6
+          },
+          "baseline": {
+            "detectionRate": {
+              "mean": 25.46,
+              "median": 25.45,
+              "stdDev": 1.67,
+              "ci95": "[25.36, 25.56]",
+              "lower": 25.36,
+              "upper": 25.56,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 43.44,
+              "median": 43.35,
+              "stdDev": 3.6,
+              "ci95": "[43.22, 43.66]",
+              "lower": 43.22,
+              "upper": 43.66,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": 160.63,
+              "median": 159,
+              "stdDev": 30.91,
+              "ci95": "[158.71, 162.55]",
+              "lower": 158.71,
+              "upper": 162.55,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 1.51,
+              "median": 0,
+              "stdDev": 1.89,
+              "ci95": "[1.39, 1.63]",
+              "lower": 1.39,
+              "upper": 1.63,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 19.81,
+              "median": 20,
+              "stdDev": 1.89,
+              "ci95": "[19.69, 19.93]",
+              "lower": 19.69,
+              "upper": 19.93,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": 80.19,
+              "median": 80,
+              "stdDev": 1.89,
+              "ci95": "[80.07, 80.31]",
+              "lower": 80.07,
+              "upper": 80.31,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.16,
+              "median": 0.16,
+              "stdDev": 0.01,
+              "ci95": "[0.16, 0.16]",
+              "lower": 0.16,
+              "upper": 0.16,
+              "sampleSize": 1000
+            },
+            "meanHits": 39.6,
+            "meanMisses": 47.4,
+            "meanBursts": 83.7,
+            "meanOpps": 155.6
+          },
+          "pairedDifference": {
+            "detectionRate": {
+              "mean": 27.41,
+              "median": 27.5,
+              "stdDev": 4.66,
+              "ci95": "[27.12, 27.7]",
+              "lower": 27.12,
+              "upper": 27.7,
+              "sampleSize": 1000
+            },
+            "sensitivity": {
+              "mean": 12.02,
+              "median": 12.2,
+              "stdDev": 5.2,
+              "ci95": "[11.7, 12.34]",
+              "lower": 11.7,
+              "upper": 12.34,
+              "sampleSize": 1000
+            },
+            "mit": {
+              "mean": -40.39,
+              "median": -38.04,
+              "stdDev": 37.16,
+              "ci95": "[-42.7, -38.08]",
+              "lower": -42.7,
+              "upper": -38.08,
+              "sampleSize": 1000
+            },
+            "far": {
+              "mean": 0,
+              "median": 0,
+              "stdDev": 0,
+              "ci95": "[0, 0]",
+              "lower": 0,
+              "upper": 0,
+              "sampleSize": 1000
+            },
+            "utilization": {
+              "mean": 21.38,
+              "median": 21,
+              "stdDev": 4.2,
+              "ci95": "[21.12, 21.64]",
+              "lower": 21.12,
+              "upper": 21.64,
+              "sampleSize": 1000
+            },
+            "predAcc": {
+              "mean": -16.98,
+              "median": -17.5,
+              "stdDev": 4.28,
+              "ci95": "[-17.25, -16.71]",
+              "lower": -17.25,
+              "upper": -16.71,
+              "sampleSize": 1000
+            },
+            "brier": {
+              "mean": 0.06,
+              "median": 0.06,
+              "stdDev": 0.01,
+              "ci95": "[0.06, 0.06]",
+              "lower": 0.06,
+              "upper": 0.06,
+              "sampleSize": 1000
+            }
+          }
+        }
+      }
+    }
+  ]
+}
