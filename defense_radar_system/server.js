@@ -1771,11 +1771,15 @@ app.get('/api/benchmark/history', (req, res) => {
   res.json(benchmarkRunner.getHistory());
 });
 
-server.listen(PORT, () => {
-  console.log(`\x1b[36m=================================================================\x1b[0m`);
-  console.log(`\x1b[32m[ESM-ASTRA: PROTOTYPE EW RECEIVER SCHEDULER & SENSORS ONLINE (SIH26055)]\x1b[0m`);
-  console.log(`Primary Contribution: Adaptive RF/ESM Scan Scheduler (Recency-Augmented UCB1)`);
-  console.log(`Supporting Layers: Tactical Radar & Optical Situational Context`);
-  console.log(`Command URL: http://localhost:${PORT}`);
-  console.log(`=================================================================\x1b[0m`);
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`\x1b[36m=================================================================\x1b[0m`);
+    console.log(`\x1b[32m[ESM-ASTRA: PROTOTYPE EW RECEIVER SCHEDULER & SENSORS ONLINE (SIH26055)]\x1b[0m`);
+    console.log(`Primary Contribution: Adaptive RF/ESM Scan Scheduler (Recency-Augmented UCB1)`);
+    console.log(`Supporting Layers: Tactical Radar & Optical Situational Context`);
+    console.log(`Command URL: http://localhost:${PORT}`);
+    console.log(`=================================================================\x1b[0m`);
+  });
+}
+
+module.exports = { app, server };

@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "outputDirectory": "defense_radar_system/public",
+  "outputDirectory": "public",
   "cleanUrls": true,
   "rewrites": [
     {

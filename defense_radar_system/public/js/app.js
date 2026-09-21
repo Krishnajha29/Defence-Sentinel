@@ -122,41 +122,114 @@ class TacticalC2App {
   /* --------------------------------------------------------------------------
      2. WEBSOCKET TELEMETRY SYNCHRONIZATION (SINGLE SOURCE OF TRUTH)
      -------------------------------------------------------------------------- */
-  connectWebSocket() {
+  getBackendUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('ws')) return params.get('ws');
+    if (params.get('backend')) {
+      const b = params.get('backend');
+      const protocol = b.startsWith('http:') ? 'ws:' : (b.startsWith('https:') ? 'wss:' : (window.location.protocol === 'https:' ? 'wss:' : 'ws:'));
+      const host = b.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      return `${protocol}//${host}/ws/c2`;
+    }
+
+    const saved = localStorage.getItem('c2_backend_url');
+    if (saved) {
+      if (saved.startsWith('ws:') || saved.startsWith('wss:')) return saved;
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${protocol}//${saved.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
+    }
+
+    if (window.__C2_BACKEND_URL__) {
+      const b = window.__C2_BACKEND_URL__;
+      if (b.startsWith('ws:') || b.startsWith('wss:')) return b;
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${protocol}//${b.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
+    }
+
+    const meta = document.querySelector('meta[name="c2-backend-url"]');
+    if (meta && meta.content) {
+      const b = meta.content;
+      if (b.startsWith('ws:') || b.startsWith('wss:')) return b;
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${protocol}//${b.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
+    }
+
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws/c2`;
+    return `${protocol}//${window.location.host}/ws/c2`;
+  }
 
-    this.ws = new WebSocket(wsUrl);
+  getBackendHttpUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('backend')) {
+      const b = params.get('backend');
+      return b.startsWith('http') ? b.replace(/\/$/, '') : `${window.location.protocol}//${b.replace(/\/$/, '')}`;
+    }
+    const saved = localStorage.getItem('c2_backend_url');
+    if (saved) {
+      return saved.startsWith('http') ? saved.replace(/\/$/, '') : `${window.location.protocol}//${saved.replace(/\/$/, '')}`;
+    }
+    if (window.__C2_BACKEND_URL__) {
+      const b = window.__C2_BACKEND_URL__;
+      return b.startsWith('http') ? b.replace(/\/$/, '') : `${window.location.protocol}//${b.replace(/\/$/, '')}`;
+    }
+    return '';
+  }
 
-    this.ws.onopen = () => {
-      const st = document.getElementById('globalSysStatus');
-      if (st) {
-        st.textContent = 'ONLINE';
-        st.style.color = 'var(--state-verified)';
-      }
-    };
-
-    this.ws.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        if (data.type === 'INCIDENT_FALSE_ALARM_TEST_RESULT') {
-          this.handleIncidentTestResult(data.result);
-        } else {
+  fetchRestSnapshot() {
+    const base = this.getBackendHttpUrl();
+    fetch(`${base}/api/status`)
+      .then(r => r.json())
+      .then(data => {
+        if (data && (data.entities || data.simState)) {
           this.handleTelemetry(data);
         }
-      } catch (err) {
-        console.error('Telemetry error:', err);
-      }
-    };
+      })
+      .catch(() => {});
+  }
 
-    this.ws.onclose = () => {
-      const st = document.getElementById('globalSysStatus');
-      if (st) {
-        st.textContent = 'OFFLINE';
-        st.style.color = 'var(--state-critical)';
-      }
+  connectWebSocket() {
+    const wsUrl = this.getBackendUrl();
+
+    try {
+      this.ws = new WebSocket(wsUrl);
+
+      this.ws.onopen = () => {
+        const st = document.getElementById('globalSysStatus');
+        if (st) {
+          st.textContent = 'ONLINE';
+          st.style.color = 'var(--state-verified)';
+        }
+      };
+
+      this.ws.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.type === 'INCIDENT_FALSE_ALARM_TEST_RESULT') {
+            this.handleIncidentTestResult(data.result);
+          } else {
+            this.handleTelemetry(data);
+          }
+        } catch (err) {
+          console.error('Telemetry error:', err);
+        }
+      };
+
+      this.ws.onclose = () => {
+        const st = document.getElementById('globalSysStatus');
+        if (st) {
+          st.textContent = 'OFFLINE';
+          st.style.color = 'var(--state-critical)';
+        }
+        setTimeout(() => this.connectWebSocket(), 2000);
+      };
+
+      this.ws.onerror = () => {
+        this.fetchRestSnapshot();
+      };
+    } catch (e) {
+      this.fetchRestSnapshot();
       setTimeout(() => this.connectWebSocket(), 2000);
-    };
+    }
   }
 
   handleTelemetry(data) {
@@ -1871,8 +1944,9 @@ class TacticalC2App {
     const exportJsonBtn = document.getElementById('btnExportBenchmarkJson');
     if (exportJsonBtn) {
       exportJsonBtn.onclick = () => {
+        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `/api/benchmark/export/json?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/json';
+        const url = expId ? `${base}/api/benchmark/export/json?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/json`;
         downloadBenchmark(url, `BENCHMARK-${expId || 'LATEST'}.json`);
       };
     }
@@ -1880,8 +1954,9 @@ class TacticalC2App {
     const exportCsvBtn = document.getElementById('btnExportBenchmarkCsv');
     if (exportCsvBtn) {
       exportCsvBtn.onclick = () => {
+        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `/api/benchmark/export/csv?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/csv';
+        const url = expId ? `${base}/api/benchmark/export/csv?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/csv`;
         downloadBenchmark(url, `BENCHMARK-${expId || 'LATEST'}.csv`);
       };
     }
@@ -1889,8 +1964,9 @@ class TacticalC2App {
     const exportReportBtn = document.getElementById('btnExportBenchmarkReport');
     if (exportReportBtn) {
       exportReportBtn.onclick = () => {
+        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `/api/benchmark/export/report?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/report';
+        const url = expId ? `${base}/api/benchmark/export/report?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/report`;
         downloadBenchmark(url, `BENCHMARK-AUDIT-${expId || 'LATEST'}.txt`);
       };
     }
@@ -1911,7 +1987,27 @@ class TacticalC2App {
     const sitrepBtn = document.getElementById('btnExportSitrepGlobal');
     if (sitrepBtn) {
       sitrepBtn.onclick = () => {
-        window.location.href = '/api/sitrep';
+        const base = this.getBackendHttpUrl();
+        window.location.href = `${base}/api/sitrep`;
+      };
+    }
+
+    // Configure backend URL by clicking status indicator
+    const statusEl = document.getElementById('globalSysStatus');
+    if (statusEl) {
+      statusEl.style.cursor = 'pointer';
+      statusEl.title = 'Click to configure C2 Backend URL';
+      statusEl.onclick = () => {
+        const current = localStorage.getItem('c2_backend_url') || window.location.host;
+        const input = prompt('Configure C2 Backend URL (or leave blank to use current origin):', current);
+        if (input !== null) {
+          if (input.trim()) {
+            localStorage.setItem('c2_backend_url', input.trim());
+          } else {
+            localStorage.removeItem('c2_backend_url');
+          }
+          window.location.reload();
+        }
       };
     }
 
