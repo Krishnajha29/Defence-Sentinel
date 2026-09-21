@@ -54,44 +54,44 @@ const CAMERAS = {
     name: 'CAM-01 NORTH GATE',
     sector: 'NORTH GATE',
     status: 'ONLINE',
-    pos: { x: 0, y: 240 },
+    pos: { x: 0, y: 0 },
     pointingDeg: 0,    // North
-    fovDeg: 70,
-    minRange: 15,
-    maxRange: 420
+    fovDeg: 88,
+    minRange: 10,
+    maxRange: 550
   },
   'CAM-02': {
     id: 'CAM-02',
     name: 'CAM-02 EAST GATE',
     sector: 'EAST GATE',
     status: 'ONLINE',
-    pos: { x: 260, y: 0 },
+    pos: { x: 0, y: 0 },
     pointingDeg: 90,   // East
-    fovDeg: 70,
-    minRange: 15,
-    maxRange: 420
+    fovDeg: 88,
+    minRange: 10,
+    maxRange: 550
   },
   'CAM-03': {
     id: 'CAM-03',
     name: 'CAM-03 SOUTH GATE',
     sector: 'SOUTH GATE',
     status: 'ONLINE',
-    pos: { x: 0, y: -280 },
+    pos: { x: 0, y: 0 },
     pointingDeg: 180,  // South
-    fovDeg: 70,
-    minRange: 15,
-    maxRange: 420
+    fovDeg: 88,
+    minRange: 10,
+    maxRange: 550
   },
   'CAM-04': {
     id: 'CAM-04',
     name: 'CAM-04 WEST GATE',
     sector: 'WEST GATE',
     status: 'ONLINE',
-    pos: { x: -260, y: 0 },
+    pos: { x: 0, y: 0 },
     pointingDeg: 270,  // West
-    fovDeg: 70,
-    minRange: 15,
-    maxRange: 420
+    fovDeg: 88,
+    minRange: 10,
+    maxRange: 550
   }
 };
 
@@ -148,6 +148,32 @@ const PERSONNEL_DB = [
 ];
 
 
+// High-Value Event Timeline Stream
+let eventTimeline = [
+  { time: '14:20:21', source: 'RECEIVER', event: 'RECEIVER HIT (9.420 GHz, SNR +33.8 dB)' },
+  { time: '14:20:19', source: 'SCHEDULER', event: '9.420 GHz PRIORITIZED (Dwell 180 ms)' },
+  { time: '14:20:18', source: 'RF', event: 'EMITTER-03 ACTIVE (9.420 GHz Associated)' },
+  { time: '14:20:16', source: 'FUSION', event: 'CONFIDENCE → 87% (Anomaly Score 72)' },
+  { time: '14:20:14', source: 'CAMERA', event: 'CV-042 MATCHED (Person 96% on CAM-01)' },
+  { time: '14:20:12', source: 'RADAR', event: 'TRK-021 DETECTED (Range 272m, Azimuth 324°)' }
+];
+
+// Dedicated RF Receiver Activity Timeline (SIH26055 Core)
+let rfEventTimeline = [
+  { time: '14:20:21', source: 'RECEIVER', state: 'HIT', freqGhz: 9.420, emitter: 'EMITTER-03 (TRK-021)', powerDbm: -61.2, snrDb: 33.8, dwellMs: 180, event: 'RF DWELL HIT: EMITTER-03 on 9.420 GHz (SNR +33.8 dB, Power -61.2 dBm)' },
+  { time: '14:20:19', source: 'RECEIVER', state: 'MISS', freqGhz: 9.675, emitter: 'NONE', powerDbm: -94.5, snrDb: 1.8, dwellMs: 180, event: 'RF DWELL MISS: Scanned 9.675 GHz (Noise Floor, No Energy Intercepted, Dwell 180ms)' },
+  { time: '14:20:17', source: 'RECEIVER', state: 'HIT', freqGhz: 9.310, emitter: 'EMITTER-02 (TRK-055)', powerDbm: -69.5, snrDb: 23.5, dwellMs: 180, event: 'RF DWELL HIT: EMITTER-02 on 9.310 GHz (SNR +23.5 dB, Power -69.5 dBm)' },
+  { time: '14:20:15', source: 'RECEIVER', state: 'MISS', freqGhz: 9.180, emitter: 'NONE', powerDbm: -94.5, snrDb: 1.8, dwellMs: 180, event: 'RF DWELL MISS: Scanned 9.180 GHz (Noise Floor, No Energy Intercepted, Dwell 180ms)' }
+];
+
+// Dedicated Optical / Camera Activity Timeline (Multi-Sensor Situational Context)
+let opticalEventTimeline = [
+  { time: '14:20:14', source: 'CAMERA', camera: 'CAM-01', trackId: 'TRK-021', detectionId: 'CV-042', type: 'PERSON', confidence: 96, sector: 'NORTH GATE', event: 'OPTICAL ACQUISITION: CV-042 (Perimeter Intruder) in CAM-01 NORTH GATE FOV (Conf 96%)' },
+  { time: '14:19:55', source: 'CAMERA', camera: 'CAM-02', trackId: 'TRK-042', detectionId: 'CV-042B', type: 'PERSON', confidence: 89, sector: 'EAST GATE', event: 'OPTICAL ACQUISITION: CV-042B (Hav. D. Singh) in CAM-02 EAST GATE FOV (Conf 89%)' },
+  { time: '14:19:30', source: 'CAMERA', camera: 'CAM-03', trackId: 'TRK-033', detectionId: 'CV-017', type: 'VEHICLE', confidence: 91, sector: 'SOUTH GATE', event: 'OPTICAL ACQUISITION: CV-017 (QRT Patrol Vehicle 4) in CAM-03 SOUTH GATE FOV (Conf 91%)' },
+  { time: '14:19:10', source: 'CAMERA', camera: 'CAM-04', trackId: 'TRK-055', detectionId: 'CV-055', type: 'ANOMALOUS_OBJECT', confidence: 67, sector: 'WEST GATE', event: 'OPTICAL ACQUISITION: CV-055 (Anomalous Target) in CAM-04 WEST GATE FOV (Conf 67%)' }
+];
+
 // Unified Master Simulation Entity Class
 class SimulatedEntity {
   constructor(cfg) {
@@ -191,8 +217,11 @@ class SimulatedEntity {
     this.personnel = {
       tagId: cfg.personnelTag || null,
       matched: false,
-      zone: null
+      zone: null,
+      details: null
     };
+
+    this.displayName = cfg.displayName || null;
 
     this.fusion = {
       radarDetected: true,
@@ -202,7 +231,8 @@ class SimulatedEntity {
       confidence: 50,
       anomalyScore: cfg.anomalyScore || 15,
       classification: 'UNIDENTIFIED',
-      recommendation: 'MONITOR'
+      recommendation: 'MONITOR',
+      statusSummary: 'Unidentified Contact — Outside Perimeter'
     };
 
     this.checkPersonnel();
@@ -215,7 +245,11 @@ class SimulatedEntity {
       if (p) {
         this.personnel.matched = true;
         this.personnel.zone = p.zone;
+        this.personnel.details = p;
         this.fusion.personnelMatch = true;
+        if (!this.displayName) {
+          this.displayName = p.name;
+        }
       }
     }
   }
@@ -260,6 +294,7 @@ class SimulatedEntity {
   }
 
   updateCameraProjection() {
+    const prevCam = this.camera.visibleCamId;
     this.camera.isVisuallyConfirmed = false;
     this.camera.visibleCamId = null;
     this.fusion.cameraMatch = false;
@@ -278,23 +313,45 @@ class SimulatedEntity {
           this.camera.visibleCamId = camId;
           this.fusion.cameraMatch = true;
 
-          // Projected screen coordinates (Viewport width 420, height 230)
+          // Projected screen coordinates
           const normX = (angleDiff + cam.fovDeg / 2) / cam.fovDeg; // 0 to 1
-          const screenX = Math.round(normX * 360 + 30);
-
           const depthNorm = Math.max(0, Math.min(1, (cam.maxRange - distFromCam) / (cam.maxRange - cam.minRange)));
-          const screenY = Math.round(135 + (1 - depthNorm) * 35);
-          const boxH = Math.max(26, Math.min(100, Math.round(34 + depthNorm * 52)));
-          const boxW = Math.max(16, Math.min(60, Math.round(boxH * 0.44)));
 
           this.camera.screenBox = {
-            x: screenX - boxW / 2,
-            y: screenY - boxH + 18,
-            w: boxW,
-            h: boxH
+            normX: Number(normX.toFixed(3)),
+            depthNorm: Number(depthNorm.toFixed(3)),
+            x: Math.round(normX * 680 + 60),
+            y: Math.round(260 + (1 - depthNorm) * 90),
+            w: Math.max(30, Math.round(36 + depthNorm * 64)),
+            h: Math.max(48, Math.round(60 + depthNorm * 110))
           };
           break;
         }
+      }
+    }
+
+    // Log optical acquisition if newly visible in a camera sector
+    if (this.camera.visibleCamId && this.camera.visibleCamId !== prevCam) {
+      const cam = CAMERAS[this.camera.visibleCamId];
+      const timeStr = new Date().toTimeString().split(' ')[0];
+      const optEvent = {
+        time: timeStr,
+        source: 'CAMERA',
+        camera: this.camera.visibleCamId,
+        trackId: this.id,
+        detectionId: this.camera.detectionId,
+        type: this.camera.typeLabel || this.type,
+        confidence: this.camera.confidence,
+        sector: cam ? cam.sector : this.camera.visibleCamId,
+        event: `OPTICAL ACQUISITION: ${this.camera.detectionId} (${this.displayName || this.type}) in ${cam ? cam.name : this.camera.visibleCamId} FOV (Conf ${this.camera.confidence}%)`
+      };
+      if (typeof opticalEventTimeline !== 'undefined') {
+        opticalEventTimeline.unshift(optEvent);
+        if (opticalEventTimeline.length > 30) opticalEventTimeline.pop();
+      }
+      if (typeof eventTimeline !== 'undefined') {
+        eventTimeline.unshift(optEvent);
+        if (eventTimeline.length > 30) eventTimeline.pop();
       }
     }
   }
@@ -310,23 +367,27 @@ class SimulatedEntity {
       this.fusion.classification = 'VERIFIED';
       this.fusion.anomalyScore = 5;
       this.fusion.recommendation = 'AUTHORIZED';
+      this.fusion.statusSummary = 'Authorized Personnel — Credentials Verified';
       conf = Math.min(99, conf + 5);
     } else if (this.type === 'WILDLIFE') {
       // ── ANIMAL / WILDLIFE ─────────────────────────────────────────────────
       this.fusion.classification = 'WILDLIFE';
       this.fusion.anomalyScore = 12;
       this.fusion.recommendation = 'FAUNA - FILTERED';
+      this.fusion.statusSummary = 'Wildlife / Fauna Contact — Filtered';
     } else if (!this.personnel.matched && this.type !== 'WILDLIFE' && this.radar.range <= 450) {
       // ── UNAUTHORIZED PERSON in restricted zone ────────────────────────────
       this.fusion.classification = 'ANOMALOUS';
       this.fusion.anomalyScore = 72;
       this.fusion.recommendation = 'REQUIRES VERIFICATION';
+      this.fusion.statusSummary = 'Anomalous Perimeter Breach // Unauthorized Contact';
       conf = 87; // Matches the 87% confidence specification
     } else {
       // ── UNIDENTIFIED / outside perimeter ─────────────────────────────────
       this.fusion.classification = 'UNIDENTIFIED';
       this.fusion.anomalyScore = 38;
       this.fusion.recommendation = 'MONITOR';
+      this.fusion.statusSummary = 'Unidentified Contact — Outside Perimeter';
     }
 
     this.fusion.confidence = conf;
@@ -336,6 +397,7 @@ class SimulatedEntity {
   serialize() {
     return {
       id: this.id,
+      displayName: this.displayName || (this.personnel.details ? this.personnel.details.name : (this.type === 'WILDLIFE' ? 'Wildlife Target' : (this.type === 'ANOMALOUS_OBJECT' ? 'Anomalous Target' : (this.type === 'VEHICLE' ? 'Patrol Vehicle' : 'Unidentified Contact')))),
       type: this.type,
       radar: this.radar,
       camera: this.camera,
@@ -347,65 +409,69 @@ class SimulatedEntity {
 }
 
 // Instantiate Master Entities (Single Source of Truth)
-let masterEntities = [
-  new SimulatedEntity({
-    id: 'TRK-014',
-    type: 'PERSON',
-    x: 60, y: 155, vx: -0.2, vy: -0.1,
-    cvId: 'CV-014', camConfidence: 98,
-    hasEmitter: true, emitterId: 'EMITTER-01', freqGhz: 9.180, powerDbm: -67.4,
-    personnelTag: 'TAG-ALPHA-01'
-  }),
-  new SimulatedEntity({
-    id: 'TRK-021', // Primary Hero Subject
-    type: 'PERSON',
-    x: -160, y: 220, vx: 1.2, vy: -1.8,
-    cvId: 'CV-042', camConfidence: 96,
-    hasEmitter: true, emitterId: 'EMITTER-03', freqGhz: 9.420, powerDbm: -61.2,
-    personnelTag: null, // No match in DB
-    anomalyScore: 72
-  }),
-  new SimulatedEntity({
-    id: 'TRK-033',
-    type: 'VEHICLE',
-    x: 15, y: -310, vx: -0.1, vy: 1.5,
-    cvId: 'CV-017', camConfidence: 91,
-    hasEmitter: false,
-    personnelTag: 'TAG-VEHICLE-04'
-  }),
-  new SimulatedEntity({
-    id: 'TRK-007',
-    type: 'PERSON',
-    x: -80, y: 35, vx: 0.05, vy: 0.02,
-    cvId: 'CV-007', camConfidence: 85,
-    hasEmitter: false,
-    personnelTag: 'TAG-CHARLIE-01'
-  }),
-  new SimulatedEntity({
-    id: 'TRK-042',
-    type: 'PERSON',
-    x: 290, y: 60, vx: -0.3, vy: -0.3,
-    cvId: 'CV-042B', camConfidence: 89,
-    hasEmitter: false,
-    personnelTag: 'TAG-BRAVO-02'
-  }),
-  new SimulatedEntity({
-    id: 'TRK-019',
-    type: 'WILDLIFE',
-    x: 450, y: -260, vx: -0.2, vy: 0.1,
-    cvId: 'CV-088', camConfidence: 88,
-    hasEmitter: false,
-    personnelTag: null
-  }),
-  new SimulatedEntity({
-    id: 'TRK-055',
-    type: 'ANOMALOUS_OBJECT',
-    x: -360, y: -90, vx: 0.02, vy: 0.01,
-    cvId: 'CV-055', camConfidence: 67,
-    hasEmitter: true, emitterId: 'EMITTER-02', freqGhz: 9.310, powerDbm: -81.5,
-    personnelTag: null
-  })
-];
+function createInitialEntities() {
+  return [
+    new SimulatedEntity({
+      id: 'TRK-014',
+      type: 'PERSON',
+      x: 60, y: 155, vx: -0.2, vy: -0.1,
+      cvId: 'CV-014', camConfidence: 98,
+      hasEmitter: true, emitterId: 'EMITTER-01', freqGhz: 9.180, powerDbm: -67.4,
+      personnelTag: 'TAG-ALPHA-01'
+    }),
+    new SimulatedEntity({
+      id: 'TRK-021', // Primary Hero Subject
+      displayName: 'Perimeter Intruder (Suspect)',
+      type: 'PERSON',
+      x: -160, y: 220, vx: 1.2, vy: -1.8,
+      cvId: 'CV-042', camConfidence: 96,
+      hasEmitter: true, emitterId: 'EMITTER-03', freqGhz: 9.420, powerDbm: -61.2,
+      personnelTag: null, // No match in DB
+      anomalyScore: 72
+    }),
+    new SimulatedEntity({
+      id: 'TRK-033',
+      type: 'VEHICLE',
+      x: 15, y: -310, vx: -0.1, vy: 1.5,
+      cvId: 'CV-017', camConfidence: 91,
+      hasEmitter: false,
+      personnelTag: 'TAG-VEHICLE-04'
+    }),
+    new SimulatedEntity({
+      id: 'TRK-007',
+      type: 'PERSON',
+      x: -80, y: 35, vx: 0.05, vy: 0.02,
+      cvId: 'CV-007', camConfidence: 85,
+      hasEmitter: false,
+      personnelTag: 'TAG-CHARLIE-01'
+    }),
+    new SimulatedEntity({
+      id: 'TRK-042',
+      type: 'PERSON',
+      x: 290, y: 60, vx: -0.3, vy: -0.3,
+      cvId: 'CV-042B', camConfidence: 89,
+      hasEmitter: false,
+      personnelTag: 'TAG-BRAVO-02'
+    }),
+    new SimulatedEntity({
+      id: 'TRK-019',
+      type: 'WILDLIFE',
+      x: 450, y: -260, vx: -0.2, vy: 0.1,
+      cvId: 'CV-088', camConfidence: 88,
+      hasEmitter: false,
+      personnelTag: null
+    }),
+    new SimulatedEntity({
+      id: 'TRK-055',
+      type: 'ANOMALOUS_OBJECT',
+      x: -360, y: -90, vx: 0.02, vy: 0.01,
+      cvId: 'CV-055', camConfidence: 67,
+      hasEmitter: true, emitterId: 'EMITTER-02', freqGhz: 9.310, powerDbm: -81.5,
+      personnelTag: null
+    })
+  ];
+}
+let masterEntities = createInitialEntities();
 
 // Global Operational Workstation State
 const simState = {
@@ -415,6 +481,8 @@ const simState = {
   selectedEntityId: 'TRK-021',
   activeCameraId: 'CAM-01',
   radarSweepAngle: 0,
+  isDemoActive: false,
+  demoStep: { current: 0, total: 12, active: false, label: 'READY' },
   sweepRpm: 24,
 
   // RF / ESM Scheduler Subsystem (SIH26055 Core)
@@ -423,6 +491,18 @@ const simState = {
   rfCurrentDwellMs: 180,
   rfIbwMhz: 50,
   receiverState: 'HIT', // 'HIT', 'MISS', 'NEXT'
+  rxTelemetry: {
+    state: 'HIT',
+    snrDb: 33.8,
+    powerDbm: -61.2,
+    assocEmitter: 'EMITTER-03 (TRK-021)',
+    feedback: 'INTERCEPT CONFIRMED',
+    nextBandGhz: 9.675,
+    nextProbPercent: 87,
+    ibwMhz: 50,
+    dwellMs: 180,
+    tunedFreqGhz: 9.420
+  },
 
   // "Why This Band?" Feature Attribution
   schedulerAttribution: {
@@ -578,6 +658,8 @@ let liveAdaptiveFalseAlarms = 0;
 let liveOpenLoopFalseAlarms = 0;
 let liveAdaptiveLatencies = [];
 let liveOpenLoopLatencies = [];
+let liveInterceptionsOverTime = [];
+let liveExperimentActive = true;
 
 let analyticsState = {
   suiteBreakdown: []
@@ -627,15 +709,6 @@ const defaultSuite = benchmarkRunner.runAllScenariosSuite({ seed: 42, runs: 1000
 analyticsState.suiteBreakdown = defaultSuite.breakdown;
 analyticsState.latestSuite = defaultSuite;
 
-// High-Value Event Timeline Stream
-let eventTimeline = [
-  { time: '14:20:21', source: 'RECEIVER', event: 'RECEIVER HIT (9.420 GHz, SNR +33.8 dB)' },
-  { time: '14:20:19', source: 'SCHEDULER', event: '9.420 GHz PRIORITIZED (Dwell 180 ms)' },
-  { time: '14:20:18', source: 'RF', event: 'EMITTER-03 ACTIVE (9.420 GHz Associated)' },
-  { time: '14:20:16', source: 'FUSION', event: 'CONFIDENCE → 87% (Anomaly Score 72)' },
-  { time: '14:20:14', source: 'CAMERA', event: 'CV-042 MATCHED (Person 96% on CAM-01)' },
-  { time: '14:20:12', source: 'RADAR', event: 'TRK-021 DETECTED (Range 272m, Azimuth 324°)' }
-];
 
 // Master 25 Hz Simulation Loop
 let loopTickCount = 0;
@@ -651,21 +724,33 @@ setInterval(() => {
 
   // Kinematics update & multi-sensor alert evaluation across master entities
   masterEntities.forEach(ent => {
-    ent.updateKinematics(dt);
+    if (!simState.isDemoActive || ent.id !== 'TRK-021') {
+      ent.updateKinematics(dt);
+    }
     incidentEngine.evaluateEntity(ent, BASE_CAMP_LAYOUT.perimeterRadiusMeters);
   });
 
-  // Sync camera perspective to selected entity if visible
-  const sel = masterEntities.find(e => e.id === simState.selectedEntityId);
-  if (sel && sel.camera.visibleCamId) {
-    simState.activeCameraId = sel.camera.visibleCamId;
-  }
-
   // Live Receiver Dwell Cycle (~160ms = 4 ticks @ 40ms)
   dwellTickCounter++;
-  if (dwellTickCounter >= 4) {
+  if (dwellTickCounter >= 4 && !simState.isDemoActive) {
     dwellTickCounter = 0;
     simulationTimeSec += 0.16 * speed;
+
+    // Update RF emitter cycles and agility based on simulation time
+    masterEntities.forEach(ent => {
+      if (ent.rf && ent.rf.hasEmitter) {
+        if (ent.rf.pulseCycle) {
+          const cycle = (ent.rf.pulseCycle.on || 1) + (ent.rf.pulseCycle.off || 1);
+          const phase = simulationTimeSec % cycle;
+          ent.rf.isTransmitting = phase < (ent.rf.pulseCycle.on || 1);
+        }
+        if (ent.rf.isAgile && ent.rf.agileBands && ent.rf.agileBands.length > 0) {
+          const hopInterval = ent.rf.hopInterval || 1.0;
+          const idx = Math.floor(simulationTimeSec / hopInterval) % ent.rf.agileBands.length;
+          ent.rf.freqGhz = ent.rf.agileBands[idx];
+        }
+      }
+    });
 
     // 1. Identify ground-truth transmitting RF frequencies from simulated entities
     const activeFreqs = new Set();
@@ -692,8 +777,9 @@ setInterval(() => {
     liveOpenLoopScheduler.observeFeedback(olBand, isOlHit);
 
     // 4. Update operational state
+    const nextBand = adDecision.predictedNextBand || (adDecision.candidateScores && adDecision.candidateScores[1]?.band) || 9.675;
     simState.rfCurrentScanGhz = adBand;
-    simState.rfNextScanGhz = adDecision.predictedNextBand;
+    simState.rfNextScanGhz = nextBand;
     simState.receiverState = isAdHit ? 'HIT' : 'MISS';
     simState.schedulerAttribution = adDecision.attribution;
     simState.bandStats = adDecision.allBandStats;
@@ -703,14 +789,126 @@ setInterval(() => {
     simState.schedulerAblationMode = liveAdaptiveScheduler.ablationMode;
     simState.schedulerPolicy = liveAdaptiveScheduler.getPolicyLabel();
 
+    const hitEnt = isAdHit ? masterEntities.find(ent => ent.rf && ent.rf.hasEmitter && ent.rf.isTransmitting && Math.abs(ent.rf.freqGhz - adBand) < 0.005) : null;
+    const nextArm = liveAdaptiveScheduler.arms[nextBand];
+    const nextProb = nextArm ? Number((nextArm.alpha / (nextArm.alpha + nextArm.beta)).toFixed(3)) : 0.5;
+
+    simState.rxTelemetry = {
+      state: isAdHit ? 'HIT' : 'MISS',
+      snrDb: isAdHit && hitEnt ? Number(hitEnt.rf.snrDb.toFixed(1)) : 1.8,
+      powerDbm: isAdHit && hitEnt ? Number(hitEnt.rf.powerDbm.toFixed(1)) : -94.5,
+      assocEmitter: isAdHit && hitEnt ? `${hitEnt.rf.emitterId} (${hitEnt.id})` : 'NO ENERGY DETECTED',
+      feedback: isAdHit ? 'INTERCEPT CONFIRMED' : 'DWELL SCAN - NO SIGNAL DETECTED',
+      nextBandGhz: nextBand,
+      nextProbPercent: Math.round(nextProb * 100),
+      ibwMhz: simState.rfIbwMhz || 50,
+      dwellMs: simState.rfCurrentDwellMs || 180,
+      tunedFreqGhz: adBand
+    };
+
     liveSimDwells++;
+    const timeStr = new Date().toTimeString().split(' ')[0];
     if (isAdHit) {
       liveAdaptiveHits++;
       liveAdaptiveLatencies.push(115 + Math.round((simulationTimeSec * 10) % 40));
+      const hitEvent = {
+        time: timeStr,
+        source: 'RECEIVER',
+        state: 'HIT',
+        freqGhz: adBand,
+        emitter: hitEnt ? `${hitEnt.rf.emitterId} (${hitEnt.id})` : 'EMITTER-03 (TRK-021)',
+        powerDbm: hitEnt ? Number(hitEnt.rf.powerDbm.toFixed(1)) : -61.2,
+        snrDb: hitEnt ? Number(hitEnt.rf.snrDb.toFixed(1)) : 33.8,
+        dwellMs: simState.rfCurrentDwellMs || 180,
+        event: `RF DWELL HIT: ${hitEnt ? hitEnt.rf.emitterId : 'EMITTER-03'} on ${adBand.toFixed(3)} GHz (SNR +${(hitEnt ? hitEnt.rf.snrDb : 33.8).toFixed(1)} dB, Power ${(hitEnt ? hitEnt.rf.powerDbm : -61.2).toFixed(1)} dBm)`
+      };
+      rfEventTimeline.unshift(hitEvent);
+      if (rfEventTimeline.length > 40) rfEventTimeline.pop();
+
+      if (liveSimDwells % 2 === 0) {
+        eventTimeline.unshift(hitEvent);
+        if (eventTimeline.length > 30) eventTimeline.pop();
+      }
+    } else {
+      const missEvent = {
+        time: timeStr,
+        source: 'RECEIVER',
+        state: 'MISS',
+        freqGhz: adBand,
+        emitter: 'NONE',
+        powerDbm: -94.5,
+        snrDb: 1.8,
+        dwellMs: simState.rfCurrentDwellMs || 180,
+        event: `RF DWELL MISS: Scanned ${adBand.toFixed(3)} GHz (Noise Floor, No Energy Intercepted, Dwell ${simState.rfCurrentDwellMs || 180}ms)`
+      };
+      rfEventTimeline.unshift(missEvent);
+      if (rfEventTimeline.length > 40) rfEventTimeline.pop();
+
+      if (liveSimDwells % 3 === 0) {
+        eventTimeline.unshift(missEvent);
+        if (eventTimeline.length > 30) eventTimeline.pop();
+      }
     }
     if (isOlHit) {
       liveOpenLoopHits++;
       liveOpenLoopLatencies.push(380 + Math.round((simulationTimeSec * 20) % 110));
+    }
+
+    // Live empirical telemetry sampling when not displaying a static benchmark
+    if (!liveExperimentActive) {
+      if (liveSimDwells % 5 === 0) {
+        const sec = Math.round(simulationTimeSec);
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        const timeFormatted = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        liveInterceptionsOverTime.push({
+          time: timeFormatted,
+          timeSec: sec,
+          adaptive: liveAdaptiveHits,
+          openLoop: liveOpenLoopHits,
+          sampleStep: liveSimDwells
+        });
+        if (liveInterceptionsOverTime.length > 100) {
+          liveInterceptionsOverTime.shift();
+        }
+        analyticsState.interceptionsOverTime = liveInterceptionsOverTime;
+        if (analyticsState.adaptive) {
+          analyticsState.adaptive.interceptionsOverTime = liveInterceptionsOverTime;
+        }
+        if (analyticsState.openLoop) {
+          analyticsState.openLoop.interceptionsOverTime = liveInterceptionsOverTime;
+        }
+
+        analyticsState.provenance.sampleCount = liveSimDwells;
+        if (liveSimDwells >= 30) {
+          analyticsState.provenance.status = 'MEASURED (LIVE TELEMETRY)';
+        }
+
+        const denom = Math.max(1, liveBurstOpportunities);
+        const adDetRate = Number(((liveAdaptiveHits / denom) * 100).toFixed(1));
+        const olDetRate = Number(((liveOpenLoopHits / denom) * 100).toFixed(1));
+        analyticsState.adaptive.probabilityOfDetection = adDetRate;
+        analyticsState.adaptive.detectionRate = adDetRate;
+        analyticsState.openLoop.probabilityOfDetection = olDetRate;
+        analyticsState.openLoop.detectionRate = olDetRate;
+
+        const adLatAvg = liveAdaptiveLatencies.length > 0 
+          ? Math.round(liveAdaptiveLatencies.reduce((a, b) => a + b, 0) / liveAdaptiveLatencies.length) 
+          : 0;
+        const olLatAvg = liveOpenLoopLatencies.length > 0 
+          ? Math.round(liveOpenLoopLatencies.reduce((a, b) => a + b, 0) / liveOpenLoopLatencies.length) 
+          : 0;
+        analyticsState.adaptive.meanTimeToIntercept = adLatAvg;
+        analyticsState.adaptive.meanInterceptTimeMs = adLatAvg;
+        analyticsState.openLoop.meanTimeToIntercept = olLatAvg;
+        analyticsState.openLoop.meanInterceptTimeMs = olLatAvg;
+
+        const deltaDet = (adDetRate - olDetRate).toFixed(1);
+        analyticsState.delta.probabilityOfDetection = {
+          absolute: (Number(deltaDet) >= 0 ? `+${deltaDet}` : `${deltaDet}`) + ' pp',
+          relative: olDetRate > 0 ? `${(((adDetRate - olDetRate) / olDetRate) * 100).toFixed(1)}%` : '+0.0%'
+        };
+      }
     }
   }
 
@@ -744,6 +942,8 @@ function broadcastState() {
     personnelDb: PERSONNEL_DB,
     entities: masterEntities.map(e => e.serialize()),
     eventTimeline: eventTimeline.slice(0, 15),
+    rfEventTimeline: rfEventTimeline.slice(0, 20),
+    opticalEventTimeline: opticalEventTimeline.slice(0, 20),
     sosLogs: getFormattedSosLogs(),
     incidents: incidentEngine.getIncidents(),
     analytics: analyticsState,
@@ -765,6 +965,8 @@ wss.on('connection', ws => {
     personnelDb: PERSONNEL_DB,
     entities: masterEntities.map(e => e.serialize()),
     eventTimeline,
+    rfEventTimeline,
+    opticalEventTimeline,
     sosLogs: getFormattedSosLogs(),
     incidents: incidentEngine.getIncidents(),
     analytics: analyticsState
@@ -783,6 +985,19 @@ wss.on('connection', ws => {
         broadcastState();
       } else if (msg.action === 'SELECT_CAMERA') {
         simState.activeCameraId = msg.camId;
+        const cam = CAMERAS[msg.camId];
+        const timeStr = new Date().toTimeString().split(' ')[0];
+        const camEvent = {
+          time: timeStr,
+          source: 'CAMERA',
+          camera: msg.camId,
+          sector: cam ? cam.sector : msg.camId,
+          event: `CAMERA SELECT: Active optical feed switched to ${cam ? cam.name : msg.camId} (${cam ? cam.sector : ''})`
+        };
+        opticalEventTimeline.unshift(camEvent);
+        if (opticalEventTimeline.length > 30) opticalEventTimeline.pop();
+        eventTimeline.unshift(camEvent);
+        if (eventTimeline.length > 30) eventTimeline.pop();
         broadcastState();
       } else if (msg.action === 'PAUSE_RESUME') {
         simState.isRunning = !simState.isRunning;
@@ -807,20 +1022,27 @@ wss.on('connection', ws => {
           broadcastState();
         }
       } else if (msg.action === 'RUN_BENCHMARK') {
+        liveExperimentActive = true;
         const seed = msg.seed !== undefined ? Number(msg.seed) : 42;
         const scenario = msg.scenario || 'FREQUENCY_AGILE';
         const runs = Number(msg.runs) || 1000;
         const experiment = benchmarkRunner.runExperiment({ seed, scenario, runs });
         syncAnalyticsFromExperiment(experiment);
+        const suite = benchmarkRunner.runAllScenariosSuite({ seed, runs });
+        analyticsState.suiteBreakdown = suite.breakdown;
+        analyticsState.latestSuite = suite;
         broadcastState();
       } else if (msg.action === 'RUN_BENCHMARK_SUITE') {
+        liveExperimentActive = true;
         const seed = msg.seed !== undefined ? Number(msg.seed) : 42;
         const runs = Number(msg.runs) || 1000;
         const suite = benchmarkRunner.runAllScenariosSuite({ seed, runs });
         analyticsState.suiteBreakdown = suite.breakdown;
         analyticsState.latestSuite = suite;
+        syncAnalyticsFromExperiment(benchmarkRunner.getLatest());
         broadcastState();
       } else if (msg.action === 'REPLAY_EXPERIMENT') {
+        liveExperimentActive = true;
         const expId = msg.experimentId || analyticsState.provenance?.experimentId;
         if (expId) {
           try {
@@ -832,6 +1054,7 @@ wss.on('connection', ws => {
           }
         }
       } else if (msg.action === 'RESET_ANALYTICS') {
+        liveExperimentActive = false;
         liveSimDwells = 0;
         liveBurstOpportunities = 0;
         liveAdaptiveHits = 0;
@@ -840,39 +1063,56 @@ wss.on('connection', ws => {
         liveOpenLoopFalseAlarms = 0;
         liveAdaptiveLatencies = [];
         liveOpenLoopLatencies = [];
+        liveInterceptionsOverTime = [];
         simulationTimeSec = 0;
         analyticsState.provenance = {
-          experimentId: 'LIVE-SIM-ACCUMULATING',
-          randomSeed: 'LIVE',
-          scenario: simState.scenario,
+          experimentId: 'RESET-IDLE',
+          randomSeed: 'NONE',
+          scenario: 'RESET / IDLE',
           sampleCount: 0,
-          status: 'MEASURING (LIVE STREAM)',
+          status: 'RESET (WAITING FOR TELEMETRY)',
           timestamp: new Date().toISOString(),
           metricDefinitions: defaultBenchmark.metricDefinitions
         };
         analyticsState.adaptive = {
           detectionRate: 0,
+          probabilityOfDetection: 0,
           meanInterceptTimeMs: 0,
+          meanTimeToIntercept: 0,
           falseAlarmRate: 0,
           predictionAccuracy: 0,
           receiverUtilization: 0,
+          sensitivity: 0,
           scanEfficiency: 0,
           totalHits: 0,
           totalMisses: 0,
-          interceptionsOverTime: [{ time: '00:00', timeSec: 0, value: 0, adaptive: 0 }]
+          interceptionsOverTime: []
         };
         analyticsState.openLoop = {
           detectionRate: 0,
+          probabilityOfDetection: 0,
           meanInterceptTimeMs: 0,
+          meanTimeToIntercept: 0,
           falseAlarmRate: 0,
           predictionAccuracy: 0,
           receiverUtilization: 0,
+          sensitivity: 0,
           scanEfficiency: 0,
           totalHits: 0,
           totalMisses: 0,
-          interceptionsOverTime: [{ time: '00:00', timeSec: 0, value: 0, openLoop: 0 }]
+          interceptionsOverTime: []
         };
-        analyticsState.interceptionsOverTime = [{ time: '00:00', timeSec: 0, adaptive: 0, openLoop: 0 }];
+        analyticsState.baseline = analyticsState.openLoop;
+        analyticsState.delta = {
+          probabilityOfDetection: { absolute: '+0.0 pp', relative: '0.0%' },
+          meanTimeToIntercept: { absolute: '0.0 ms', relative: '0.0%' },
+          falseAlarmRate: { absolute: '+0.0 pp', relative: '0.0%' },
+          predictionAccuracy: { absolute: '+0.0 pp', relative: '0.0%' },
+          receiverUtilization: { absolute: '+0.0 pp', relative: '0.0%' },
+          sensitivity: { absolute: '+0.0 pp', relative: '0.0%' }
+        };
+        analyticsState.interceptionsOverTime = [];
+        analyticsState.suiteBreakdown = [];
         broadcastState();
       } else if (msg.action === 'SET_SCHEDULER_ABLATION') {
         const mode = msg.mode;
@@ -928,45 +1168,202 @@ wss.on('connection', ws => {
 });
 
 function stepSimulationScan() {
+  simState.simulationTimeSec = (simState.simulationTimeSec || 0) + 0.2;
   masterEntities.forEach(ent => ent.updateKinematics(0.2));
-  const bands = [9.180, 9.310, 9.420, 9.675, 9.810];
-  const nextIdx = (bands.indexOf(simState.rfNextScanGhz) + 1) % bands.length;
-  simState.rfCurrentScanGhz = simState.rfNextScanGhz;
-  simState.rfNextScanGhz = bands[nextIdx];
+  simState.radarSweepAngle = (simState.radarSweepAngle + 12) % 360;
+
+  const selectedArm = liveAdaptiveScheduler.selectBand();
+  simState.rfCurrentScanGhz = selectedArm.freqGhz;
+  
+  const hitEnt = masterEntities.find(e => e.rf && e.rf.hasEmitter && e.rf.isTransmitting && Math.abs(e.rf.freqGhz - selectedArm.freqGhz) < 0.05);
+  const isHit = Boolean(hitEnt);
+  simState.receiverState = isHit ? 'HIT' : 'MISS';
+  
+  liveAdaptiveScheduler.observeFeedback(selectedArm.armIndex, isHit);
+
+  const nextArm = liveAdaptiveScheduler.arms[(selectedArm.armIndex + 1) % liveAdaptiveScheduler.arms.length];
+  simState.rfNextScanGhz = nextArm.freqGhz;
+
+  simState.rxTelemetry = {
+    state: isHit ? 'HIT' : 'MISS',
+    snrDb: isHit ? (hitEnt.rf.snrDb || 32.0) : +(1.5 + Math.random() * 2.0).toFixed(1),
+    powerDbm: isHit ? (hitEnt.rf.powerDbm || -62.0) : +(-95.0 + Math.random() * 4.0).toFixed(1),
+    assocEmitter: isHit ? `${hitEnt.rf.emitterId} (${hitEnt.id})` : 'NO ENERGY DETECTED',
+    feedback: isHit ? `INTERCEPT CONFIRMED ON ${selectedArm.freqGhz.toFixed(3)} GHz` : 'DWELL SCAN - NO SIGNAL DETECTED',
+    nextBandGhz: nextArm.freqGhz,
+    nextProbPercent: Math.round(selectedArm.thetaHat * 100),
+    ibwMhz: 50,
+    dwellMs: 180,
+    tunedFreqGhz: selectedArm.freqGhz
+  };
 
   const timeStr = new Date().toTimeString().split(' ')[0];
   eventTimeline.unshift({
     time: timeStr,
     source: 'SCHEDULER',
-    event: `SCAN STEP: Receiver tuned to ${simState.rfCurrentScanGhz.toFixed(3)} GHz (Next: ${simState.rfNextScanGhz.toFixed(3)} GHz)`
+    event: `SCAN STEP: Receiver tuned to ${simState.rfCurrentScanGhz.toFixed(3)} GHz -> [${simState.receiverState}]`
   });
+  if (eventTimeline.length > 30) eventTimeline.pop();
+  broadcastState();
 }
 
 function resetState() {
+  if (demoTimer) {
+    clearInterval(demoTimer);
+    demoTimer = null;
+  }
+  simState.isDemoActive = false;
+  simState.demoStep = { current: 0, total: 12, active: false, label: 'READY' };
+  simState.isRunning = true;
   simState.selectedEntityId = 'TRK-021';
   simState.activeCameraId = 'CAM-01';
   simState.rfCurrentScanGhz = 9.420;
   simState.rfNextScanGhz = 9.675;
+  simState.receiverState = 'HIT';
   simState.operatingMode = 'TACTICAL MONITORING';
   simState.scenario = 'STANDARD BASE MONITORING';
   simState.speedMultiplier = 1;
+  simState.radarSweepAngle = 0;
+  simState.simulationTimeSec = 0;
+  simState.rxTelemetry = {
+    state: 'HIT',
+    snrDb: 33.8,
+    powerDbm: -61.2,
+    assocEmitter: 'EMITTER-03 (TRK-021)',
+    feedback: 'INTERCEPT CONFIRMED',
+    nextBandGhz: 9.675,
+    nextProbPercent: 87,
+    ibwMhz: 50,
+    dwellMs: 180,
+    tunedFreqGhz: 9.420
+  };
+  masterEntities = createInitialEntities();
+  incidentEngine = new IncidentEngine();
+  const timeStr = new Date().toTimeString().split(' ')[0];
+  eventTimeline.unshift({
+    time: timeStr,
+    source: 'SYSTEM',
+    event: 'SYSTEM RESET: Operational state, master entities, and scheduler restored to baseline.'
+  });
+  if (eventTimeline.length > 30) eventTimeline.pop();
   broadcastState();
 }
 
 function applyScenario(scenarioName) {
   const timeStr = new Date().toTimeString().split(' ')[0];
+  const scUpper = (scenarioName || '').toUpperCase().trim();
   simState.scenario = scenarioName;
   simState.operatingMode = scenarioName;
 
-  if (scenarioName === 'NIGHT PERIMETER' || scenarioName === 'NIGHT OPERATION' || scenarioName === 'NIGHT MONITORING') {
+  // Reset RF emitter agility flags first
+  masterEntities.forEach(ent => {
+    if (ent.rf) {
+      ent.rf.isAgile = false;
+      ent.rf.agileBands = null;
+    }
+  });
+
+  if (scUpper === 'PERIODIC' || scUpper === 'PERIODIC RF') {
+    simState.scenario = 'PERIODIC RF';
+    simState.operatingMode = 'PERIODIC RF MONITORING';
+    simState.selectedEntityId = 'TRK-021';
+    const e = masterEntities.find(x => x.id === 'TRK-021');
+    if (e) {
+      e.rf.hasEmitter = true;
+      e.rf.emitterId = 'EMITTER-03';
+      e.rf.freqGhz = 9.420;
+      e.rf.pulseCycle = { on: 2.0, off: 2.0 };
+      e.rf.isTransmitting = true;
+      e.rf.powerDbm = -61.2;
+      e.rf.snrDb = 33.8;
+    }
+    masterEntities.forEach(x => { if (x.id !== 'TRK-021' && x.rf) x.rf.isTransmitting = false; });
+    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO [PERIODIC]: Emitter TRK-021 periodic bursts on 9.420 GHz (2s ON / 2s OFF).' });
+  } else if (scUpper === 'INTERMITTENT' || scUpper === 'INTERMITTENT RF' || scUpper === 'INTERMITTENT SIGNAL') {
+    simState.scenario = 'INTERMITTENT RF';
+    simState.operatingMode = 'INTERMITTENT RF SURVEILLANCE';
+    simState.selectedEntityId = 'TRK-021';
+    const e = masterEntities.find(x => x.id === 'TRK-021');
+    if (e) {
+      e.rf.hasEmitter = true;
+      e.rf.emitterId = 'EMITTER-03';
+      e.rf.freqGhz = 9.675;
+      e.rf.pulseCycle = { on: 0.8, off: 3.2 };
+      e.rf.isTransmitting = true;
+      e.rf.powerDbm = -65.0;
+      e.rf.snrDb = 28.5;
+    }
+    masterEntities.forEach(x => { if (x.id !== 'TRK-021' && x.rf) x.rf.isTransmitting = false; });
+    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO [INTERMITTENT]: Low duty-cycle pulsed emitter on 9.675 GHz (0.8s ON / 3.2s OFF).' });
+  } else if (scUpper === 'FREQUENCY_AGILE' || scUpper === 'FREQUENCY AGILE') {
+    simState.scenario = 'FREQUENCY AGILE';
+    simState.operatingMode = 'FREQUENCY AGILE EW INTERCEPT';
+    simState.selectedEntityId = 'TRK-021';
+    const e = masterEntities.find(x => x.id === 'TRK-021');
+    if (e) {
+      e.rf.hasEmitter = true;
+      e.rf.emitterId = 'EMITTER-03';
+      e.rf.isAgile = true;
+      e.rf.agileBands = [9.180, 9.310, 9.420, 9.675, 9.810];
+      e.rf.hopInterval = 1.0;
+      e.rf.freqGhz = 9.420;
+      e.rf.pulseCycle = { on: 1.0, off: 0.2 };
+      e.rf.isTransmitting = true;
+      e.rf.powerDbm = -62.0;
+      e.rf.snrDb = 31.0;
+    }
+    masterEntities.forEach(x => { if (x.id !== 'TRK-021' && x.rf) x.rf.isTransmitting = false; });
+    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO [FREQUENCY AGILE]: Rapid frequency-hopping emitter across 5 candidate EW bands.' });
+  } else if (scUpper === 'MULTI_EMITTER' || scUpper === 'MULTI-EMITTER') {
+    simState.scenario = 'MULTI-EMITTER';
+    simState.operatingMode = 'MULTI-EMITTER DENSE SPECTRUM';
+    simState.selectedEntityId = 'TRK-021';
+    const e1 = masterEntities.find(x => x.id === 'TRK-021');
+    if (e1) {
+      e1.rf.hasEmitter = true; e1.rf.emitterId = 'EMITTER-03'; e1.rf.freqGhz = 9.420;
+      e1.rf.pulseCycle = { on: 2.0, off: 1.5 }; e1.rf.isTransmitting = true; e1.rf.powerDbm = -61.2; e1.rf.snrDb = 33.8;
+    }
+    const e2 = masterEntities.find(x => x.id === 'TRK-014');
+    if (e2) {
+      e2.rf.hasEmitter = true; e2.rf.emitterId = 'EMITTER-01'; e2.rf.freqGhz = 9.180;
+      e2.rf.pulseCycle = { on: 3.0, off: 2.0 }; e2.rf.isTransmitting = true; e2.rf.powerDbm = -67.4; e2.rf.snrDb = 25.2;
+    }
+    const e3 = masterEntities.find(x => x.id === 'TRK-055');
+    if (e3) {
+      e3.rf.hasEmitter = true; e3.rf.emitterId = 'EMITTER-04'; e3.rf.freqGhz = 9.810;
+      e3.rf.pulseCycle = { on: 1.5, off: 2.5 }; e3.rf.isTransmitting = true; e3.rf.powerDbm = -70.1; e3.rf.snrDb = 22.0;
+    }
+    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO [MULTI-EMITTER]: Concurrent multi-threat emitters active on 9.180, 9.420, and 9.810 GHz.' });
+  } else if (scUpper === 'MIXED' || scUpper === 'MIXED EW' || scUpper === 'MIXED COMPOSITE') {
+    simState.scenario = 'MIXED EW';
+    simState.operatingMode = 'COMPOSITE EW ENVIRONMENT';
+    simState.selectedEntityId = 'TRK-021';
+    const e1 = masterEntities.find(x => x.id === 'TRK-021');
+    if (e1) {
+      e1.rf.hasEmitter = true; e1.rf.emitterId = 'EMITTER-03'; e1.rf.freqGhz = 9.420;
+      e1.rf.pulseCycle = { on: 2.0, off: 1.0 }; e1.rf.isTransmitting = true; e1.rf.powerDbm = -61.2; e1.rf.snrDb = 33.8;
+    }
+    const e2 = masterEntities.find(x => x.id === 'TRK-014');
+    if (e2) {
+      e2.rf.hasEmitter = true; e2.rf.emitterId = 'EMITTER-01'; e2.rf.freqGhz = 9.675;
+      e2.rf.pulseCycle = { on: 0.5, off: 4.0 }; e2.rf.isTransmitting = true; e2.rf.powerDbm = -68.0; e2.rf.snrDb = 24.0;
+    }
+    const e3 = masterEntities.find(x => x.id === 'TRK-055');
+    if (e3) {
+      e3.rf.hasEmitter = true; e3.rf.emitterId = 'EMITTER-04'; e3.rf.isAgile = true;
+      e3.rf.agileBands = [9.310, 9.810]; e3.rf.hopInterval = 1.5; e3.rf.freqGhz = 9.310;
+      e3.rf.pulseCycle = { on: 1.0, off: 1.0 }; e3.rf.isTransmitting = true; e3.rf.powerDbm = -69.5; e3.rf.snrDb = 23.5;
+    }
+    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO [MIXED]: Composite environment combining periodic, intermittent, and agile emitters.' });
+  } else if (scUpper === 'NIGHT PERIMETER' || scUpper === 'NIGHT OPERATION' || scUpper === 'NIGHT MONITORING') {
     simState.selectedEntityId = 'TRK-021';
     simState.activeCameraId = 'CAM-01';
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Night Perimeter Monitoring activated. Thermal sensitivity high.' });
-  } else if (scenarioName === 'SENTRY PATROL') {
+  } else if (scUpper === 'SENTRY PATROL') {
     simState.selectedEntityId = 'TRK-014';
     simState.activeCameraId = 'CAM-01';
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Sentry Patrol deployed along inner perimeter perimeter fence.' });
-  } else if (scenarioName === 'MULTI-SENSOR EVENT') {
+  } else if (scUpper === 'MULTI-SENSOR EVENT' || scUpper === 'MULTI_SENSOR') {
     simState.selectedEntityId = 'TRK-021';
     simState.activeCameraId = 'CAM-01';
     const e = masterEntities.find(x => x.id === 'TRK-021');
@@ -976,35 +1373,14 @@ function applyScenario(scenarioName) {
       e.rf.freqGhz = 9.420;
     }
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Multi-sensor anomalous event active on North perimeter wire.' });
-  } else if (scenarioName === 'UNKNOWN CONTACT' || scenarioName === 'UNKNOWN ACTIVITY') {
+  } else if (scUpper === 'UNKNOWN CONTACT' || scUpper === 'UNKNOWN ACTIVITY' || scUpper === 'UNKNOWN_PERSON') {
     simState.selectedEntityId = 'TRK-055';
     simState.rfNextScanGhz = 9.810;
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Unknown frequency-agile contact radiating on 9.810 GHz.' });
-  } else if (scenarioName === 'WILDLIFE') {
+  } else if (scUpper === 'WILDLIFE') {
     simState.selectedEntityId = 'TRK-019';
     simState.activeCameraId = 'CAM-02';
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Wildlife fauna detected in Sector East. Micro-Doppler filtered.' });
-  } else if (scenarioName === 'PERIODIC RF') {
-    const e = masterEntities.find(x => x.id === 'TRK-021');
-    if (e) {
-      e.rf.hasEmitter = true;
-      e.rf.pulseCycle = { on: 3.0, off: 3.0 };
-      e.rf.freqGhz = 9.420;
-    }
-    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Periodic RF emitter cycling on 9.420 GHz (3s ON / 3s OFF).' });
-  } else if (scenarioName === 'INTERMITTENT RF' || scenarioName === 'INTERMITTENT SIGNAL') {
-    const e = masterEntities.find(x => x.id === 'TRK-021');
-    if (e) {
-      e.rf.hasEmitter = true;
-      e.rf.pulseCycle = { on: 1.0, off: 4.0 };
-      e.rf.freqGhz = 9.675;
-    }
-    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Intermittent pulsed emitter on 9.675 GHz.' });
-  } else if (scenarioName === 'FREQUENCY AGILE') {
-    simState.rfNextScanGhz = 9.310;
-    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Frequency-agile emitter hopping between 9.180 and 9.810 GHz.' });
-  } else if (scenarioName === 'MULTI-EMITTER') {
-    eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Multiple concurrent RF emitters detected across 3 sectors.' });
   } else {
     resetState();
     eventTimeline.unshift({ time: timeStr, source: 'SYSTEM', event: 'SCENARIO: Standard Base Monitoring restored.' });
@@ -1014,36 +1390,123 @@ function applyScenario(scenarioName) {
 // 12-STEP DEMONSTRATION MODE (Exact sequence per specification)
 let demoTimer = null;
 function runExact12StepDemo() {
-  if (demoTimer) clearInterval(demoTimer);
+  if (demoTimer) {
+    clearInterval(demoTimer);
+    demoTimer = null;
+  }
+  simState.isDemoActive = true;
 
   const demoSteps = [
-    { source: 'RADAR', event: 'STEP 01: Radar sees an unknown track in Sector North', action: () => {} },
-    { source: 'RADAR', event: 'STEP 02: Radar establishes TRK-021 (Range 272m, Speed 12.1 km/h)', action: () => { simState.selectedEntityId = 'TRK-021'; } },
-    { source: 'CAMERA', event: 'STEP 03: Target enters CAM-01 FOV (North Gate Sector)', action: () => { simState.activeCameraId = 'CAM-01'; } },
-    { source: 'CAMERA', event: 'STEP 04: Camera detects CV-042 (Person, Confidence 96%)', action: () => {} },
-    { source: 'DATABASE', event: 'STEP 05: Personnel DB finds no matching authorization for TRK-021', action: () => {} },
+    { source: 'RADAR', event: 'STEP 01: Radar sees an unknown track in Sector North', action: () => {
+      simState.selectedEntityId = 'TRK-021';
+    } },
+    { source: 'RADAR', event: 'STEP 02: Radar establishes TRK-021 (Range 272m, Speed 12.1 km/h)', action: () => {
+      simState.selectedEntityId = 'TRK-021';
+      const e = masterEntities.find(x => x.id === 'TRK-021');
+      if (e) {
+        e.radar.range = 272;
+        e.radar.azimuth = 324;
+        e.radar.speedKmh = 12.1;
+        e.radar.heading = 330;
+      }
+    } },
+    { source: 'CAMERA', event: 'STEP 03: Target enters CAM-01 FOV (North Gate Sector)', action: () => {
+      simState.activeCameraId = 'CAM-01';
+      const e = masterEntities.find(x => x.id === 'TRK-021');
+      if (e) {
+        e.camera.visibleCamId = 'CAM-01';
+        e.camera.isVisuallyConfirmed = true;
+        e.fusion.cameraMatch = true;
+      }
+    } },
+    { source: 'CAMERA', event: 'STEP 04: Camera detects CV-042 (Person, Confidence 96%)', action: () => {
+      const e = masterEntities.find(x => x.id === 'TRK-021');
+      if (e) {
+        e.camera.detectionId = 'CV-042';
+        e.camera.confidence = 96;
+        e.camera.typeLabel = 'PERSON';
+      }
+    } },
+    { source: 'DATABASE', event: 'STEP 05: Personnel DB finds no matching authorization for TRK-021', action: () => {
+      const e = masterEntities.find(x => x.id === 'TRK-021');
+      if (e) {
+        e.personnel.matched = false;
+        e.personnel.tagId = null;
+        e.personnel.details = null;
+        e.fusion.personnelMatch = false;
+      }
+    } },
     { source: 'RF / ESM', event: 'STEP 06: RF emitter associated with entity begins transmitting (EMITTER-03 on 9.420 GHz)', action: () => {
       const e = masterEntities.find(x => x.id === 'TRK-021');
-      if (e) e.rf.isTransmitting = true;
+      if (e) {
+        e.rf.hasEmitter = true;
+        e.rf.emitterId = 'EMITTER-03';
+        e.rf.freqGhz = 9.420;
+        e.rf.isTransmitting = true;
+        e.fusion.rfAssociated = true;
+      }
     }},
     { source: 'RECEIVER', event: 'STEP 07: Current receiver misses because receiver window is at 9.180 GHz', action: () => {
       simState.rfCurrentScanGhz = 9.180;
       simState.receiverState = 'MISS';
+      simState.rxTelemetry = {
+        state: 'MISS',
+        snrDb: 1.8,
+        powerDbm: -94.5,
+        assocEmitter: 'NO ENERGY DETECTED',
+        feedback: 'DWELL SCAN - NO SIGNAL DETECTED',
+        nextBandGhz: 9.420,
+        nextProbPercent: 87,
+        ibwMhz: 50,
+        dwellMs: 180,
+        tunedFreqGhz: 9.180
+      };
     }},
     { source: 'SCHEDULER', event: 'STEP 08: Adaptive scheduler changes priority (Score 68 for 9.420 GHz)', action: () => {
       simState.rfNextScanGhz = 9.420;
       simState.receiverState = 'NEXT';
+      simState.schedulerAttribution = {
+        activity: 18,
+        recentHit: 22,
+        uncertainty: 14,
+        recency: 9,
+        exploration: 5,
+        totalScore: 68,
+        policy: 'UCB Adaptive Scheduler'
+      };
+      simState.rxTelemetry.nextBandGhz = 9.420;
+      simState.rxTelemetry.feedback = 'PRIORITIZING 9.420 GHz (SCORE 68)';
     }},
     { source: 'SCHEDULER', event: 'STEP 09: Receiver moves into the correct band (Tuned to 9.420 GHz)', action: () => {
       simState.rfCurrentScanGhz = 9.420;
       simState.rfNextScanGhz = 9.675;
+      simState.rxTelemetry.tunedFreqGhz = 9.420;
+      simState.rxTelemetry.nextBandGhz = 9.675;
     }},
     { source: 'RECEIVER', event: 'STEP 10: HIT detected on 9.420 GHz (Signal Power -61.2 dBm)', action: () => {
       simState.receiverState = 'HIT';
+      simState.rxTelemetry = {
+        state: 'HIT',
+        snrDb: 33.8,
+        powerDbm: -61.2,
+        assocEmitter: 'EMITTER-03 (TRK-021)',
+        feedback: 'INTERCEPT CONFIRMED',
+        nextBandGhz: 9.675,
+        nextProbPercent: 87,
+        ibwMhz: 50,
+        dwellMs: 180,
+        tunedFreqGhz: 9.420
+      };
     }},
     { source: 'FUSION', event: 'STEP 11: Sensor fusion confidence rises to 87% (Anomaly Score 72)', action: () => {
       const e = masterEntities.find(x => x.id === 'TRK-021');
-      if (e) e.fusion.confidence = 87;
+      if (e) {
+        e.fusion.confidence = 87;
+        e.fusion.anomalyScore = 72;
+        e.fusion.classification = 'ANOMALOUS';
+        e.fusion.recommendation = 'REQUIRES VERIFICATION';
+        e.fusion.statusSummary = 'Anomalous Perimeter Breach // Unauthorized Contact';
+      }
     }},
     { source: 'SYSTEM', event: 'STEP 12: System updates operational state: REQUIRES VERIFICATION', action: () => {
       simState.operatingMode = 'ANOMALY VERIFICATION ENGAGED';
@@ -1051,15 +1514,24 @@ function runExact12StepDemo() {
   ];
 
   let stepIdx = 0;
-  demoTimer = setInterval(() => {
+  function executeCurrentStep() {
     if (stepIdx >= demoSteps.length) {
       clearInterval(demoTimer);
       demoTimer = null;
+      simState.isDemoActive = false;
+      simState.demoStep = { current: 12, total: 12, active: false, label: 'COMPLETED: 12-STEP DEMO FINISHED' };
+      broadcastState();
       return;
     }
 
     const s = demoSteps[stepIdx];
     s.action();
+    simState.demoStep = {
+      current: stepIdx + 1,
+      total: demoSteps.length,
+      active: stepIdx < demoSteps.length - 1,
+      label: s.event
+    };
 
     const timeStr = new Date().toTimeString().split(' ')[0];
     eventTimeline.unshift({
@@ -1071,7 +1543,12 @@ function runExact12StepDemo() {
 
     broadcastState();
     stepIdx++;
-  }, 1600);
+  }
+
+  // Execute Step 1 immediately upon trigger
+  executeCurrentStep();
+  // Schedule subsequent steps every 1200ms
+  demoTimer = setInterval(executeCurrentStep, 1200);
 }
 
 // REST APIs
@@ -1213,16 +1690,19 @@ app.get('/api/benchmark/suite', (req, res) => {
 });
 
 app.post('/api/benchmark/suite/run', (req, res) => {
+  liveExperimentActive = true;
   const seed = req.body?.seed !== undefined ? Number(req.body.seed) : 42;
   const runs = Number(req.body?.runs) || 1000;
   const suite = benchmarkRunner.runAllScenariosSuite({ seed, runs });
   analyticsState.suiteBreakdown = suite.breakdown;
   analyticsState.latestSuite = suite;
+  syncAnalyticsFromExperiment(benchmarkRunner.getLatest());
   broadcastState();
   res.json(suite);
 });
 
 app.post('/api/benchmark/replay', (req, res) => {
+  liveExperimentActive = true;
   const experimentId = req.body?.experimentId || analyticsState.provenance?.experimentId;
   if (!experimentId) {
     return res.status(400).json({ error: 'experimentId is required' });
@@ -1277,6 +1757,7 @@ app.get('/api/benchmark/export/report', (req, res) => {
 });
 
 app.post('/api/benchmark/run', (req, res) => {
+  liveExperimentActive = true;
   const seed = req.body.seed !== undefined ? Number(req.body.seed) : 42;
   const scenario = req.body.scenario || 'FREQUENCY_AGILE';
   const runs = Number(req.body.runs) || 1000;

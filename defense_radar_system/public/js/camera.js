@@ -1,6 +1,6 @@
 /**
- * ESM-ASTRA: Optical Surveillance Monitor
- * Real webcam feed with CV detection overlays + procedural IR fallback
+ * ESM-ASTRA: Optical Surveillance Monitor (SIH26055 Demonstration Layer)
+ * Real webcam feed with CV detection overlays + robust procedural tactical IR fallback
  */
 
 class OpticalSurveillanceMonitor {
@@ -15,10 +15,10 @@ class OpticalSurveillanceMonitor {
     this.selectedEntityId = 'TRK-021';
     this.entities = [];
 
-    // Webcam
+    // Webcam with graceful procedural fallback (zero console exceptions)
     this.webcamVideo = null;
     this.webcamReady = false;
-    this.webcamError = null;
+    this.webcamError = false;
     this.startWebcam();
 
     this.setupEvents();
@@ -28,29 +28,32 @@ class OpticalSurveillanceMonitor {
 
   startWebcam() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      this.webcamError = 'Camera API not available';
+      this.webcamError = true;
       return;
     }
-    const video = document.createElement('video');
-    video.autoplay = true;
-    video.muted = true;
-    video.playsInline = true;
-    this.webcamVideo = video;
+    try {
+      const video = document.createElement('video');
+      video.autoplay = true;
+      video.muted = true;
+      video.playsInline = true;
+      this.webcamVideo = video;
 
-    navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, facingMode: 'environment' }, audio: false })
-      .then(stream => {
-        video.srcObject = stream;
-        video.onloadedmetadata = () => {
-          video.play().then(() => {
-            this.webcamReady = true;
-            console.log('[CAMERA] Webcam active:', video.videoWidth + 'x' + video.videoHeight);
-          }).catch(e => { this.webcamError = e.message; });
-        };
-      })
-      .catch(err => {
-        this.webcamError = err.name + ': ' + err.message;
-        console.warn('[CAMERA] Webcam unavailable, using procedural IR scene:', err.message);
-      });
+      navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, facingMode: 'environment' }, audio: false })
+        .then(stream => {
+          video.srcObject = stream;
+          video.onloadedmetadata = () => {
+            video.play().then(() => {
+              this.webcamReady = true;
+              this.webcamError = false;
+            }).catch(() => { this.webcamError = true; });
+          };
+        })
+        .catch(() => {
+          this.webcamError = true;
+        });
+    } catch (_) {
+      this.webcamError = true;
+    }
   }
 
   resize() {
@@ -66,16 +69,35 @@ class OpticalSurveillanceMonitor {
     this.ctx.scale(dpr, dpr);
   }
 
+  getEntityScreenBox(ent, w, h) {
+    const horizonY = h * 0.44;
+    const groundH = h - horizonY;
+    const b = ent.camera?.screenBox || {};
+
+    const normX = b.normX !== undefined ? b.normX : Math.max(0, Math.min(1, ((b.x || 60) - 30) / 360));
+    const depthNorm = b.depthNorm !== undefined ? b.depthNorm : Math.max(0, Math.min(1, ((b.h || 50) - 34) / 52));
+
+    const sceneX = Math.round(w * 0.14 + normX * (w * 0.72));
+    const footY = Math.round(horizonY + 30 + (depthNorm * (groundH - 55)));
+    const boxH = Math.max(46, Math.round(48 + depthNorm * (h * 0.22)));
+    const boxW = Math.max(26, Math.round(boxH * (ent.type === 'VEHICLE' ? 0.95 : 0.46)));
+    const boxX = Math.round(sceneX - boxW / 2);
+    const boxY = Math.round(footY - boxH);
+
+    return { sceneX, footY, boxX, boxY, boxW, boxH };
+  }
+
   setupEvents() {
     if (!this.canvas) return;
     this.canvas.addEventListener('click', (e) => {
       const rect = this.canvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
+
       for (const ent of this.entities) {
-        if (ent.camera.visibleCamId === this.activeCamId && ent.camera.isVisuallyConfirmed) {
-          const b = ent.camera.screenBox;
-          if (clickX >= b.x && clickX <= b.x + b.w && clickY >= b.y && clickY <= b.y + b.h) {
+        if (ent.camera && ent.camera.visibleCamId === this.activeCamId && ent.camera.isVisuallyConfirmed) {
+          const { boxX, boxY, boxW, boxH } = this.getEntityScreenBox(ent, this.width, this.height);
+          if (clickX >= boxX && clickX <= boxX + boxW && clickY >= boxY && clickY <= boxY + boxH) {
             if (window.app) window.app.selectEntity(ent.id);
             break;
           }
@@ -87,8 +109,8 @@ class OpticalSurveillanceMonitor {
   updateData(data) {
     if (data.entities) this.entities = data.entities;
     if (data.simState) {
-      this.activeCamId = data.simState.activeCameraId;
-      this.selectedEntityId = data.simState.selectedEntityId;
+      if (data.simState.activeCameraId) this.activeCamId = data.simState.activeCameraId;
+      if (data.simState.selectedEntityId) this.selectedEntityId = data.simState.selectedEntityId;
     }
   }
 
@@ -108,45 +130,31 @@ class OpticalSurveillanceMonitor {
 
     if (this.webcamReady && this.webcamVideo && this.webcamVideo.readyState >= 2) {
       // ── REAL WEBCAM FEED ─────────────────────────────────────────────────
-      // Draw live video frame stretched to canvas
       ctx.save();
       ctx.drawImage(this.webcamVideo, 0, 0, w, h);
-      // Dark tactical overlay so the HUD text stays readable
-      ctx.fillStyle = 'rgba(3, 8, 14, 0.35)';
+      ctx.fillStyle = 'rgba(3, 8, 14, 0.32)';
       ctx.fillRect(0, 0, w, h);
-      // Subtle green IR tint
-      ctx.fillStyle = 'rgba(18, 50, 30, 0.18)';
+      ctx.fillStyle = 'rgba(18, 50, 30, 0.15)';
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
     } else {
-      // ── PROCEDURAL IR FALLBACK ────────────────────────────────────────────
+      // ── PROCEDURAL IR NIGHT-VISION SCENE ─────────────────────────────────
       this.drawProceduralCameraScene(ctx, w, h);
 
-      // Show webcam status if still loading
-      if (!this.webcamError && !this.webcamReady) {
-        ctx.save();
-        ctx.fillStyle = 'rgba(24,184,214,0.85)';
-        ctx.font = '700 11px "JetBrains Mono", monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText('⟳ REQUESTING CAMERA ACCESS...', w / 2, 22);
-        ctx.restore();
-      } else if (this.webcamError) {
-        ctx.save();
-        ctx.fillStyle = 'rgba(212,88,88,0.85)';
-        ctx.font = '700 10px "JetBrains Mono", monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText('CAM OFFLINE — PROCEDURAL IR MODE', w / 2, 22);
-        ctx.restore();
-      }
+      // Subtle Tactical Sensor Status
+      ctx.save();
+      ctx.fillStyle = '#42c47a';
+      ctx.font = '700 9.5px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('● IR THERMAL OPTICAL SENSOR [PROCEDURAL IR ONLINE]', w / 2, 22);
+      ctx.restore();
     }
 
-    // ── OVERLAYS (always drawn on top of webcam or procedural) ─────────────
+    // ── OVERLAYS (always active on both webcam and procedural) ────────────
     this.drawOpticalReticle(ctx, w, h);
     this.drawDetectedEntities(ctx, w, h);
     this.drawCameraHud(ctx, w, h);
   }
-
-
 
   drawProceduralCameraScene(ctx, w, h) {
     const horizonY = h * 0.44;
@@ -160,14 +168,14 @@ class OpticalSurveillanceMonitor {
     ctx.fillRect(0, 0, w, horizonY);
 
     // Stars / Atmospheric Points
-    ctx.fillStyle = 'rgba(200, 225, 255, 0.4)';
-    for (let i = 0; i < 24; i++) {
+    ctx.fillStyle = 'rgba(200, 225, 255, 0.45)';
+    for (let i = 0; i < 28; i++) {
       const sx = (i * 97) % w;
       const sy = (i * 37) % (horizonY - 15);
       ctx.fillRect(sx, sy, 1.2, 1.2);
     }
 
-    // Distant Mountain Ranges (2 Depth Layers)
+    // Distant Mountain Ranges
     ctx.fillStyle = '#060c13';
     ctx.beginPath();
     ctx.moveTo(0, horizonY);
@@ -219,6 +227,12 @@ class OpticalSurveillanceMonitor {
       this.drawSouthMainScene(ctx, w, h, horizonY);
     } else {
       this.drawWestThicketScene(ctx, w, h, horizonY);
+    }
+
+    // Thermal Night-Vision Scanlines
+    ctx.fillStyle = 'rgba(75, 169, 199, 0.015)';
+    for (let sy = 0; sy < h; sy += 3) {
+      ctx.fillRect(0, sy, w, 1);
     }
   }
 
@@ -318,12 +332,11 @@ class OpticalSurveillanceMonitor {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Perimeter Security Fence with Razor Coils (Perspective Left)
+    // Perimeter Security Fence with Razor Coils
     this.drawPerspectiveFence(ctx, w * 0.16, h, vpX - 16, horizonY);
   }
 
   drawEastWireScene(ctx, w, h, horizonY) {
-    // Continuous East Perimeter Security Line with Barbed Coils
     ctx.strokeStyle = '#1a2c3d';
     ctx.lineWidth = 1.4;
 
@@ -332,7 +345,6 @@ class OpticalSurveillanceMonitor {
     ctx.lineTo(w, horizonY + 36);
     ctx.stroke();
 
-    // Concertina Coils
     ctx.strokeStyle = '#29435b';
     ctx.setLineDash([4, 5]);
     ctx.beginPath();
@@ -341,7 +353,6 @@ class OpticalSurveillanceMonitor {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Regular Fence Posts
     for (let px = 20; px < w; px += 42) {
       ctx.beginPath();
       ctx.moveTo(px, horizonY + 14);
@@ -349,7 +360,6 @@ class OpticalSurveillanceMonitor {
       ctx.stroke();
     }
 
-    // Elevated Watchtower
     const twX = w * 0.78;
     const twY = horizonY - 40;
     ctx.fillStyle = '#0b131c';
@@ -362,7 +372,6 @@ class OpticalSurveillanceMonitor {
     ctx.moveTo(twX + 14, twY + 24); ctx.lineTo(twX + 18, horizonY + 34);
     ctx.stroke();
 
-    // Spotlight Cone
     const spotGrad = ctx.createRadialGradient(twX, twY + 12, 5, w * 0.4, h * 0.72, 160);
     spotGrad.addColorStop(0, 'rgba(93, 159, 234, 0.2)');
     spotGrad.addColorStop(1, 'rgba(0,0,0,0)');
@@ -373,7 +382,6 @@ class OpticalSurveillanceMonitor {
   }
 
   drawSouthMainScene(ctx, w, h, horizonY) {
-    // Broad Dual Checkpoint Entry
     ctx.fillStyle = '#0e1722';
     ctx.beginPath();
     ctx.moveTo(w * 0.44, horizonY);
@@ -383,7 +391,6 @@ class OpticalSurveillanceMonitor {
     ctx.closePath();
     ctx.fill();
 
-    // Overhead Inspection Gantry
     ctx.strokeStyle = '#324a5e';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
@@ -393,7 +400,6 @@ class OpticalSurveillanceMonitor {
     ctx.lineTo(w * 0.78, h * 0.6);
     ctx.stroke();
 
-    // Inspection Lights
     ctx.fillStyle = '#d7a84b';
     ctx.beginPath();
     ctx.arc(w * 0.38, h * 0.44, 4, 0, Math.PI * 2);
@@ -402,7 +408,6 @@ class OpticalSurveillanceMonitor {
   }
 
   drawWestThicketScene(ctx, w, h, horizonY) {
-    // Dense foliage silhouettes
     ctx.fillStyle = '#09121a';
     for (let x = 10; x < w; x += 38) {
       ctx.beginPath();
@@ -410,7 +415,6 @@ class OpticalSurveillanceMonitor {
       ctx.fill();
     }
 
-    // Security Wire
     ctx.strokeStyle = '#1d2f40';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
@@ -431,13 +435,11 @@ class OpticalSurveillanceMonitor {
       const y = startY + t * (endY - startY);
       const postH = 46 * (1 - t * 0.65);
 
-      // Vertical post
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(x, y - postH);
       ctx.stroke();
 
-      // Top 45-degree angled barbed arm
       ctx.beginPath();
       ctx.moveTo(x, y - postH);
       ctx.lineTo(x + 6 * (1 - t * 0.6), y - postH - 6 * (1 - t * 0.6));
@@ -451,7 +453,6 @@ class OpticalSurveillanceMonitor {
     ctx.strokeStyle = 'rgba(93, 159, 234, 0.22)';
     ctx.lineWidth = 0.8;
 
-    // Center Crosshair
     const cx = w / 2;
     const cy = h / 2;
     ctx.beginPath();
@@ -459,7 +460,6 @@ class OpticalSurveillanceMonitor {
     ctx.moveTo(cx, cy - 20); ctx.lineTo(cx, cy + 20);
     ctx.stroke();
 
-    // Corner Tactical Frame Brackets
     const pad = 12;
     const bLen = 14;
     ctx.beginPath();
@@ -473,76 +473,77 @@ class OpticalSurveillanceMonitor {
   }
 
   drawDetectedEntities(ctx, w, h) {
+    let visibleCount = 0;
+
     this.entities.forEach(ent => {
       // Must be geometrically inside active camera FOV
-      if (ent.camera.visibleCamId !== this.activeCamId || !ent.camera.isVisuallyConfirmed) {
-        return;
+      if (ent.camera && ent.camera.visibleCamId === this.activeCamId && ent.camera.isVisuallyConfirmed) {
+        visibleCount++;
+        const { sceneX, footY, boxX, boxY, boxW, boxH } = this.getEntityScreenBox(ent, w, h);
+        const isSelected = ent.id === this.selectedEntityId;
+
+        // Color coding per classification state
+        let color = '#5d9fea'; // Normal CV blue
+        if (ent.fusion?.classification === 'VERIFIED') color = '#42c47a'; // Green
+        else if (ent.fusion?.classification === 'ANOMALOUS') color = '#d45858'; // Red
+        else if (ent.fusion?.classification === 'WILDLIFE') color = '#d7a84b'; // Amber
+
+        // 1. Render Physical Silhouette Avatar in Perspective Scene
+        this.drawRealisticAvatar(ctx, sceneX, footY, boxH, ent.type, color);
+
+        // 2. Overlay Computer Vision Bounding Box
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = isSelected ? 2.2 : 1.2;
+        ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+        // Semi-transparent interior fill
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.08;
+        ctx.fillRect(boxX, boxY, boxW, boxH);
+        ctx.globalAlpha = 1.0;
+
+        // Top Classification Tag
+        const tagW = Math.max(boxW, 94);
+        ctx.fillStyle = color;
+        ctx.fillRect(boxX, boxY - 16, tagW, 16);
+
+        ctx.font = '700 8.5px "JetBrains Mono", monospace';
+        ctx.fillStyle = '#070b10';
+        ctx.fillText(`${ent.camera.typeLabel || ent.type} ${ent.camera.confidence}%`, boxX + 4, boxY - 4);
+
+        // Bottom Cross-Reference Label
+        ctx.fillStyle = 'rgba(7, 11, 16, 0.90)';
+        ctx.fillRect(boxX, boxY + boxH + 2, tagW, 14);
+        ctx.font = '7.5px "JetBrains Mono", monospace';
+        ctx.fillStyle = color;
+        ctx.fillText(`RADAR ${ent.id} ↔ ${ent.camera.detectionId}`, boxX + 4, boxY + boxH + 12);
+
+        // Tactical Corner Bracket Ticks
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.0;
+        const cL = 7;
+        ctx.beginPath();
+        ctx.moveTo(boxX, boxY + cL); ctx.lineTo(boxX, boxY); ctx.lineTo(boxX + cL, boxY);
+        ctx.moveTo(boxX + boxW - cL, boxY); ctx.lineTo(boxX + boxW, boxY); ctx.lineTo(boxX + boxW, boxY + cL);
+        ctx.moveTo(boxX, boxY + boxH - cL); ctx.lineTo(boxX, boxY + boxH); ctx.lineTo(boxX + cL, boxY + boxH);
+        ctx.moveTo(boxX + boxW - cL, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH - cL);
+        ctx.stroke();
+
+        ctx.restore();
       }
-
-      const b = ent.camera.screenBox;
-      const isSelected = ent.id === this.selectedEntityId;
-
-      // Color coding per classification state
-      let color = '#5d9fea'; // Normal CV blue
-      if (ent.fusion.classification === 'VERIFIED') color = '#42c47a'; // Green
-      else if (ent.fusion.classification === 'ANOMALOUS') color = '#d45858'; // Red
-      else if (ent.fusion.classification === 'LOW CONFIDENCE' || ent.type === 'WILDLIFE') color = '#d7a84b'; // Amber
-
-      // 1. Render Simulated 2.5D Physical Silhouette Avatar in Perspective Scene
-      this.drawRealisticAvatar(ctx, b.x + b.w/2, b.y + b.h, b.h, ent.type, color);
-
-      // 2. Overlay Computer Vision Bounding Box
-      ctx.save();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = isSelected ? 2 : 1.2;
-      ctx.strokeRect(b.x, b.y, b.w, b.h);
-
-      // Subtle fill
-      ctx.fillStyle = color;
-      ctx.globalAlpha = 0.08;
-      ctx.fillRect(b.x, b.y, b.w, b.h);
-      ctx.globalAlpha = 1.0;
-
-      // Top Tag
-      ctx.fillStyle = color;
-      const tagW = Math.max(b.w, 88);
-      ctx.fillRect(b.x, b.y - 15, tagW, 15);
-
-      ctx.font = '700 9px "JetBrains Mono", monospace';
-      ctx.fillStyle = '#070b10';
-      ctx.fillText(`${ent.camera.typeLabel} ${ent.camera.confidence}%`, b.x + 4, b.y - 4);
-
-      // Bottom Cross-Reference Label
-      ctx.fillStyle = 'rgba(7, 11, 16, 0.88)';
-      ctx.fillRect(b.x, b.y + b.h + 2, tagW, 13);
-      ctx.font = '7.5px "JetBrains Mono", monospace';
-      ctx.fillStyle = color;
-      ctx.fillText(`RADAR ${ent.id} ↔ ${ent.camera.detectionId}`, b.x + 3, b.y + b.h + 11);
-
-      // Corner Ticks on Bounding Box
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.8;
-      const cL = 6;
-      ctx.beginPath();
-      ctx.moveTo(b.x, b.y + cL); ctx.lineTo(b.x, b.y); ctx.lineTo(b.x + cL, b.y);
-      ctx.moveTo(b.x + b.w - cL, b.y); ctx.lineTo(b.x + b.w, b.y); ctx.lineTo(b.x + b.w, b.y + cL);
-      ctx.moveTo(b.x, b.y + b.h - cL); ctx.lineTo(b.x, b.y + b.h); ctx.lineTo(b.x + cL, b.y + b.h);
-      ctx.moveTo(b.x + b.w - cL, b.y + b.h); ctx.lineTo(b.x + b.w, b.y + b.h); ctx.lineTo(b.x + b.w, b.y + b.h - cL);
-      ctx.stroke();
-
-      ctx.restore();
     });
 
-    // Check if selected entity is outside current camera FOV
+    // If selected entity is currently in another sector or out of FOV, display informative banner
     const sel = this.entities.find(e => e.id === this.selectedEntityId);
-    if (sel && sel.camera.visibleCamId !== this.activeCamId) {
+    if (sel && sel.camera && sel.camera.visibleCamId !== this.activeCamId) {
       ctx.save();
-      const bannerW = 420;
+      const bannerW = 440;
       const bannerH = 46;
       const bx = (w - bannerW) / 2;
-      const by = 24;
+      const by = 26;
 
-      ctx.fillStyle = 'rgba(9, 14, 20, 0.88)';
+      ctx.fillStyle = 'rgba(9, 14, 20, 0.90)';
       ctx.fillRect(bx, by, bannerW, bannerH);
       ctx.strokeStyle = '#d7a84b';
       ctx.lineWidth = 1.2;
@@ -551,12 +552,14 @@ class OpticalSurveillanceMonitor {
       ctx.font = '700 9.5px "JetBrains Mono", monospace';
       ctx.fillStyle = '#d7a84b';
       ctx.textAlign = 'center';
-      ctx.fillText(`[ ⚠️ TARGET OUT OF OPTICAL FOV ]`, w / 2, by + 16);
+      ctx.fillText(`[ ⚠️ TARGET OUT OF CURRENT OPTICAL FOV ]`, w / 2, by + 16);
 
       ctx.font = '9px "JetBrains Mono", monospace';
       ctx.fillStyle = '#e6edf3';
-      const visibleMsg = sel.camera.visibleCamId ? `(CURRENTLY IN SECTOR ${sel.camera.visibleCamId})` : `(BEYOND SENSOR RANGE: ${sel.radar.range}m / ${sel.radar.azimuth}°)`;
-      ctx.fillText(`TARGET ${sel.id} IS OUTSIDE ${this.activeCamId} FIELD OF VIEW ${visibleMsg}`, w / 2, by + 32);
+      const visibleMsg = sel.camera.isVisuallyConfirmed && sel.camera.visibleCamId 
+        ? `(CURRENTLY VISIBLE IN SECTOR ${sel.camera.visibleCamId})` 
+        : `(RANGE: ${sel.radar?.range || 0}m / AZ: ${sel.radar?.azimuth || 0}°)`;
+      ctx.fillText(`TARGET ${sel.id} OUTSIDE ${this.activeCamId} SECTOR ${visibleMsg}`, w / 2, by + 32);
 
       ctx.restore();
     }
@@ -565,7 +568,7 @@ class OpticalSurveillanceMonitor {
   drawRealisticAvatar(ctx, x, groundY, boxH, type, color) {
     ctx.save();
     ctx.fillStyle = color;
-    ctx.globalAlpha = 0.82;
+    ctx.globalAlpha = 0.85;
 
     if (type === 'PERSON') {
       const scale = boxH / 70;
@@ -586,33 +589,27 @@ class OpticalSurveillanceMonitor {
       ctx.fillRect(x + 1 * scale, groundY - boxH * 0.36, 3.5 * scale, boxH * 0.36);
     } else if (type === 'VEHICLE') {
       const scale = boxH / 45;
-      // Vehicle Chassis
       ctx.fillRect(x - 24 * scale, groundY - 18 * scale, 48 * scale, 14 * scale);
       ctx.fillRect(x - 14 * scale, groundY - 28 * scale, 26 * scale, 10 * scale);
 
-      // Wheels
       ctx.beginPath();
       ctx.arc(x - 14 * scale, groundY - 4 * scale, 4.5 * scale, 0, Math.PI * 2);
       ctx.arc(x + 14 * scale, groundY - 4 * scale, 4.5 * scale, 0, Math.PI * 2);
       ctx.fill();
 
-      // Headlight Beam
-      ctx.fillStyle = 'rgba(215, 168, 75, 0.18)';
+      ctx.fillStyle = 'rgba(215, 168, 75, 0.22)';
       ctx.beginPath();
       ctx.moveTo(x + 24 * scale, groundY - 14 * scale);
-      ctx.lineTo(x + 60 * scale, groundY - 26 * scale);
-      ctx.lineTo(x + 60 * scale, groundY + 4 * scale);
+      ctx.lineTo(x + 65 * scale, groundY - 26 * scale);
+      ctx.lineTo(x + 65 * scale, groundY + 4 * scale);
       ctx.closePath();
       ctx.fill();
     } else if (type === 'WILDLIFE') {
       const scale = boxH / 32;
-      // Quadruped Body
       ctx.fillRect(x - 14 * scale, groundY - 17 * scale, 28 * scale, 9 * scale);
-      // Head and Antlers
       ctx.beginPath();
       ctx.arc(x - 16 * scale, groundY - 20 * scale, 3.5 * scale, 0, Math.PI * 2);
       ctx.fill();
-      // Legs
       ctx.fillRect(x - 12 * scale, groundY - 8 * scale, 2.2 * scale, 8 * scale);
       ctx.fillRect(x - 6 * scale, groundY - 8 * scale, 2.2 * scale, 8 * scale);
       ctx.fillRect(x + 6 * scale, groundY - 8 * scale, 2.2 * scale, 8 * scale);
@@ -625,7 +622,7 @@ class OpticalSurveillanceMonitor {
   drawCameraHud(ctx, w, h) {
     ctx.save();
     ctx.font = '8.5px "JetBrains Mono", monospace';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
 
     const now = new Date();
     const timeStr = now.toISOString().replace('T', ' ').substring(11, 19) + ' UTC';
@@ -634,7 +631,7 @@ class OpticalSurveillanceMonitor {
     ctx.fillText(`${this.activeCamId} // ${timeStr}`, w - 16, 16);
     ctx.fillText('IR THERMAL NIGHT VISION // 30 FPS // 70° FOV', w - 16, 28);
 
-    // REC Dot
+    // REC Indicator
     ctx.fillStyle = '#d45858';
     ctx.beginPath();
     ctx.arc(w - 240, 13, 3, 0, Math.PI * 2);

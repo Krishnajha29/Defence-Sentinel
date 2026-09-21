@@ -90,6 +90,8 @@ class SystemAnalyticsRenderer {
       setText('benchExpSeed', stats.provenance.randomSeed !== undefined ? `${stats.provenance.randomSeed} (DETERMINISTIC)` : '--');
       setText('benchExpScenario', stats.provenance.scenario || '--');
       setText('benchExpRuns', stats.provenance.sampleCount ? `N = ${stats.provenance.sampleCount} DWELLS` : '0 DWELLS');
+      setText('benchExpHash', stats.provenance.configHash ? (stats.provenance.configHash.substring(0, 8) + '...') : '--');
+      setText('benchExpTime', stats.provenance.timestamp ? new Date(stats.provenance.timestamp).toLocaleTimeString() : '--');
 
       const statusEl = document.getElementById('benchExpStatus');
       if (statusEl) {
@@ -214,19 +216,123 @@ class SystemAnalyticsRenderer {
       }
     });
 
-    // 8. Render Scenario Breakdown Table if suite data is present
+    // 8. Render Scenario Breakdown Table
     if (stats.suiteBreakdown && Array.isArray(stats.suiteBreakdown)) {
       this.renderScenarioBreakdown(stats.suiteBreakdown);
+    } else {
+      this.renderScenarioBreakdown([]);
     }
+  }
+
+  reset() {
+    this.analytics = null;
+    this.hoverIndex = -1;
+    this.mouseX = -1;
+    this.mouseY = -1;
+    if (this.tooltip) this.tooltip.style.display = 'none';
+
+    const setText = (id, txt) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = txt;
+    };
+    const setWidth = (id, pct) => {
+      const el = document.getElementById(id);
+      if (el) el.style.width = pct;
+    };
+
+    // 1. Reset Provenance Chips
+    setText('benchExpId', 'RESET-IDLE');
+    setText('benchExpSeed', '--');
+    setText('benchExpScenario', '--');
+    setText('benchExpRuns', '0 DWELLS');
+    setText('benchExpHash', '--');
+    setText('benchExpTime', '--');
+    const statusEl = document.getElementById('benchExpStatus');
+    if (statusEl) {
+      statusEl.textContent = 'STATUS: RESET (WAITING FOR TELEMETRY)';
+      statusEl.style.color = 'var(--text-tertiary)';
+      statusEl.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+      statusEl.style.background = 'rgba(255, 255, 255, 0.05)';
+    }
+
+    // 2. Reset 6 Metric Cards
+    setText('metricAdaptiveDetRate', '0.0%');
+    setWidth('metricFillAdaptiveDetRate', '0%');
+    setText('metricOpenLoopDetRate', '0.0%');
+    setWidth('metricFillOpenLoopDetRate', '0%');
+    setText('metricDeltaDetRate', '+0.0 pp (0.0%)');
+    setText('metricCiDetRate', '95% CI: RESET');
+
+    setText('metricAdaptiveLatency', '0 ms');
+    setWidth('metricFillAdaptiveLatency', '0%');
+    setText('metricOpenLoopLatency', '0 ms');
+    setWidth('metricFillOpenLoopLatency', '0%');
+    setText('metricDeltaLatency', '0.0 ms (0.0%)');
+    setText('metricStatsLatency', 'Dispersion: RESET');
+
+    setText('metricAdaptiveFar', '0.0%');
+    setWidth('metricFillAdaptiveFar', '0%');
+    setText('metricOpenLoopFar', '0.0%');
+    setWidth('metricFillOpenLoopFar', '0%');
+    setText('metricDeltaFar', '+0.0 pp (0.0%)');
+    setText('metricStatusFar', 'Evaluated across 0 noise-only dwells');
+
+    setText('metricAdaptiveAcc', '0.0%');
+    setWidth('metricFillAdaptiveAcc', '0%');
+    setText('metricOpenLoopAcc', '0.0%');
+    setWidth('metricFillOpenLoopAcc', '0%');
+    setText('metricDeltaAcc', '+0.0 pp (0.0%)');
+    setText('metricBrierAcc', 'Brier Score: RESET');
+
+    setText('metricAdaptiveUtil', '0.0%');
+    setWidth('metricFillAdaptiveUtil', '0%');
+    setText('metricOpenLoopUtil', '0.0%');
+    setWidth('metricFillOpenLoopUtil', '0%');
+    setText('metricDeltaUtil', '+0.0 pp (0.0%)');
+    setText('metricTimeUtil', 'Active Energy: 0.0s / 0s');
+
+    setText('metricAdaptiveEff', '0.0%');
+    setWidth('metricFillAdaptiveEff', '0%');
+    setText('metricOpenLoopEff', '0.0%');
+    setWidth('metricFillOpenLoopEff', '0%');
+    setText('metricDeltaEff', '+0.0 pp (0.0%)');
+    setText('metricNoteEff', 'Reset / Idle');
+
+    ['metricTagDetRate', 'metricTagLatency', 'metricTagFar', 'metricTagAcc', 'metricTagUtil', 'metricTagEff'].forEach(tagId => {
+      const tagEl = document.getElementById(tagId);
+      if (tagEl) {
+        tagEl.textContent = 'RESET';
+        tagEl.className = 'metric-tag table-tag insufficient';
+      }
+    });
+
+    if (this.canvas && this.ctx) {
+      this.ctx.save();
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+    }
+
+    const tbody = document.getElementById('suiteBreakdownTbody');
+    if (tbody) {
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:var(--text-tertiary); padding:16px; font-family:var(--font-mono); font-size:10px;">NO BENCHMARK DATA AVAILABLE — RUN EXPERIMENT OR 5-SCENARIO SUITE</td></tr>`;
+    }
+
+    this.render();
   }
 
   renderScenarioBreakdown(breakdown) {
     const tbody = document.getElementById('suiteBreakdownTbody');
-    if (!tbody || !breakdown || breakdown.length === 0) return;
+    if (!tbody) return;
+    if (!breakdown || breakdown.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; color:var(--text-tertiary); padding:16px; font-family:var(--font-mono); font-size:10px;">NO BENCHMARK DATA AVAILABLE — RUN EXPERIMENT OR 5-SCENARIO SUITE</td></tr>`;
+      return;
+    }
 
     tbody.innerHTML = breakdown.map(row => {
-      const isPositive = row.deltaDetection.absoluteValue >= 0;
+      const isPositive = row.deltaDetection && (row.deltaDetection.absoluteValue !== undefined ? row.deltaDetection.absoluteValue >= 0 : !String(row.deltaDetection.absolute || row.deltaDetection).startsWith('-'));
       const tagClass = isPositive ? 'positive' : 'negative';
+      const deltaText = typeof row.deltaDetection === 'object' ? `${row.deltaDetection.absolute} (${row.deltaDetection.relative})` : row.deltaDetection;
       return `
         <tr>
           <td style="font-weight:700; color:var(--text-primary);">${row.scenario}</td>
@@ -234,7 +340,7 @@ class SystemAnalyticsRenderer {
           <td style="color:var(--text-secondary);">${row.openLoopDetection}%</td>
           <td>
             <span class="table-tag ${tagClass}">
-              ${row.deltaDetection.absolute} (${row.deltaDetection.relative})
+              ${deltaText}
             </span>
           </td>
           <td style="color:var(--state-verified); font-weight:700;">${row.adaptiveMeanInterceptTime} ms</td>
@@ -259,7 +365,7 @@ class SystemAnalyticsRenderer {
     }
 
     // 2. Separate adaptive & openLoop arrays as specified in prompt
-    if (Array.isArray(this.analytics.adaptive?.interceptionsOverTime)) {
+    if (Array.isArray(this.analytics.adaptive?.interceptionsOverTime) && this.analytics.adaptive.interceptionsOverTime.length > 0) {
       const adList = this.analytics.adaptive.interceptionsOverTime;
       const olList = this.analytics.openLoop?.interceptionsOverTime || [];
       return adList.map((pt, idx) => ({
@@ -361,7 +467,7 @@ class SystemAnalyticsRenderer {
     const points = this.getPoints();
 
     // 2. Empty / Initial State Check
-    if (!points || points.length === 0) {
+    if (!points || points.length < 2) {
       ctx.strokeStyle = '#1C2A34';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 4; i++) {

@@ -1,6 +1,7 @@
 /**
  * ESM-ASTRA: RF / ESM Intelligence Spectrum Analyzer & Waterfall Spectrogram (SIH26055 Core)
  * Single Source of Truth: Synthesizes spectral peaks from master transmitting entities
+ * and live backend receiver telemetry (simState.rxTelemetry).
  */
 
 class CompactSpectrumAnalyzer {
@@ -19,14 +20,23 @@ class CompactSpectrumAnalyzer {
     this.width = 600;
     this.height = 340;
 
-    // Waterfall history buffer (rows of power values across frequency bins)
-    this.waterfallRows = 60;
+    // Waterfall history buffer (75 rows x 180 frequency bins)
+    this.waterfallRows = 75;
     this.waterfallBins = 180;
     this.waterfallHistory = [];
+    this.lastWaterfallPush = 0;
+
+    // Initialize waterfall with baseline noise and default scan raster
     for (let r = 0; r < this.waterfallRows; r++) {
-      const row = new Float32Array(this.waterfallBins);
-      for (let b = 0; b < this.waterfallBins; b++) row[b] = -95.0;
-      this.waterfallHistory.push(row);
+      const powers = new Float32Array(this.waterfallBins);
+      for (let b = 0; b < this.waterfallBins; b++) {
+        powers[b] = -94.0 + (Math.sin(b * 0.3) * 0.8);
+      }
+      this.waterfallHistory.push({
+        powers,
+        dwellGhz: 9.420,
+        isHit: r % 2 === 0
+      });
     }
 
     this.setupEvents();
@@ -64,7 +74,7 @@ class CompactSpectrumAnalyzer {
         let closest = null;
         let minDist = 0.15;
         this.entities.forEach(ent => {
-          if (ent.rf.hasEmitter && ent.rf.freqGhz) {
+          if (ent.rf && ent.rf.hasEmitter && ent.rf.freqGhz) {
             const d = Math.abs(ent.rf.freqGhz - clickedGhz);
             if (d < minDist) {
               minDist = d;
@@ -87,6 +97,17 @@ class CompactSpectrumAnalyzer {
     if (data.simState) this.simState = data.simState;
   }
 
+  pushWaterfallSlice(currentSlice, curGhz, isHit) {
+    this.waterfallHistory.unshift({
+      powers: currentSlice,
+      dwellGhz: curGhz,
+      isHit: Boolean(isHit)
+    });
+    if (this.waterfallHistory.length > this.waterfallRows) {
+      this.waterfallHistory.pop();
+    }
+  }
+
   render() {
     if (!this.canvas) return;
     const parent = this.canvas.parentElement;
@@ -104,11 +125,11 @@ class CompactSpectrumAnalyzer {
 
     const padL = 46;
     const padR = 20;
-    const padT = 24;
-    const splitRatio = 0.58; // Upper 58% spectrum, lower 42% waterfall
+    const padT = 26;
+    const splitRatio = 0.56; // Upper 56% spectrum analyzer, lower 44% waterfall
     const specH = Math.round((h - padT - 30) * splitRatio);
-    const wfTop = padT + specH + 18;
-    const wfH = Math.max(40, h - wfTop - 18);
+    const wfTop = padT + specH + 20;
+    const wfH = Math.max(40, h - wfTop - 16);
     const plotW = w - padL - padR;
 
     if (plotW <= 10 || specH <= 10) return;
@@ -116,7 +137,13 @@ class CompactSpectrumAnalyzer {
     const freqToX = f => padL + ((f - this.minFreq) / (this.maxFreq - this.minFreq)) * plotW;
     const powerToY = p => padT + (1 - (p - this.minPower) / (this.maxPower - this.minPower)) * specH;
 
-    // 1. Spectrum Analyzer Background Grid & dBm lines
+    const curGhz = this.simState?.rfCurrentScanGhz || this.simState?.rxTelemetry?.tunedFreqGhz || 9.420;
+    const isHit = (this.simState?.receiverState === 'HIT') || (this.simState?.rxTelemetry?.state === 'HIT');
+    const rxTel = this.simState?.rxTelemetry;
+
+    // -------------------------------------------------------------------------
+    // 1. SPECTRUM ANALYZER BACKGROUND GRID & dBm CALIBRATION
+    // -------------------------------------------------------------------------
     ctx.strokeStyle = '#14202c';
     ctx.lineWidth = 1;
     ctx.fillStyle = '#5c6f80';
@@ -139,93 +166,118 @@ class CompactSpectrumAnalyzer {
       ctx.beginPath();
       ctx.moveTo(x, padT);
       ctx.lineTo(x, padT + specH);
-      ctx.strokeStyle = isMajor ? '#192837' : '#101b24';
+      ctx.strokeStyle = isMajor ? '#1a2938' : '#101b24';
       ctx.stroke();
 
       if (isMajor) {
         ctx.textAlign = 'center';
+        ctx.fillStyle = '#5c6f80';
         ctx.fillText(`${f.toFixed(1)}G`, x, padT + specH + 12);
       }
     }
 
-    // 2. RECEIVER 50 MHz IBW WINDOW
-    if (this.simState) {
-      const curGhz = this.simState.rfCurrentScanGhz || 9.420;
-      const minW = freqToX(curGhz - 0.025);
-      const maxW = freqToX(curGhz + 0.025);
-      const winW = maxW - minW;
+    // -------------------------------------------------------------------------
+    // 2. RECEIVER 50 MHz INSTANTANEOUS BANDWIDTH (IBW) WINDOW & SCAN TARGETS
+    // -------------------------------------------------------------------------
+    const minW = freqToX(curGhz - 0.025);
+    const maxW = freqToX(curGhz + 0.025);
+    const winW = maxW - minW;
 
-      ctx.fillStyle = 'rgba(75, 169, 199, 0.14)';
-      ctx.fillRect(minW, padT, winW, specH);
-      ctx.strokeStyle = 'rgba(75, 169, 199, 0.75)';
-      ctx.lineWidth = 1.2;
-      ctx.strokeRect(minW, padT, winW, specH);
+    // Window fill: Green/Cyan for HIT, Amber/Slate for SCAN/MISS
+    ctx.fillStyle = isHit ? 'rgba(66, 196, 122, 0.18)' : 'rgba(215, 168, 75, 0.09)';
+    ctx.fillRect(minW, padT, winW, specH);
 
-      const cx = freqToX(curGhz);
+    ctx.strokeStyle = isHit ? 'rgba(66, 196, 122, 0.85)' : 'rgba(215, 168, 75, 0.65)';
+    ctx.lineWidth = 1.2;
+    ctx.strokeRect(minW, padT, winW, specH);
+
+    // Center tuned frequency marker line
+    const cx = freqToX(curGhz);
+    ctx.beginPath();
+    ctx.moveTo(cx, padT);
+    ctx.lineTo(cx, padT + specH);
+    ctx.strokeStyle = isHit ? '#42c47a' : '#d7a84b';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Receiver Badge Header
+    const badgeW = 84;
+    const badgeText = isHit ? `RCVR ${curGhz.toFixed(3)}G [HIT]` : `RCVR ${curGhz.toFixed(3)}G [SCAN]`;
+    ctx.fillStyle = isHit ? '#42c47a' : '#d7a84b';
+    ctx.fillRect(cx - badgeW / 2, padT - 18, badgeW, 14);
+    ctx.fillStyle = '#070b10';
+    ctx.font = '700 8.5px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(badgeText, cx, padT - 8);
+
+    // Next anticipated scan band (from UCB scheduler decision)
+    if (this.simState?.rfNextScanGhz) {
+      const nextGhz = this.simState.rfNextScanGhz;
+      const nx = freqToX(nextGhz);
+      ctx.save();
+      ctx.setLineDash([4, 4]);
       ctx.beginPath();
-      ctx.moveTo(cx, padT);
-      ctx.lineTo(cx, padT + specH);
+      ctx.moveTo(nx, padT);
+      ctx.lineTo(nx, padT + specH);
       ctx.strokeStyle = '#4ba9c7';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1.2;
       ctx.stroke();
 
-      ctx.fillStyle = '#4ba9c7';
-      ctx.fillRect(cx - 32, padT - 18, 64, 14);
+      ctx.fillStyle = '#18b8d6';
+      ctx.fillRect(nx - 36, padT - 18, 72, 14);
       ctx.fillStyle = '#070b10';
-      ctx.font = '700 8.5px "JetBrains Mono", monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText(`RCVR ${curGhz.toFixed(3)}G`, cx, padT - 8);
-
-      if (this.simState.rfNextScanGhz) {
-        const nx = freqToX(this.simState.rfNextScanGhz);
-        ctx.save();
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(nx, padT);
-        ctx.lineTo(nx, padT + specH);
-        ctx.strokeStyle = '#d7a84b';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-
-        ctx.fillStyle = '#d7a84b';
-        ctx.fillRect(nx - 30, padT - 18, 60, 14);
-        ctx.fillStyle = '#070b10';
-        ctx.fillText(`NEXT ${this.simState.rfNextScanGhz.toFixed(3)}G`, nx, padT - 8);
-        ctx.restore();
-      }
+      ctx.font = '700 8px "JetBrains Mono", monospace';
+      ctx.fillText(`NEXT ${nextGhz.toFixed(3)}G`, nx, padT - 8);
+      ctx.restore();
     }
 
-    // 3. Synthesize Current Spectral Slice & Update Waterfall Buffer
+    // -------------------------------------------------------------------------
+    // 3. SYNTHESIZE CURRENT SPECTRAL SLICE (Single Source of Truth)
+    // -------------------------------------------------------------------------
     const points = [];
-    const numPts = 180;
+    const numPts = this.waterfallBins; // 180 points across 9.00 - 10.00 GHz
     const now = performance.now();
     const currentSlice = new Float32Array(numPts);
 
     for (let i = 0; i <= numPts; i++) {
       const f = this.minFreq + (i / numPts) * (this.maxFreq - this.minFreq);
-      const noise = -94.0 + (Math.sin(i * 0.4 + now * 0.003) * 0.8) + ((Math.random() - 0.5) * 1.2);
+      // Realistic RF front-end thermal noise floor
+      const noise = -94.0 + (Math.sin(i * 0.35 + now * 0.004) * 0.7) + ((Math.random() - 0.5) * 1.0);
       let power = noise;
 
+      // Energy contribution from transmitting master entities
       for (const ent of this.entities) {
-        if (ent.rf.hasEmitter && ent.rf.isTransmitting && ent.rf.freqGhz) {
-          const delta = f - ent.rf.freqGhz;
-          if (Math.abs(delta) < 0.045) {
-            const g = Math.exp(-(delta * delta) / (2 * 0.008 * 0.008));
-            power = Math.max(power, -95 + (ent.rf.powerDbm - (-95)) * g);
+        if (ent.rf && ent.rf.hasEmitter && ent.rf.freqGhz) {
+          const isTx = ent.rf.isTransmitting;
+          const isTunedHit = isHit && Math.abs(curGhz - ent.rf.freqGhz) < 0.025;
+
+          if (isTx || isTunedHit) {
+            const delta = f - ent.rf.freqGhz;
+            if (Math.abs(delta) < 0.045) {
+              const peakPwr = isTunedHit && rxTel?.powerDbm !== undefined ? rxTel.powerDbm : (ent.rf.powerDbm || -61.2);
+              const g = Math.exp(-(delta * delta) / (2 * 0.009 * 0.009));
+              power = Math.max(power, -95 + (peakPwr - (-95)) * g);
+            }
           }
         }
+      }
+
+      // If receiver confirms HIT at tuned frequency, ensure received energy is visibly peaked in receiver window
+      if (isHit && Math.abs(f - curGhz) < 0.035) {
+        const delta = f - curGhz;
+        const hitPwr = rxTel?.powerDbm !== undefined ? rxTel.powerDbm : -61.2;
+        const g = Math.exp(-(delta * delta) / (2 * 0.008 * 0.008));
+        power = Math.max(power, -95 + (hitPwr - (-95)) * g);
       }
 
       if (i < numPts) currentSlice[i] = power;
       points.push({ x: freqToX(f), y: powerToY(power) });
     }
 
-    // Push slice into waterfall history buffer
-    if (Math.random() < 0.35) {
-      this.waterfallHistory.unshift(currentSlice);
-      if (this.waterfallHistory.length > this.waterfallRows) {
-        this.waterfallHistory.pop();
-      }
+    // Steady paced waterfall slice rollout (~10-12 Hz)
+    if (now - this.lastWaterfallPush > 90) {
+      this.pushWaterfallSlice(currentSlice, curGhz, isHit);
+      this.lastWaterfallPush = now;
     }
 
     // Fill under spectrum curve
@@ -237,90 +289,170 @@ class CompactSpectrumAnalyzer {
     ctx.closePath();
 
     const specGrad = ctx.createLinearGradient(0, padT, 0, padT + specH);
-    specGrad.addColorStop(0, 'rgba(75, 169, 199, 0.35)');
+    specGrad.addColorStop(0, isHit ? 'rgba(66, 196, 122, 0.35)' : 'rgba(75, 169, 199, 0.30)');
     specGrad.addColorStop(0.6, 'rgba(75, 169, 199, 0.08)');
     specGrad.addColorStop(1, 'rgba(7, 11, 16, 0.0)');
     ctx.fillStyle = specGrad;
     ctx.fill();
 
-    // Spectrum stroke
+    // Spectrum stroke line
     ctx.beginPath();
     for (let i = 0; i < points.length; i++) {
       if (i === 0) ctx.moveTo(points[i].x, points[i].y);
       else ctx.lineTo(points[i].x, points[i].y);
     }
-    ctx.strokeStyle = '#4ba9c7';
+    ctx.strokeStyle = isHit ? '#3ed685' : '#4ba9c7';
     ctx.lineWidth = 1.4;
     ctx.stroke();
 
-    // Peak markers
+    // Emitter Peak Markers
     this.entities.forEach(ent => {
-      if (ent.rf.hasEmitter && ent.rf.freqGhz) {
+      if (ent.rf && ent.rf.hasEmitter && ent.rf.freqGhz) {
+        const isTx = ent.rf.isTransmitting;
+        const isTunedHit = isHit && Math.abs(curGhz - ent.rf.freqGhz) < 0.025;
+        const activeSignal = isTx || isTunedHit;
+        const pwr = isTunedHit && rxTel?.powerDbm !== undefined ? rxTel.powerDbm : (ent.rf.powerDbm || -61.2);
+
         const ex = freqToX(ent.rf.freqGhz);
-        const ey = powerToY(ent.rf.isTransmitting ? ent.rf.powerDbm : -92);
+        const ey = powerToY(activeSignal ? pwr : -92.5);
         const isSelected = ent.id === (this.simState?.selectedEntityId || 'TRK-021');
 
         ctx.save();
-        ctx.fillStyle = isSelected ? '#18b8d6' : (ent.rf.isTransmitting ? '#42c47a' : '#687784');
+        ctx.fillStyle = activeSignal ? (isSelected ? '#18b8d6' : '#42c47a') : '#5c6f80';
         ctx.beginPath();
-        ctx.arc(ex, ey, isSelected ? 4.5 : 3.5, 0, Math.PI * 2);
+        ctx.arc(ex, ey, activeSignal ? 4.5 : 3, 0, Math.PI * 2);
         ctx.fill();
 
-        if (ent.rf.isTransmitting) {
+        if (activeSignal) {
           ctx.strokeStyle = isSelected ? '#18b8d6' : '#42c47a';
-          ctx.lineWidth = 1;
+          ctx.lineWidth = 1.2;
           ctx.stroke();
 
           ctx.font = '700 8.5px "JetBrains Mono", monospace';
           ctx.fillStyle = isSelected ? '#18b8d6' : '#e6edf3';
           ctx.textAlign = 'center';
           ctx.fillText(`${ent.rf.emitterId} (${ent.id})`, ex, ey - 9);
+
           ctx.font = '7.5px "JetBrains Mono", monospace';
-          ctx.fillStyle = '#9aa7b5';
-          ctx.fillText(`${ent.rf.freqGhz.toFixed(3)}G [${ent.rf.powerDbm}dBm]`, ex, ey + 13);
+          ctx.fillStyle = isTunedHit ? '#42c47a' : '#9aa7b5';
+          ctx.fillText(`${ent.rf.freqGhz.toFixed(3)}G [${pwr.toFixed(1)}dBm]`, ex, ey + 13);
+        } else {
+          // Idle channel marker
+          ctx.font = '7px "JetBrains Mono", monospace';
+          ctx.fillStyle = '#5c6f80';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${ent.rf.emitterId}`, ex, ey - 6);
         }
         ctx.restore();
       }
     });
     ctx.restore();
 
-    // 4. WATERFALL SPECTROGRAM UNDERNEATH SPECTRUM
+    // -------------------------------------------------------------------------
+    // 4. SPECTROGRAM WATERFALL UNDERNEATH SPECTRUM (Continuous Time History)
+    // -------------------------------------------------------------------------
     ctx.save();
-    // Waterfall box border
+
+    // Dark tactical waterfall background
+    ctx.fillStyle = '#080d14';
+    ctx.fillRect(padL, wfTop, plotW, wfH);
+
+    // Box border
     ctx.strokeStyle = '#182736';
     ctx.strokeRect(padL, wfTop, plotW, wfH);
 
-    // Label
+    // Label with live receiver indicator
     ctx.font = '700 8.5px "JetBrains Mono", monospace';
     ctx.fillStyle = '#617180';
     ctx.textAlign = 'left';
-    ctx.fillText('SPECTROGRAM WATERFALL // TIME DECAY', padL + 4, wfTop - 4);
+    ctx.fillText('SPECTROGRAM WATERFALL // TIME DECAY', padL + 4, wfTop - 5);
 
-    const rowH = wfH / this.waterfallHistory.length;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = isHit ? '#42c47a' : '#8a9ab5';
+    ctx.fillText(isHit ? '● INTERCEPT TRACKING ACTIVE' : '○ CHANNEL SCANNING', w - padR - 4, wfTop - 5);
+
+    const historyLen = this.waterfallHistory.length;
+    const rowH = wfH / historyLen;
     const colW = plotW / this.waterfallBins;
 
-    for (let r = 0; r < this.waterfallHistory.length; r++) {
-      const row = this.waterfallHistory[r];
+    // Render waterfall rows (row 0 = newest at top, older rows decay downwards)
+    for (let r = 0; r < historyLen; r++) {
+      const item = this.waterfallHistory[r];
+      const powers = item.powers;
       const y = wfTop + r * rowH;
 
-      for (let c = 0; c < row.length; c++) {
-        const p = row[c];
+      // 4a. Receiver dwell scan raster track
+      if (item.dwellGhz) {
+        const dwellMinX = freqToX(item.dwellGhz - 0.025);
+        const dwellMaxX = freqToX(item.dwellGhz + 0.025);
+        const dwellW = dwellMaxX - dwellMinX;
+
+        ctx.fillStyle = item.isHit ? 'rgba(66, 196, 122, 0.16)' : 'rgba(75, 169, 199, 0.10)';
+        ctx.fillRect(dwellMinX, y, dwellW, rowH + 0.5);
+      }
+
+      // 4b. Frequency intensity bins
+      for (let c = 0; c < powers.length; c++) {
+        const p = powers[c];
         const x = padL + c * colW;
 
-        // Intensity color mapping (-95 dBm -> dark, -60 dBm -> bright cyan/yellow)
-        const norm = Math.max(0, Math.min(1, (p - (-95)) / 45));
-        if (norm > 0.05) {
-          if (norm < 0.3) {
-            ctx.fillStyle = `rgba(24, 184, 214, ${norm * 0.5})`;
-          } else if (norm < 0.7) {
-            ctx.fillStyle = `rgba(66, 196, 122, ${norm * 0.8})`;
-          } else {
-            ctx.fillStyle = `rgba(215, 168, 75, ${norm})`;
+        // Baseline noise floor texture
+        if (p < -90) {
+          if ((c + r) % 3 === 0) {
+            ctx.fillStyle = 'rgba(16, 28, 42, 0.35)';
+            ctx.fillRect(x, y, colW + 0.5, rowH + 0.5);
           }
-          ctx.fillRect(x, y, colW + 0.5, rowH + 0.5);
+        } else {
+          // Heat map color ramp for RF energy:
+          // -90 to -78 dBm: Deep Cyan
+          // -78 to -68 dBm: Bright Cyan to Emerald
+          // -68 to -58 dBm: Emerald to Golden Amber
+          // > -58 dBm: White-hot
+          const norm = Math.max(0, Math.min(1, (p - (-90)) / 45));
+          if (norm < 0.28) {
+            ctx.fillStyle = `rgba(24, 184, 214, ${0.4 + norm * 1.5})`;
+          } else if (norm < 0.65) {
+            ctx.fillStyle = `rgba(66, 196, 122, ${0.6 + norm * 0.5})`;
+          } else if (norm < 0.88) {
+            ctx.fillStyle = `rgba(229, 169, 60, ${0.75 + norm * 0.25})`;
+          } else {
+            ctx.fillStyle = `rgba(255, 255, 255, ${norm})`;
+          }
+          ctx.fillRect(x, y, colW + 0.8, rowH + 0.8);
         }
       }
+
+      // Subtle horizontal time decay dividers every 15 rows
+      if (r > 0 && r % 15 === 0) {
+        ctx.strokeStyle = 'rgba(24, 39, 54, 0.5)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(w - padR, y);
+        ctx.stroke();
+      }
     }
+
+    // Vertical frequency grid alignment matching spectrum above
+    for (let f = 9.0; f <= 10.001; f += 0.2) {
+      const x = freqToX(f);
+      ctx.strokeStyle = '#121e29';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, wfTop);
+      ctx.lineTo(x, wfTop + wfH);
+      ctx.stroke();
+    }
+
+    // Time decay scale on left margin
+    ctx.font = '7.5px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#4a5b6c';
+    ctx.textAlign = 'right';
+    ctx.fillText('0s', padL - 4, wfTop + 8);
+    ctx.fillText('-3s', padL - 4, wfTop + wfH * 0.35);
+    ctx.fillText('-6s', padL - 4, wfTop + wfH * 0.70);
+    ctx.fillText('-9s', padL - 4, wfTop + wfH - 2);
+
     ctx.restore();
   }
 }

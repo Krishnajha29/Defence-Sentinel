@@ -3,6 +3,7 @@ import type { Scenario } from './types';
 import { usePersonnel }  from './hooks/usePersonnel';
 import { useAlerts }     from './hooks/useAlerts';
 import { useSimulation } from './hooks/useSimulation';
+import { useC2Backend }  from './hooks/useC2Backend';
 import RadarScope        from './components/RadarScope';
 import TrackList         from './components/TrackList';
 import PersonnelPanel    from './components/PersonnelPanel';
@@ -30,19 +31,56 @@ export default function App() {
     fireAlert(track);
   }, [fireAlert]);
 
-  const { tracks, sweepAngle, isPaused, scenario, setScenario, pause, resume, reset } = useSimulation(personnelIds, handleBreach);
+  const c2 = useC2Backend(handleBreach);
+
+  const handleLocalBreach = useCallback((track: Track) => {
+    if (!c2.isConnected) {
+      fireAlert(track);
+    }
+  }, [c2.isConnected, fireAlert]);
+
+  const localSim = useSimulation(personnelIds, handleLocalBreach);
+
+  // Use canonical backend tracks and controls when connected; fallback to local simulation if offline
+  const isConnected = c2.isConnected;
+  const tracks = isConnected && c2.tracks.length > 0 ? c2.tracks : localSim.tracks;
+  const sweepAngle = isConnected ? c2.sweepAngle : localSim.sweepAngle;
+  const isPaused = isConnected ? c2.isPaused : localSim.isPaused;
+  const scenario = (isConnected && c2.scenario ? c2.scenario : localSim.scenario) as Scenario;
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleSelect = useCallback((id: string | null) => setSelectedId(id), []);
+  const setScenario = useCallback((s: Scenario) => {
+    if (isConnected) {
+      c2.selectScenario(s);
+    } else {
+      localSim.setScenario(s);
+    }
+  }, [isConnected, c2, localSim]);
+
+  const pause = useCallback(() => {
+    if (isConnected) c2.togglePause();
+    else localSim.pause();
+  }, [isConnected, c2, localSim]);
+
+  const resume = useCallback(() => {
+    if (isConnected) c2.togglePause();
+    else localSim.resume();
+  }, [isConnected, c2, localSim]);
+
+  const handleSelect = useCallback((id: string | null) => {
+    setSelectedId(id);
+    if (isConnected && id) c2.selectEntity(id);
+  }, [isConnected, c2]);
 
   const selectedTrack = tracks.find(t => t.id === selectedId) ?? null;
 
   const handleReset = useCallback(() => {
-    reset();
+    if (isConnected) c2.resetSim();
+    else localSim.reset();
     clearAll();
     setSelectedId(null);
-  }, [reset, clearAll]);
+  }, [isConnected, c2, localSim, clearAll]);
 
   const handleReport = useCallback(() => {
     const report = {
@@ -77,15 +115,17 @@ export default function App() {
       {/* ── TOP BAR ─────────────────────────────────────────────────────────── */}
       <header className="flex items-center justify-between px-4 py-2 border-b border-gray-700/60 bg-gray-950 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-emerald-400 animate-pulse' : 'bg-cyan-400'}`} />
           <span className="text-sm font-bold tracking-[0.15em] text-cyan-300">RADAR SECURITY SCANNER</span>
-          <span className="text-[8px] border border-gray-700 text-gray-500 px-2 py-0.5 rounded">SIMULATION</span>
+          <span className={`text-[8px] border px-2 py-0.5 rounded font-bold ${isConnected ? 'border-emerald-500/50 text-emerald-400 bg-emerald-950/40' : 'border-gray-700 text-gray-500'}`}>
+            {isConnected ? 'C2 BACKEND: CONNECTED [PORT 8080]' : 'OFFLINE FALLBACK'}
+          </span>
         </div>
         <div className="text-[8px] text-red-500/80 font-bold tracking-wide text-center flex-1 mx-4">
           ⚠ SIMULATION ONLY — NOT CONNECTED TO REAL CAMERAS, BIOMETRIC SYSTEMS, OR SECURITY NETWORKS
         </div>
         <div className="flex items-center gap-3 text-[10px]">
-          <span className="text-gray-500">SCENARIO: <span className="text-cyan-400 font-bold">{scenario.replace('_', ' ')}</span></span>
+          <span className="text-gray-500">SCENARIO: <span className="text-cyan-400 font-bold">{String(scenario).replace(/_/g, ' ')}</span></span>
           <Clock />
         </div>
       </header>

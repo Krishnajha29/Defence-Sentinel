@@ -304,7 +304,7 @@
               </div>
               <div class="rf-stat-row">
                 <span style="color:var(--text-secondary);">INSTANTANEOUS BW:</span>
-                <span style="color:var(--rf-teal); font-weight:700;">50 MHz</span>
+                <span style="color:var(--rf-teal); font-weight:700;" id="rfCurrentIbw">50 MHz</span>
               </div>
               <div class="rf-stat-row">
                 <span style="color:var(--text-secondary);">DWELL ALLOCATION:</span>
@@ -492,12 +492,13 @@
             <table class="rf-emitter-table">
               <thead>
                 <tr>
-                  <th>ENTITY ID</th>
+                  <th>TRACK</th>
                   <th>RADAR</th>
-                  <th>CAMERA</th>
+                  <th>OPTICAL / CAMERA</th>
                   <th>RF / ESM</th>
                   <th>PERSONNEL</th>
-                  <th>FUSION STATUS</th>
+                  <th>CLASSIFICATION</th>
+                  <th>CONFIDENCE</th>
                 </tr>
               </thead>
               <tbody id="fusionMatrixBody">
@@ -926,7 +927,7 @@
               <span>BAYESIAN PRIOR VS POSTERIOR DISTRIBUTION</span>
               <span style="color:var(--radar-cyan);">MODEL UPDATE</span>
             </div>
-            <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:12px; display:flex; flex-direction:column; gap:8px;">
+            <div id="schedBayesDistContainer" style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:12px; display:flex; flex-direction:column; gap:8px;">
               <div>
                 <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9px; margin-bottom:2px;">
                   <span>9.420 GHz [TARGET BAND]</span>
@@ -1000,7 +1001,7 @@
               <span>BAND PRIORITY & OCCUPANCY COMPARISON</span>
             </div>
 
-            <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:12px; display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
+            <div id="schedBandPriorityContainer" style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:12px; display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">
               <div>
                 <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9.5px; margin-bottom:2px;">
                   <span>9.420 GHz (Primary Target)</span>
@@ -1073,6 +1074,8 @@
               <span class="prov-chip">SEED: <b id="benchExpSeed" style="color:var(--radar-cyan);">42 (REPRODUCIBLE)</b></span>
               <span class="prov-chip">SCENARIO: <b id="benchExpScenario" style="color:#fff;">FREQUENCY_AGILE</b></span>
               <span class="prov-chip">SAMPLE: <b id="benchExpRuns" style="color:#fff;">N = 1000 DWELLS (180s)</b></span>
+              <span class="prov-chip">HASH: <b id="benchExpHash" style="color:#fff;">--</b></span>
+              <span class="prov-chip">TIME: <b id="benchExpTime" style="color:#fff;">--</b></span>
             </div>
           </div>
           <div class="prov-right-actions" style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
@@ -1372,8 +1375,6 @@
           </div>
         </div>
 
-        </div>
-
         <!-- Cumulative Interceptions Comparison Chart -->
         <div class="analytics-chart-container" id="analyticsChartContainer">
           <div class="analytics-chart-header">
@@ -1416,10 +1417,11 @@
           <div style="display:flex; flex-direction:column; gap:6px;">
             <button class="btn-scenario active" data-scenario="STANDARD BASE MONITORING">STANDARD BASE MONITORING</button>
             <button class="btn-scenario" data-scenario="NIGHT PERIMETER">NIGHT PERIMETER INFILTRATION</button>
-            <button class="btn-scenario" data-scenario="PERIODIC RF">PERIODIC RF EMITTER (3s ON / 3s OFF)</button>
+            <button class="btn-scenario" data-scenario="PERIODIC RF">PERIODIC RF EMITTER (2s ON / 2s OFF)</button>
             <button class="btn-scenario" data-scenario="INTERMITTENT RF">INTERMITTENT PULSED SIGNAL</button>
             <button class="btn-scenario" data-scenario="FREQUENCY AGILE">FREQUENCY AGILE SPREAD-SPECTRUM</button>
             <button class="btn-scenario" data-scenario="MULTI-EMITTER">MULTI-EMITTER CONCURRENT INTERCEPT</button>
+            <button class="btn-scenario" data-scenario="MIXED">MIXED COMPOSITE EW ENVIRONMENT</button>
             <button class="btn-scenario" data-scenario="UNKNOWN ACTIVITY">UNKNOWN HIGH-FREQUENCY CONTACT</button>
           </div>
 
@@ -1443,11 +1445,16 @@
 
           <div class="panel-section-title">
             <span>AUTOMATED 12-STEP DEMONSTRATION</span>
+            <span id="simDemoStepBadge" style="color:var(--radar-amber); font-weight:700;">READY</span>
           </div>
           <div>
             <button id="btnSimTriggerDemo" class="btn-ops btn-demo-amber" style="width:100%; padding:8px;">
               ▶ RUN EXACT 12-STEP DEMO: NIGHT PERIMETER MONITORING
             </button>
+            <div id="demoStepProgressBox" style="margin-top:6px; padding:8px 10px; background:#04070a; border:1px solid var(--border-default); border-radius:3px; font-family:var(--font-mono); font-size:9.5px; color:var(--text-secondary); display:flex; justify-content:space-between; align-items:center;">
+              <span id="demoStepIndicatorText">DEMO STATUS: READY TO EXECUTE</span>
+              <span id="demoStepCountBadge" style="color:var(--radar-cyan); font-weight:700;">0 / 12</span>
+            </div>
           </div>
         </div>
 
@@ -1459,23 +1466,23 @@
           <div class="rf-receiver-card">
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">360° PPI RADAR ENGINE:</span>
-              <span style="color:var(--state-verified); font-weight:700;">ONLINE (24 RPM)</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRadarEngine">ONLINE (24 RPM)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">OPTICAL SURVEILLANCE NETWORK:</span>
-              <span style="color:var(--cam-blue); font-weight:700;">4 / 4 ONLINE</span>
+              <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">4 / 4 ONLINE</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">RF / ESM RECEIVER (SIH26055):</span>
-              <span style="color:var(--state-verified); font-weight:700;">ACTIVE (50 MHz IBW)</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">ACTIVE (50 MHz IBW)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">SENSOR FUSION SYNTHESIS:</span>
-              <span style="color:var(--radar-cyan); font-weight:700;">SYNCHRONIZED (25 Hz)</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysFusion">SYNCHRONIZED (25 Hz)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">ADAPTIVE SCHEDULER (UCB1):</span>
-              <span style="color:var(--radar-cyan); font-weight:700;">HEALTHY</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">HEALTHY</span>
             </div>
           </div>
 

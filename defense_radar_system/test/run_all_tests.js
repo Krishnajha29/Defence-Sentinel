@@ -26,22 +26,30 @@ try {
   if (!suiteL.success) throw new Error(`Suite L FAILED: ${suiteL.fail} test(s) failed`);
   console.log('✅ PASS: Simulated Security Alert & Incident Response Engine Verified.\n');
 
-  console.log('===========================================================');
-  console.log('  🎉 ALL AUTOMATED TEST SUITES PASSED (12/12 SUITES)');
-  console.log('  - Suite A (PRNG Determinism): VERIFIED');
-  console.log('  - Suite B (UCB Mathematical Correctness): VERIFIED');
-  console.log('  - Suite C (Beta Posterior Updates): VERIFIED');
-  console.log('  - Suite D (Unvisited Band Exploration): VERIFIED');
-  console.log('  - Suite E (Stationary Convergence): VERIFIED');
-  console.log('  - Suite F (Deterministic Single-Timeline Replay): VERIFIED');
-  console.log('  - Suite G (Metric Calculations & Brier Score): VERIFIED');
-  console.log('  - Suite H (Single Source of Truth Entity Sync): VERIFIED');
-  console.log('  - Suite I (Experimental Benchmark Engine & Suite): VERIFIED');
-  console.log('  - Suite J (Adaptive Learning Loop & Decision Traces): VERIFIED');
-  console.log('  - Suite K (Robustness Engine & Failure Injection): VERIFIED');
-  console.log('  - Suite L (Simulated Security Alert & Incident Engine): VERIFIED');
-  console.log('===========================================================');
-  process.exit(0);
+  // Suite M: Phase 3 System Completion Verification
+  const { runPhase3Tests } = require('./test_phase3_completion.js');
+  runPhase3Tests().then(() => {
+    console.log('===========================================================');
+    console.log('  🎉 ALL AUTOMATED TEST SUITES PASSED (13/13 SUITES)');
+    console.log('  - Suite A (PRNG Determinism): VERIFIED');
+    console.log('  - Suite B (UCB Mathematical Correctness): VERIFIED');
+    console.log('  - Suite C (Beta Posterior Updates): VERIFIED');
+    console.log('  - Suite D (Unvisited Band Exploration): VERIFIED');
+    console.log('  - Suite E (Stationary Convergence): VERIFIED');
+    console.log('  - Suite F (Deterministic Single-Timeline Replay): VERIFIED');
+    console.log('  - Suite G (Metric Calculations & Brier Score): VERIFIED');
+    console.log('  - Suite H (Single Source of Truth Entity Sync): VERIFIED');
+    console.log('  - Suite I (Experimental Benchmark Engine & Suite): VERIFIED');
+    console.log('  - Suite J (Adaptive Learning Loop & Decision Traces): VERIFIED');
+    console.log('  - Suite K (Robustness Engine & Failure Injection): VERIFIED');
+    console.log('  - Suite L (Simulated Security Alert & Incident Engine): VERIFIED');
+    console.log('  - Suite M (Phase 3 System Completion & RF Telemetry): VERIFIED');
+    console.log('===========================================================');
+    process.exit(0);
+  }).catch(err => {
+    console.error('\n❌ SUITE M FAILED:', err);
+    process.exit(1);
+  });
 } catch (err) {
   console.error('\n❌ TEST SUITE FAILED:', err);
   process.exit(1);

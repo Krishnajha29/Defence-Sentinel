@@ -180,8 +180,12 @@ class RecencyAugmentedUCB1Scheduler {
         this.decisionHistory.unshift(decisionRecord);
         if (this.decisionHistory.length > 50) this.decisionHistory.pop();
 
+        const unvisitedOthers = this.bands.filter(cand => cand !== b && this.arms[cand].visits === 0);
+        const predictedNextBand = unvisitedOthers.length > 0 ? unvisitedOthers[0] : (this.bands.find(cand => cand !== b) || b);
+
         return {
           selectedBand: b,
+          predictedNextBand,
           score: Infinity,
           dwellMs: this.dwellMs,
           predictedProbability: 0.5,
@@ -295,8 +299,11 @@ class RecencyAugmentedUCB1Scheduler {
     this.decisionHistory.unshift(decisionRecord);
     if (this.decisionHistory.length > 50) this.decisionHistory.pop();
 
+    const predictedNextBand = candidateScores.length > 1 ? candidateScores[1].band : bestBand;
+
     return {
       selectedBand: bestBand,
+      predictedNextBand,
       score: maxQ,
       dwellMs: this.dwellMs,
       predictedProbability: bestInfo.bayesProb,
@@ -392,7 +399,8 @@ class RecencyAugmentedUCB1Scheduler {
         lastObserved,
         aging,
         explorationBonus,
-        currentScore
+        currentScore,
+        lastOutcome: arm.lastOutcome || 'NONE'
       };
     });
   }
