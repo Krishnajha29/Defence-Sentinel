@@ -1,0 +1,9 @@
+{
+  "name": "defence-sentinel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Defence Sentinel — Adaptive RF/ESM Radar Security System",
+  "scripts": {
+    "build": "npm --prefix radar-scanner run build"
+  }
+}
