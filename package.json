@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "Defence Sentinel — ESM-ASTRA Adaptive RF/ESM Radar Security System (SIH26055)",
+  "main": "index.js",
   "scripts": {
-    "build": "node -e \"console.log('ESM-ASTRA assets ready in defense_radar_system/public')\"",
-    "start": "node defense_radar_system/server.js"
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('public')) fs.cpSync('defense_radar_system/public', 'public', {recursive:true}); console.log('ESM-ASTRA assets ready');\"",
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.19.2",
     "ws": "^8.18.0"
   }
 }
-
