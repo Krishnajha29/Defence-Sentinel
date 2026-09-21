@@ -206,6 +206,13 @@ The Multi-Sensor Simulation Center features an automated 12-step guided demonstr
 
 ## Quick Start
 
+### 0. Clone the Repository
+
+```bash
+git clone https://github.com/Krishnajha29/Defence-Sentinel.git
+cd Defence-Sentinel
+```
+
 ### 1. Start the C2 Backend & Main Dashboard (Port 8080)
 
 ```bash
