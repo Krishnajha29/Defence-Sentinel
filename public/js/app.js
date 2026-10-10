@@ -338,65 +338,65 @@ class TacticalC2App {
 
       // Extra detail block based on classification
       const authorizedRows = pRecord ? `
-        <div style="border-top:1px solid rgba(66,196,122,0.2); margin-top:5px; padding-top:5px;">
-          <div style="color:${clsColor}; font-size:7.5px; font-weight:700; letter-spacing:0.07em; margin-bottom:3px;">✓ AUTHORIZED PERSONNEL</div>
-          <div style="color:#e8f4ff; font-size:9.5px; font-weight:700; margin-bottom:4px;">${personName}</div>
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 8px;">
-            <span style="color:var(--text-tertiary);font-size:7.5px;">TAG ID</span>
-            <span style="color:var(--radar-cyan);font-size:7.5px;font-weight:700;">${personTag}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">RANK</span>
-            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.rank || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">ROLE</span>
-            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.role || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">UNIT</span>
-            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.unit || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">ZONE</span>
-            <span style="color:#e0f0ff;font-size:7.5px;">${personZone}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">CLEARANCE</span>
-            <span style="color:${clsColor};font-size:7.5px;font-weight:700;">${pRecord.clearance || personStatus}</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">SHIFT</span>
-            <span style="color:#b0c8e0;font-size:7.5px;">${pRecord.shift || '—'}</span>
+        <div style="border-top:1px solid rgba(16,185,129,0.25); margin-top:6px; padding-top:6px;">
+          <div style="color:${clsColor}; font-size:10px; font-weight:700; letter-spacing:0.05em; margin-bottom:3px;">✓ AUTHORIZED PERSONNEL</div>
+          <div style="color:#e8f4ff; font-size:11px; font-weight:700; margin-bottom:4px;">${personName}</div>
+          <div style="display:grid; grid-template-columns:auto 1fr; gap:3px 10px;">
+            <span style="color:var(--text-tertiary);font-size:10px;">TAG ID</span>
+            <span style="color:var(--radar-cyan);font-size:10px;font-weight:700;">${personTag}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">RANK</span>
+            <span style="color:#e0f0ff;font-size:10px;">${pRecord.rank || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">ROLE</span>
+            <span style="color:#e0f0ff;font-size:10px;">${pRecord.role || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">UNIT</span>
+            <span style="color:#e0f0ff;font-size:10px;">${pRecord.unit || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">ZONE</span>
+            <span style="color:#e0f0ff;font-size:10px;">${personZone}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">CLEARANCE</span>
+            <span style="color:${clsColor};font-size:10px;font-weight:700;">${pRecord.clearance || personStatus}</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">SHIFT</span>
+            <span style="color:#b0c8e0;font-size:10px;">${pRecord.shift || '—'}</span>
           </div>
         </div>` : cls === 'ANOMALOUS' ? `
-        <div style="border-top:1px solid rgba(212,88,88,0.25); margin-top:5px; padding-top:5px;">
-          <div style="color:${clsColor};font-size:7.5px;font-weight:700;">⚠ UNAUTHORIZED — NO TAG MATCH</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
-            <span style="color:var(--text-tertiary);font-size:7.5px;">RISK</span>
-            <span style="color:#ff6666;font-size:7.5px;font-weight:700;">${ent.fusion.anomalyScore}/100</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">CONFIDENCE</span>
-            <span style="color:#ffaaaa;font-size:7.5px;">${ent.fusion.confidence}%</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">STATUS</span>
-            <span style="color:${clsColor};font-size:7.5px;font-weight:700;">RESTRICTED ZONE BREACH</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">ACTION</span>
-            <span style="color:#ffaaaa;font-size:7.5px;">${ent.fusion.recommendation}</span>
+        <div style="border-top:1px solid rgba(239,68,68,0.25); margin-top:6px; padding-top:6px;">
+          <div style="color:${clsColor};font-size:10px;font-weight:700;">⚠ UNAUTHORIZED — NO TAG MATCH</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
+            <span style="color:var(--text-tertiary);font-size:10px;">RISK</span>
+            <span style="color:#ff6666;font-size:10px;font-weight:700;">${ent.fusion.anomalyScore}/100</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">CONFIDENCE</span>
+            <span style="color:#ffaaaa;font-size:10px;">${ent.fusion.confidence}%</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">STATUS</span>
+            <span style="color:${clsColor};font-size:10px;font-weight:700;">RESTRICTED ZONE BREACH</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">ACTION</span>
+            <span style="color:#ffaaaa;font-size:10px;">${ent.fusion.recommendation}</span>
           </div>
         </div>` : cls === 'WILDLIFE' ? `
-        <div style="border-top:1px solid rgba(215,168,75,0.2); margin-top:5px; padding-top:5px;">
-          <div style="color:${clsColor};font-size:7.5px;font-weight:700;">▲ WILDLIFE / FAUNA CONTACT</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
-            <span style="color:var(--text-tertiary);font-size:7.5px;">ANOMALY</span>
-            <span style="color:#d7a84b;font-size:7.5px;">${ent.fusion.anomalyScore}/100</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">FILTER</span>
-            <span style="color:#b09050;font-size:7.5px;">FAUNA FILTERED — NO ALERT</span>
+        <div style="border-top:1px solid rgba(245,158,11,0.25); margin-top:6px; padding-top:6px;">
+          <div style="color:${clsColor};font-size:10px;font-weight:700;">▲ WILDLIFE / FAUNA CONTACT</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
+            <span style="color:var(--text-tertiary);font-size:10px;">ANOMALY</span>
+            <span style="color:#d7a84b;font-size:10px;">${ent.fusion.anomalyScore}/100</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">FILTER</span>
+            <span style="color:#b09050;font-size:10px;">FAUNA FILTERED — NO ALERT</span>
           </div>
         </div>` : `
-        <div style="border-top:1px solid rgba(138,154,181,0.15); margin-top:5px; padding-top:5px;">
-          <div style="color:${clsColor};font-size:7.5px;">□ UNIDENTIFIED — OUTSIDE PERIMETER</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
-            <span style="color:var(--text-tertiary);font-size:7.5px;">CONFIDENCE</span>
-            <span style="color:#8a9ab5;font-size:7.5px;">${ent.fusion.confidence}%</span>
-            <span style="color:var(--text-tertiary);font-size:7.5px;">ACTION</span>
-            <span style="color:#8a9ab5;font-size:7.5px;">MONITOR</span>
+        <div style="border-top:1px solid rgba(138,154,181,0.15); margin-top:6px; padding-top:6px;">
+          <div style="color:${clsColor};font-size:10px;">□ UNIDENTIFIED — OUTSIDE PERIMETER</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
+            <span style="color:var(--text-tertiary);font-size:10px;">CONFIDENCE</span>
+            <span style="color:#8a9ab5;font-size:10px;">${ent.fusion.confidence}%</span>
+            <span style="color:var(--text-tertiary);font-size:10px;">ACTION</span>
+            <span style="color:#8a9ab5;font-size:10px;">MONITOR</span>
           </div>
         </div>`;
 
 
       card.innerHTML = `
         <div class="track-card-header">
-          <span class="track-card-id" style="color:${isSelected ? 'var(--radar-cyan)' : clsColor};">${icon} ${ent.id} <span style="font-size:7.5px; color:var(--text-secondary); font-weight:600; margin-left:2px;">[${ent.type}]</span></span>
+          <span class="track-card-id" style="color:${isSelected ? 'var(--radar-cyan)' : clsColor};">${icon} ${ent.id} <span style="font-size:10px; color:var(--text-secondary); font-weight:600; margin-left:3px;">[${ent.type}]</span></span>
           <span class="track-pill ${classSuffix}">${cls}</span>
         </div>
-        <div class="track-card-metrics" style="margin-top:3px;">
+        <div class="track-card-metrics" style="margin-top:4px;">
           <span>Range: <b>${ent.radar.range}m</b></span>
           <span>Brg: <b>${ent.radar.azimuth}°</b></span>
           <span>Speed: <b>${ent.radar.speedKmh} km/h</b></span>
@@ -472,18 +472,18 @@ class TacticalC2App {
         ].filter(Boolean).join(' | ') : '';
 
         return `
-          <div class="sos-log-entry" style="background:${bgColor}; border-left:2px solid ${levelColor}; padding-left:6px; margin-bottom:4px;">
+          <div class="sos-log-entry" style="background:${bgColor}; border-left:3px solid ${levelColor}; padding-left:8px; margin-bottom:5px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; align-items:center;">
-              <span style="color:${levelColor}; font-size:9px;">${inc.incidentId || inc.id}</span>
-              <span style="color:var(--text-tertiary); font-size:8px;">${inc.timeStr || inc.time}</span>
+              <span style="color:${levelColor}; font-size:11px;">${inc.incidentId || inc.id}</span>
+              <span style="color:var(--text-tertiary); font-size:10px;">${inc.timeStr || inc.time}</span>
             </div>
-            <div style="color:#fff; margin-top:1px; font-size:9px; font-weight:600;">${inc.entityId || inc.targetId} — ${inc.alertLevel || inc.level || 'NONE'}</div>
-            <div style="color:var(--text-secondary); font-size:8px; margin-top:1px;">${inc.range ? `Range ${inc.range}m | Az ${inc.azimuth}° | ${inc.speed?.toFixed(1)} km/h` : (inc.location || '')}</div>
-            ${evidenceStr ? `<div style="color:var(--radar-cyan); font-size:7.5px; margin-top:1px; font-family:var(--font-mono);">${evidenceStr}</div>` : ''}
-            ${inc.riskScore !== undefined ? `<div style="color:${levelColor}; font-size:7.5px; font-family:var(--font-mono);">RISK: ${inc.riskScore}/100</div>` : ''}
-            <div style="display:flex; align-items:center; gap:4px; margin-top:3px;">
-              <span style="font-size:7.5px; color:${isActive ? 'var(--state-critical)' : 'var(--state-verified)'}; font-weight:700;">${inc.status}</span>
-              ${isActive && hasAlert ? `<button class="btn-ops" style="font-size:7px; padding:1px 6px; height:16px; line-height:1;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
+            <div style="color:#fff; margin-top:2px; font-size:11px; font-weight:600;">${inc.entityId || inc.targetId} — ${inc.alertLevel || inc.level || 'NONE'}</div>
+            <div style="color:var(--text-secondary); font-size:10px; margin-top:2px;">${inc.range ? `Range ${inc.range}m | Az ${inc.azimuth}° | ${inc.speed?.toFixed(1)} km/h` : (inc.location || '')}</div>
+            ${evidenceStr ? `<div style="color:var(--radar-cyan); font-size:10px; margin-top:2px; font-family:var(--font-mono);">${evidenceStr}</div>` : ''}
+            ${inc.riskScore !== undefined ? `<div style="color:${levelColor}; font-size:10px; font-family:var(--font-mono); font-weight:600;">RISK: ${inc.riskScore}/100</div>` : ''}
+            <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
+              <span style="font-size:10px; color:${isActive ? 'var(--state-critical)' : 'var(--state-verified)'}; font-weight:700;">${inc.status}</span>
+              ${isActive && hasAlert ? `<button class="btn-ops" style="font-size:10px; padding:2px 8px; height:20px; line-height:1.2;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
             </div>
           </div>
         `;
@@ -626,16 +626,16 @@ class TacticalC2App {
       const dwellStr = e.dwellMs || 180;
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:62px;">
-            <span class="sos-time" style="font-size:8.5px; color:var(--text-tertiary);">${e.time}</span>
-            <span class="sos-tag ${tagClass}" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content;">${tagText}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:68px;">
+            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${e.time}</span>
+            <span class="sos-tag ${tagClass}" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content;">${tagText}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
-            <div class="sos-title" style="color:${isHit ? 'var(--state-verified)' : '#d7a84b'}; font-size:9.5px; font-weight:700;">
+            <div class="sos-title" style="color:${isHit ? 'var(--state-verified)' : 'var(--state-warning)'}; font-size:11px; font-weight:700;">
               ${freqStr} // ${isHit ? `INTERCEPT: ${emitterStr}` : 'DWELL SCAN — NO SIGNAL'}
             </div>
-            <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
+            <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
               ${isHit ? `SNR ${snrStr} | PWR ${pwrStr} | DWELL ${dwellStr}ms` : `NOISE FLOOR (${pwrStr}) | DWELL ${dwellStr}ms | POSTERIOR UPDATED`}
             </div>
           </div>
@@ -727,16 +727,16 @@ class TacticalC2App {
         : (e.sector ? `SECTOR: ${e.sector} | STATUS: STREAMING` : 'OPTICAL SURVEILLANCE ACTIVE');
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:55px;">
-            <span class="sos-time" style="font-size:8.5px; color:var(--text-tertiary);">${e.time}</span>
-            <span class="sos-tag" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(34,211,238,0.2); color:#22d3ee; border:1px solid rgba(34,211,238,0.4);">${tagText}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:65px;">
+            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${e.time}</span>
+            <span class="sos-tag" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(59,130,246,0.15); color:var(--cam-blue); border:1px solid rgba(59,130,246,0.35);">${tagText}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
-            <div class="sos-title" style="color:#22d3ee; font-size:9.5px; font-weight:700;">
+            <div class="sos-title" style="color:var(--cam-blue); font-size:11px; font-weight:700;">
               ${title}
             </div>
-            <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
+            <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
               ${meta}
             </div>
           </div>
@@ -1058,19 +1058,19 @@ class TacticalC2App {
     });
 
     container.innerHTML = steps.map(s => `
-      <div class="sos-log-item" style="border-left:3px solid ${s.tagColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
-        <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:62px;">
-          <span class="sos-time" style="font-size:8px; color:var(--text-tertiary); font-family:var(--font-mono);">${timeStr}</span>
-          <span class="sos-tag" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(255,255,255,0.06); color:${s.tagColor}; border:1px solid ${s.tagColor};">${s.tag}</span>
+      <div class="sos-log-item" style="border-left:3px solid ${s.tagColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
+        <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:68px;">
+          <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${timeStr}</span>
+          <span class="sos-tag" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(255,255,255,0.06); color:${s.tagColor}; border:1px solid ${s.tagColor};">${s.tag}</span>
         </div>
         <div class="sos-desc-col" style="flex:1; margin-left:8px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="sos-title" style="color:${s.tagColor}; font-size:9.5px; font-weight:700;">
+            <div class="sos-title" style="color:${s.tagColor}; font-size:11px; font-weight:700;">
               ${s.title}
             </div>
-            <span style="font-family:var(--font-mono); font-size:8px; color:#fff; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 4px; border-radius:2px;">${s.status}</span>
+            <span style="font-family:var(--font-mono); font-size:10px; color:#fff; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 5px; border-radius:2px;">${s.status}</span>
           </div>
-          <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
+          <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
             ${s.meta}
           </div>
         </div>
@@ -1479,28 +1479,28 @@ class TacticalC2App {
       const isLatest = idx === 0;
       const prevColor = d.previousOutcome === 'HIT' ? 'var(--state-verified)' : (d.previousOutcome === 'MISS' ? 'var(--state-critical)' : 'var(--text-secondary)');
       const borderColor = isLatest ? 'var(--radar-cyan)' : (d.previousOutcome === 'HIT' ? 'rgba(66,196,122,0.4)' : 'rgba(255,255,255,0.1)');
-      const factors = (d.topFactors || []).map(f => `<span style="font-size:7.5px; padding:1px 4px; border-radius:2px; background:rgba(24,184,214,0.1); color:var(--radar-cyan); border:1px solid rgba(24,184,214,0.25);">${f}</span>`).join(' ');
+      const factors = (d.topFactors || []).map(f => `<span style="font-size:10px; padding:2px 6px; border-radius:2px; background:rgba(56,189,248,0.1); color:var(--radar-cyan); border:1px solid rgba(56,189,248,0.25);">${f}</span>`).join(' ');
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:65px;">
-            <span class="sos-time" style="font-size:8px; color:var(--text-tertiary); font-family:var(--font-mono);">${d.timestamp || '00:00:00'}</span>
-            <span class="sos-tag tag-normal" style="font-size:7.5px; padding:1px 4px; font-weight:700; width:fit-content; background:rgba(24,184,214,0.12); color:var(--radar-cyan); border:1px solid rgba(24,184,214,0.3);">${d.decisionId || ('DEC-#' + (1000 + idx))}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:7px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:70px;">
+            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${d.timestamp || '00:00:00'}</span>
+            <span class="sos-tag tag-normal" style="font-size:10px; padding:2px 6px; font-weight:700; width:fit-content; background:rgba(56,189,248,0.12); color:var(--radar-cyan); border:1px solid rgba(56,189,248,0.3);">${d.decisionId || ('DEC-#' + (1000 + idx))}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div class="sos-title" style="color:#fff; font-size:9.5px; font-weight:700;">
+              <div class="sos-title" style="color:#fff; font-size:11.5px; font-weight:700;">
                 ALLOCATE RECEIVER: <span style="color:var(--radar-cyan);">${d.selectedBand.toFixed(3)} GHz</span>
-                <span style="font-size:8.5px; color:var(--text-secondary); margin-left:4px;">(Q = ${d.selectedScore.toFixed(3)})</span>
+                <span style="font-size:10.5px; color:var(--text-secondary); margin-left:4px;">(Q = ${d.selectedScore.toFixed(3)})</span>
               </div>
-              <span style="font-family:var(--font-mono); font-size:8px; color:${prevColor}; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 5px; border-radius:2px; border:1px solid ${prevColor};">
+              <span style="font-family:var(--font-mono); font-size:10px; color:${prevColor}; font-weight:700; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:2px; border:1px solid ${prevColor};">
                 PREV: ${d.previousOutcome || 'INITIAL_SURVEY'}
               </span>
             </div>
-            <div class="sos-meta" style="font-size:8.5px; color:var(--text-secondary); margin-top:2px;">
-              [<span style="color:var(--radar-cyan);">${d.policy || 'Recency-Augmented UCB1'}</span>] ${d.reasoning || ''}
+            <div class="sos-meta" style="font-size:10.5px; color:var(--text-secondary); margin-top:3px; line-height:1.4;">
+              [<span style="color:var(--radar-cyan); font-weight:600;">${d.policy || 'Recency-Augmented UCB1'}</span>] ${d.reasoning || ''}
             </div>
-            ${factors ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">${factors}</div>` : ''}
+            ${factors ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">${factors}</div>` : ''}
           </div>
         </div>
       `;
