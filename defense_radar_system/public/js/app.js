@@ -1280,8 +1280,10 @@ class TacticalC2App {
 
     // Policy Inspector Rendering
     const pi = sim.policyInspector || {};
-    setEl('piCurrentPolicy', sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1');
-    setEl('schedPolicyDisp', sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1');
+    const polName = sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1';
+    setEl('piCurrentPolicy', polName);
+    setEl('schedPolicyDisp', polName);
+    setEl('schedPolicyBadge', polName);
     setEl('piExplorationC', pi.explorationConstant !== undefined ? pi.explorationConstant.toFixed(3) : '1.414');
     setEl('piLearningRate', pi.learningRate || 'Conjugate Beta(α,β) (+1 per dwell)');
     setEl('piBestBand', `${(pi.currentBestBand || 9.420).toFixed(3)} GHz`);
@@ -1337,7 +1339,10 @@ class TacticalC2App {
     if (!tbody) return;
 
     const bandsData = sim.perBandState || [];
-    if (bandsData.length === 0) return;
+    if (bandsData.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:16px; color:var(--text-tertiary); font-family:var(--font-mono); font-size:11px;">Acquiring candidate band allocation telemetry...</td></tr>';
+      return;
+    }
 
     const currentScan = Number(Number(sim.rfCurrentScanGhz || 9.420).toFixed(3));
     const bestBand = sim.policyInspector?.currentBestBand || 9.420;
@@ -1602,11 +1607,15 @@ class TacticalC2App {
 
     const currentScan = Number(Number(sim.rfCurrentScanGhz || 9.420).toFixed(3));
     const nextScan = Number(Number(sim.rfNextScanGhz || 9.675).toFixed(3));
+    const sortedBands = [...bands].sort((a, b) => b.currentScore - a.currentScore);
     const maxScore = Math.max(...bands.map(b => b.currentScore), 1.0);
 
     container.innerHTML = bands.map(b => {
       const isTarget = Math.abs(b.freqGhz - currentScan) < 0.005;
       const isNext = Math.abs(b.freqGhz - nextScan) < 0.005;
+      const rank = sortedBands.findIndex(sb => Math.abs(sb.freqGhz - b.freqGhz) < 0.005) + 1;
+      const deltaLeader = b.currentScore - maxScore;
+      const deltaStr = deltaLeader >= -0.001 ? 'Leader' : `Δ ${deltaLeader.toFixed(2)}`;
       const role = isTarget ? '(Primary Target)' : (isNext ? '(Secondary Agility)' : (b.visits === 0 ? '(Exploration Band)' : '(Auxiliary Sensor)'));
       const widthPct = Math.max(8, Math.min(100, Math.round((b.currentScore / maxScore) * 100)));
       const color = isTarget ? 'var(--radar-cyan)' : (isNext ? 'var(--state-warning)' : 'var(--text-secondary)');
@@ -1615,8 +1624,8 @@ class TacticalC2App {
       return `
         <div>
           <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9.5px; margin-bottom:2px;">
-            <span style="color:${isTarget ? 'var(--radar-cyan)' : '#fff'}; font-weight:${isTarget ? '700' : '400'};">${b.freqGhz.toFixed(3)} GHz ${role}</span>
-            <span style="color:${color}; font-weight:700;">Score Q: ${b.currentScore.toFixed(3)}</span>
+            <span style="color:${isTarget ? 'var(--radar-cyan)' : '#fff'}; font-weight:${isTarget ? '700' : '400'};">#${rank} · ${b.freqGhz.toFixed(3)} GHz ${role}</span>
+            <span style="color:${color}; font-weight:700;">Score Q: ${b.currentScore.toFixed(3)} <span style="font-size:8.5px; color:var(--text-tertiary); font-weight:normal;">(${deltaStr})</span></span>
           </div>
           <div class="bar-track">
             <div class="${fillClass}" style="width:${widthPct}%; background:${color};"></div>
