@@ -1,4 +1,4 @@
-﻿# ESM-ASTRA: Adaptive Electronic Support & Tactical Situational Awareness
+# ESM-ASTRA: Adaptive Electronic Support & Tactical Situational Awareness
 ### Unified Multi-Sensor Defence Command & Control Workstation
 **Smart India Hackathon 2026 | Problem Statement: SIH26055**
 
@@ -23,16 +23,13 @@ Unlike isolated analytics tools or video-game HUDs, ESM-ASTRA integrates four co
 ## 🚀 Quick Start (How to Run)
 
 ### Method 1: Double-Click Batch File (Windows)
-Double-click:
-```
-E:\SIH\defense_radar_system\run_radar.bat
-```
+Double-click `run_radar.bat` inside the `defense_radar_system/` folder.
 This automatically installs dependencies, boots the server on port `8080`, and opens your default browser.
 
 ### Method 2: Command Line (Node.js)
 ```powershell
-cd e:\SIH\defense_radar_system
-npm.cmd install
+cd defense_radar_system
+npm install
 node server.js
 ```
 Then navigate to: **`http://localhost:8080`**

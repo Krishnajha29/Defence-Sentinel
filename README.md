@@ -277,7 +277,8 @@ node test/test_final_presentation_acceptance.js
 
 | Endpoint | Method | Description |
 |---|---|---|
-| `/api/status` | `GET` | Snapshot of radar, RF, scheduler, and simulation state |
+| `/api/status` | `GET` | Snapshot of radar, RF, scheduler, hardware, and simulation state |
+| `/api/hardware/status` | `GET` | Hardware readiness registry, device adapter interfaces, and physical connection state |
 | `/api/sitrep` | `GET` | Formatted tactical situation report |
 | `/api/entities` | `GET` | Array of 7 canonical entities with multi-sensor evidence |
 | `/api/analytics` | `GET` | Current scheduler benchmarks and metric calculations |
