@@ -1,5 +1,5 @@
 /**
- * ESM-ASTRA: Adaptive RF/ESM Receiver Scheduler & Situational Platform (SIH26055)
+ * Defence Sentinel // ESM-ASTRA: Adaptive RF/ESM Receiver Scheduler & Situational Platform
  * Single Source of Truth: Synchronizes all 7 workspaces to master simulation entities
  */
 
@@ -180,24 +180,40 @@ class TacticalC2App {
   checkHttpBackendHealth() {
     const httpLabel = document.getElementById('httpStatusLabel');
     const httpIndicator = document.getElementById('httpStatusIndicator');
+    const httpNavSep = document.getElementById('httpNavSep');
     const base = this.getBackendHttpUrl();
     fetch(`${base}/api/status`)
       .then(r => {
         if (r.ok) {
-          if (httpLabel) httpLabel.textContent = 'HTTP 200';
+          if (httpLabel) httpLabel.textContent = 'HTTP OK';
           if (httpIndicator) {
+            httpIndicator.style.display = 'inline-flex';
             httpIndicator.classList.remove('offline');
             httpIndicator.title = 'Backend HTTP API Reachable (200 OK)';
           }
+          if (httpNavSep) httpNavSep.style.display = 'inline';
         } else {
           if (httpLabel) httpLabel.textContent = `HTTP ${r.status}`;
+          if (httpIndicator) {
+            httpIndicator.style.display = 'inline-flex';
+            httpIndicator.classList.add('offline');
+          }
+          if (httpNavSep) httpNavSep.style.display = 'inline';
         }
       })
       .catch(() => {
-        if (httpLabel) httpLabel.textContent = 'HTTP ERR';
-        if (httpIndicator) {
-          httpIndicator.classList.add('offline');
-          httpIndicator.title = 'Backend HTTP API unreachable';
+        // When server is offline or reconnecting, hide redundant HTTP ERR badge
+        if (this.connectionState !== 'CONNECTED') {
+          if (httpIndicator) httpIndicator.style.display = 'none';
+          if (httpNavSep) httpNavSep.style.display = 'none';
+        } else {
+          if (httpLabel) httpLabel.textContent = 'HTTP ERR';
+          if (httpIndicator) {
+            httpIndicator.style.display = 'inline-flex';
+            httpIndicator.classList.add('offline');
+            httpIndicator.title = 'Backend HTTP API unreachable';
+          }
+          if (httpNavSep) httpNavSep.style.display = 'inline';
         }
       });
   }
@@ -229,8 +245,8 @@ class TacticalC2App {
         document.querySelectorAll('.is-stale').forEach(el => el.classList.remove('is-stale'));
       }
     } else {
-      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'DISCONNECTED';
-      dot.style.background = 'var(--state-critical)';
+      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'STANDBY';
+      dot.style.background = 'var(--text-tertiary)';
       if (container) {
         container.classList.add('freshness-offline');
         container.classList.remove('freshness-stale');
@@ -274,8 +290,17 @@ class TacticalC2App {
       return `${protocol}//${b.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    return `${protocol}//${window.location.host}/ws/c2`;
+    const isSecure = window.location.protocol === 'https:';
+    const wsProto = isSecure ? 'wss:' : 'ws:';
+
+    // If running on port 8080 or standard origin:
+    if (window.location.port === '8080' || (window.location.hostname && !window.location.port && window.location.protocol.startsWith('http'))) {
+      return `${wsProto}//${window.location.host}/ws/c2`;
+    }
+
+    // Static dev server or file:// fallback to 8080
+    const targetHost = window.location.hostname || 'localhost';
+    return `${wsProto}//${targetHost}:8080/ws/c2`;
   }
 
   getBackendHttpUrl() {
@@ -292,7 +317,14 @@ class TacticalC2App {
       const b = window.__C2_BACKEND_URL__;
       return b.startsWith('http') ? b.replace(/\/$/, '') : `${window.location.protocol}//${b.replace(/\/$/, '')}`;
     }
-    return '';
+    // If running directly on port 8080 or standard origin:
+    if (window.location.port === '8080' || (window.location.hostname && !window.location.port && window.location.protocol.startsWith('http'))) {
+      return '';
+    }
+    // Static dev server or file:// fallback to 8080
+    const targetHost = window.location.hostname || 'localhost';
+    const httpProto = window.location.protocol.startsWith('http') ? window.location.protocol : 'http:';
+    return `${httpProto}//${targetHost}:8080`;
   }
 
   fetchRestSnapshot() {
@@ -333,6 +365,11 @@ class TacticalC2App {
           st.textContent = 'ONLINE';
           st.style.color = 'var(--state-verified)';
         }
+        const httpIndicator = document.getElementById('httpStatusIndicator');
+        const httpNavSep = document.getElementById('httpNavSep');
+        if (httpIndicator) httpIndicator.style.display = 'inline-flex';
+        if (httpNavSep) httpNavSep.style.display = 'inline';
+        this.checkHttpBackendHealth();
         this.checkDataFreshness();
       };
 
@@ -359,12 +396,20 @@ class TacticalC2App {
           st.textContent = 'OFFLINE';
           st.style.color = 'var(--state-critical)';
         }
+        const httpIndicator = document.getElementById('httpStatusIndicator');
+        const httpNavSep = document.getElementById('httpNavSep');
+        if (httpIndicator) httpIndicator.style.display = 'none';
+        if (httpNavSep) httpNavSep.style.display = 'none';
         this.checkDataFreshness();
         if (!this.reconnectTimer) {
           this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
           const delay = Math.min(2000 * Math.pow(1.2, Math.min(this.reconnectAttempts, 5)), 6000);
           this.reconnectTimer = setTimeout(() => {
             this.reconnectTimer = null;
+            if (st) {
+              st.textContent = 'RECONNECTING...';
+              st.style.color = 'var(--state-warning)';
+            }
             this.connectWebSocket();
           }, delay);
         }
@@ -375,6 +420,15 @@ class TacticalC2App {
       };
     } catch (e) {
       this.connectionState = 'OFFLINE';
+      const st = document.getElementById('globalSysStatus');
+      if (st) {
+        st.textContent = 'OFFLINE';
+        st.style.color = 'var(--state-critical)';
+      }
+      const httpIndicator = document.getElementById('httpStatusIndicator');
+      const httpNavSep = document.getElementById('httpNavSep');
+      if (httpIndicator) httpIndicator.style.display = 'none';
+      if (httpNavSep) httpNavSep.style.display = 'none';
       this.fetchRestSnapshot();
       this.checkDataFreshness();
       if (!this.reconnectTimer) {
@@ -719,7 +773,7 @@ class TacticalC2App {
 
 
   /* --------------------------------------------------------------------------
-     4. PAGE 2: RF / ESM INTELLIGENCE RENDERING (SIH26055)
+     4. PAGE 2: RF / ESM INTELLIGENCE RENDERING (RF/ESM SUBSYSTEM)
      -------------------------------------------------------------------------- */
   renderRfEmitterTable(entities) {
     const tbody = document.getElementById('rfEmitterTableBody');
@@ -1299,7 +1353,7 @@ class TacticalC2App {
   }
 
   /* --------------------------------------------------------------------------
-     7. PAGE 5: ADAPTIVE EW SCAN SCHEDULER RENDERING (SIH CORE)
+     7. PAGE 5: ADAPTIVE EW SCAN SCHEDULER RENDERING (ADAPTIVE EW SUBSYSTEM)
      -------------------------------------------------------------------------- */
   updateSchedulerPage(sim) {
     const curFreq = Number(sim.rfCurrentScanGhz || 9.420);
@@ -2068,7 +2122,7 @@ class TacticalC2App {
       };
     }
 
-    // Policy Ablation Toggles (SIH26055 Core)
+    // Policy Ablation Toggles (Adaptive Scan Policy Engine)
     const ablationGroup = document.getElementById('ablationBtnGroup');
     if (ablationGroup) {
       ablationGroup.querySelectorAll('.btn-ablation').forEach(btn => {

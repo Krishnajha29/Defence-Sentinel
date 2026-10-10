@@ -1,5 +1,5 @@
 /* ==========================================================================
-   DEFENCE SENTINEL // ESM-ASTRA: Tactical Defence Command Platform (SIH26055)
+   DEFENCE SENTINEL // ESM-ASTRA: Tactical Defence Command Platform
    Professional Defence & Industrial C2 Interface System
    ========================================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
@@ -284,10 +284,10 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 }
 
 .freshness-offline {
-  color: var(--state-critical);
+  color: var(--text-tertiary);
 }
 .freshness-offline .freshness-dot {
-  background: var(--state-critical);
+  background: var(--text-tertiary);
 }
 
 .btn-ops {
@@ -664,7 +664,7 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 }
 
 /* ==========================================================================
-   PAGE 2: RF / ESM INTELLIGENCE (SIH26055 WORKSPACE)
+   PAGE 2: RF / ESM INTELLIGENCE WORKSPACE
    ========================================================================== */
 .rf-page-layout {
   display: flex;
@@ -774,7 +774,7 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
    ========================================================================== */
 .camera-page-layout {
   display: grid;
-  grid-template-columns: 74% 26%;
+  grid-template-columns: 1fr 350px;
   height: 100%;
   width: 100%;
   background: var(--bg-deep);
@@ -835,11 +835,15 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
   display: flex;
   flex-direction: column;
   background: var(--bg-panel);
-  overflow: hidden;
+  border-left: 1px solid var(--border-default);
+  overflow-y: auto;
+  min-width: 320px;
 }
 
 .cam-detection-list {
-  flex: 1;
+  flex: none;
+  min-height: 90px;
+  max-height: 180px;
   overflow-y: auto;
   padding: 10px;
   display: flex;
@@ -1134,7 +1138,7 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 }
 
 /* ==========================================================================
-   PAGE 5: AI ADAPTIVE SCAN SCHEDULER (SIH CORE WORKSPACE)
+   PAGE 5: AI ADAPTIVE SCAN SCHEDULER (ADAPTIVE EW WORKSPACE)
    ========================================================================== */
 .scheduler-page-layout {
   display: flex;
@@ -2182,7 +2186,7 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 ::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
 
 /* =========================================================================
-   SIH26055 ALIGNMENT PASS: Core Technical Pipeline & Problem Alignment
+   CORE TECHNICAL PIPELINE & PROBLEM ALIGNMENT
    ========================================================================= */
 .sih-core-banner {
   display: flex;

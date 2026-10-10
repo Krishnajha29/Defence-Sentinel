@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ESM-ASTRA // Adaptive RF/ESM Receiver Scheduler & Situational Platform (SIH26055)</title>
+  <title>Defence Sentinel // ESM-ASTRA — Adaptive RF/ESM Command & Monitoring System</title>
   <link rel="stylesheet" href="css/design-system.css">
   <link rel="stylesheet" href="css/tactical.css">
 </head>
@@ -13,14 +13,14 @@
        1. GLOBAL PERSISTENT NAVIGATION BAR
        ==================================================================== -->
   <header class="global-navbar">
-    <div class="nav-brand" title="Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context">
+    <div class="nav-brand" title="Defence Sentinel — Adaptive RF/ESM Command & Monitoring System">
       <div class="brand-badge">DS</div>
       <div class="brand-titles">
         <div class="brand-title">
           DEFENCE SENTINEL
           <span class="tag-sim" title="Adaptive Electronic Warfare Receiver Scheduling">ESM-ASTRA</span>
         </div>
-        <div class="brand-desc" title="Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context">Adaptive RF/ESM C2 Console (SIH26055)</div>
+        <div class="brand-desc" title="Multi-Sensor Monitoring & Adaptive Scanning">Adaptive RF/ESM Command & Monitoring System</div>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
       <button class="nav-tab-btn active" role="tab" id="tab-tactical" data-view="radar" aria-selected="true" aria-current="page" tabindex="0" title="Tactical Situation & Radar Context">
         <span>Tactical</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-rf" data-view="rf" aria-selected="false" tabindex="-1" title="RF Spectrum & ESM Intercept (SIH Core)">
+      <button class="nav-tab-btn" role="tab" id="tab-rf" data-view="rf" aria-selected="false" tabindex="-1" title="RF Spectrum & ESM Intercept">
         <span>RF / ESM</span>
       </button>
       <button class="nav-tab-btn" role="tab" id="tab-optical" data-view="camera" aria-selected="false" tabindex="-1" title="Optical & Thermal Sensor Context">
@@ -38,7 +38,7 @@
       <button class="nav-tab-btn" role="tab" id="tab-fusion" data-view="fusion" aria-selected="false" tabindex="-1" title="Multi-Sensor Bayesian Correlation">
         <span>Fusion</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-scheduler" data-view="scheduler" aria-selected="false" tabindex="-1" title="Adaptive Multi-Armed Bandit Scheduler (SIH Core)">
+      <button class="nav-tab-btn" role="tab" id="tab-scheduler" data-view="scheduler" aria-selected="false" tabindex="-1" title="Adaptive Multi-Armed Bandit Scheduler">
         <span>Scheduler</span>
       </button>
       <button class="nav-tab-btn" role="tab" id="tab-analytics" data-view="analytics" aria-selected="false" tabindex="-1" title="Performance Analytics & Benchmark Suite">
@@ -51,24 +51,24 @@
 
     <!-- Global Diagnostics & Utilities -->
     <div class="nav-right-tools">
-      <div class="status-indicator" id="httpStatusIndicator" title="HTTP Backend API Link Status">
+      <div class="status-indicator" id="httpStatusIndicator" title="HTTP Backend API Link Status" style="display:none;">
         <span class="status-dot"></span>
         <span id="httpStatusLabel" style="font-weight:600;">HTTP OK</span>
       </div>
-      <span class="nav-sep">|</span>
-      <div class="status-indicator" title="WebSocket Stream State">
+      <span class="nav-sep" id="httpNavSep" style="display:none;">|</span>
+      <div class="status-indicator" id="wsStatusIndicator" title="WebSocket Stream State">
         <span class="status-dot"></span>
         <span id="globalSysStatus" style="font-weight:600;">ONLINE</span>
       </div>
       <span class="nav-sep">|</span>
       <div class="data-source-badge" id="globalDataSourceBadge" title="Click to view Hardware Readiness & Adapter Diagnostics">
         <span class="source-tag" id="globalDataSourceTag">SRC: SIMULATION</span>
-        <span class="hw-tag" id="globalHwStatusTag">HW: UNVERIFIED</span>
+        <span class="hw-tag" id="globalHwStatusTag">HW: UNAVAILABLE</span>
       </div>
-      <span class="nav-sep">|</span>
+      <span class="nav-sep" id="freshnessNavSep">|</span>
       <div class="freshness-indicator" id="globalDataFreshness" title="WebSocket Telemetry Health">
         <span class="freshness-dot" id="freshnessDot"></span>
-        <span id="freshnessLabel">FRESH (20Hz)</span>
+        <span id="freshnessLabel">SIMULATED (20Hz)</span>
       </div>
       <span class="nav-sep">|</span>
       <div style="color:var(--radar-cyan); font-weight:600;" id="globalOpMode">TACTICAL MONITORING</div>
@@ -90,7 +90,7 @@
          ------------------------------------------------------------------ -->
     <section id="view-radar" class="view-page active">
       <div class="page-sim-banner" role="status">
-        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SIH26055 SYNTHETIC TELEMETRY</span>
+        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SYNTHETIC TELEMETRY</span>
       </div>
       <div class="radar-page-layout">
         
@@ -191,11 +191,11 @@
     </section>
 
     <!-- ------------------------------------------------------------------
-         PAGE 2: RF / ESM INTELLIGENCE (SIH26055 WORKSPACE)
+         PAGE 2: RF / ESM INTELLIGENCE WORKSPACE
          ------------------------------------------------------------------ -->
     <section id="view-rf" class="view-page">
       <div class="page-sim-banner" role="status">
-        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SIH26055 SYNTHETIC TELEMETRY</span>
+        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SYNTHETIC TELEMETRY</span>
       </div>
       <div class="rf-page-layout">
         
@@ -305,16 +305,16 @@
         <!-- Collapsible Method Overview Section (Content Unchanged) -->
         <details class="method-overview-details ds-card" style="margin:12px; padding:8px 12px;">
           <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); font-size:12px; outline:none; user-select:none;">
-            ▸ METHOD OVERVIEW: ADAPTIVE EW RECEIVER SCHEDULING (SIH26055 SPECIFICATION)
+            ▸ METHOD OVERVIEW: ADAPTIVE EW RECEIVER SCHEDULING SPECIFICATION
           </summary>
           <div style="margin-top:10px;">
-            <!-- SIH CORE: Technical Decision Pipeline Indicator -->
+            <!-- Technical Decision Pipeline Indicator -->
             <div class="sih-core-banner">
               <div class="sih-core-header-row">
                 <div class="sih-core-badge-wrap">
-                  <span class="sih-tag-core">SIH CORE</span>
+                  <span class="sih-tag-core">SYSTEM ARCHITECTURE</span>
                   <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
-                  <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
+                  <span class="sih-ps-tag">OPERATIONAL SPECIFICATION</span>
                 </div>
                 <div style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-tertiary);">
                   Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
@@ -353,10 +353,10 @@
               </div>
             </div>
 
-            <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
+            <!-- Comparative Reference Panel -->
             <div class="ps-solution-panel">
               <div class="ps-panel-header">
-                <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
+                <span>WHY THIS ARCHITECTURE ADDRESSES ADAPTIVE SCAN CHALLENGES</span>
                 <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
               </div>
               <div class="ps-panel-grid">
@@ -373,7 +373,7 @@
                 <div class="ps-panel-col">
                   <span class="ps-col-label proposed">03. PROPOSED</span>
                   <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
-                  <span class="ps-col-sub">SIH26055 Core Algorithm</span>
+                  <span class="ps-col-sub">Adaptive Core Algorithm</span>
                 </div>
                 <div class="ps-panel-col">
                   <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
@@ -454,7 +454,7 @@
           <div class="panel-section-title">
             <span>OPTICAL EVENT LOG</span>
           </div>
-          <div class="sos-logs-container" id="camOpticalEventLog" style="flex:1;">
+          <div class="sos-logs-container" id="camOpticalEventLog" style="flex:1; min-height:120px; max-height:220px; overflow-y:auto;">
             <!-- Dynamically populated -->
           </div>
         </aside>
@@ -668,7 +668,7 @@
     </section>
 
     <!-- ------------------------------------------------------------------
-         PAGE 5: ADAPTIVE EW SCAN SCHEDULER (SIH CORE)
+         PAGE 5: ADAPTIVE EW SCAN SCHEDULER
          ------------------------------------------------------------------ -->
     <section id="view-scheduler" class="view-page">
       <div class="scheduler-page-layout">
@@ -686,7 +686,7 @@
           </div>
         </div>
 
-        <!-- Policy Inspector Bar & Ablation Controls (SIH26055 Credibility Pass) -->
+        <!-- Policy Inspector Bar & Ablation Controls -->
         <div class="policy-inspector-bar">
           <div class="pi-left-telemetry">
             <div class="pi-metric-item">
@@ -728,20 +728,20 @@
           <span><b style="color:var(--text-primary);">Best Empirical Band:</b> Sub-band with highest historical hit rate</span>
         </div>
 
-        <!-- Collapsible SIH Methodology & PS Solution Details -->
+        <!-- Collapsible Methodology & Technical Decision Details -->
         <details class="method-overview-details" style="margin-bottom:12px; background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:8px 12px;">
           <summary style="font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--radar-cyan); cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px;">
-            <span>▶ SIH PROBLEM STATEMENT SIH26055 METHODOLOGY & 5-STEP PIPELINE</span>
+            <span>▶ ADAPTIVE SCAN METHODOLOGY & 5-STEP DECISION PIPELINE</span>
             <span style="font-size:9px; color:var(--text-tertiary); font-weight:normal;">(Click to expand algorithm details & comparative reference)</span>
           </summary>
           <div style="margin-top:10px;">
-            <!-- SIH CORE: Technical Decision Pipeline Indicator -->
+            <!-- Technical Decision Pipeline Indicator -->
             <div class="sih-core-banner" style="margin-bottom:10px;">
               <div class="sih-core-header-row">
                 <div class="sih-core-badge-wrap">
-                  <span class="sih-tag-core">SIH CORE</span>
+                  <span class="sih-tag-core">SYSTEM ARCHITECTURE</span>
                   <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
-                  <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
+                  <span class="sih-ps-tag">OPERATIONAL SPECIFICATION</span>
                 </div>
                 <div style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);">
                   Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
@@ -780,10 +780,10 @@
               </div>
             </div>
 
-            <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
+            <!-- Comparative Reference Panel -->
             <div class="ps-solution-panel">
               <div class="ps-panel-header">
-                <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
+                <span>WHY THIS ARCHITECTURE ADDRESSES ADAPTIVE SCAN CHALLENGES</span>
                 <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
               </div>
               <div class="ps-panel-grid">
@@ -800,7 +800,7 @@
                 <div class="ps-panel-col">
                   <span class="ps-col-label proposed">03. PROPOSED</span>
                   <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
-                  <span class="ps-col-sub">SIH26055 Core Algorithm</span>
+                  <span class="ps-col-sub">Adaptive Core Algorithm</span>
                 </div>
                 <div class="ps-panel-col">
                   <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
@@ -879,7 +879,7 @@
               </div>
             </div>
 
-            <!-- 10-Attribute Per-Band State Table (Mandatory SIH Observables) -->
+            <!-- 10-Attribute Per-Band State Table (Real-Time Observables) -->
             <div class="panel-section-title">
               <span>CANDIDATE BAND ALLOCATION STATE (10 REAL-TIME OBSERVABLES)</span>
               <span style="color:var(--radar-cyan);">SINGLE SOURCE OF TRUTH</span>
@@ -1035,7 +1035,7 @@
           <!-- Right Column: Decision Trace, Interception History, Timeline -->
           <div class="scheduler-col">
 
-            <!-- Live Decision Trace Feed (SIH Mandate) -->
+            <!-- Live Decision Trace Feed -->
             <div class="panel-section-title">
               <span>LIVE DECISION TRACE (EXPLAINABLE C2 FEED)</span>
               <span style="color:var(--radar-cyan);" id="decisionTraceCount">ROLLING AUDIT</span>
@@ -1538,7 +1538,7 @@
               <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">SYNTHETIC CAM NET (4 / 4)</span>
             </div>
             <div class="rf-stat-row">
-              <span style="color:var(--text-secondary);">RF / ESM RECEIVER (SIH26055):</span>
+              <span style="color:var(--text-secondary);">RF / ESM RECEIVER TESTBED:</span>
               <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">SIMULATED TESTBED (50 MHz IBW // IDLE)</span>
             </div>
             <div class="rf-stat-row">
