@@ -1547,12 +1547,17 @@
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">ADAPTIVE SCHEDULER (UCB1):</span>
-              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">HEALTHY</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">HEALTHY (Simulated Engine)</span>
             </div>
           </div>
 
-          <div class="panel-section-title">
+          <div class="panel-section-title" style="display:flex; justify-content:space-between; align-items:center;">
             <span>LIVE JSON STATE & TELEMETRY</span>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <span style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);" id="jsonInspectorLastUpdated">--</span>
+              <button id="btnFreezeJsonInspector" class="btn-ops" style="font-size:9px; padding:1px 6px;">⏸ FREEZE</button>
+              <button id="btnCopyJsonState" class="btn-ops" style="font-size:9px; padding:1px 6px;">📋 COPY</button>
+            </div>
           </div>
           <pre id="simLiveJsonInspector" style="flex:1; background:#04070a; border:1px solid var(--border-default); border-radius:4px; padding:10px; font-family:var(--font-mono); font-size:9px; color:#88a2b5; overflow:auto;"></pre>
         </div>

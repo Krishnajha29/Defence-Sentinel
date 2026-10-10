@@ -1793,7 +1793,7 @@ class TacticalC2App {
 
     // 4. Comprehensive Live JSON State & Telemetry Inspector
     const inspector = document.getElementById('simLiveJsonInspector');
-    if (inspector) {
+    if (inspector && !this._freezeJsonInspector) {
       const activeEnt = (this.entities || []).find(e => e.id === sim.selectedEntityId) || null;
       const displayData = {
         simulation: {
@@ -1847,6 +1847,8 @@ class TacticalC2App {
         timestamp: new Date().toISOString()
       };
       inspector.textContent = JSON.stringify(displayData, null, 2);
+      const stampEl = document.getElementById('jsonInspectorLastUpdated');
+      if (stampEl) stampEl.textContent = `${new Date().toISOString().substring(11, 19)} UTC`;
     }
   }
 
@@ -2159,6 +2161,27 @@ class TacticalC2App {
         }
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
           this.ws.send(JSON.stringify({ action: 'RESET_ANALYTICS' }));
+        }
+      };
+    }
+
+    // JSON Inspector Freeze & Copy
+    const freezeBtn = document.getElementById('btnFreezeJsonInspector');
+    if (freezeBtn) {
+      freezeBtn.onclick = () => {
+        this._freezeJsonInspector = !this._freezeJsonInspector;
+        freezeBtn.textContent = this._freezeJsonInspector ? '▶ UNFREEZE' : '⏸ FREEZE';
+        freezeBtn.style.color = this._freezeJsonInspector ? 'var(--state-warning)' : 'inherit';
+      };
+    }
+    const copyBtn = document.getElementById('btnCopyJsonState');
+    if (copyBtn) {
+      copyBtn.onclick = () => {
+        const inspector = document.getElementById('simLiveJsonInspector');
+        if (inspector) {
+          navigator.clipboard?.writeText(inspector.textContent || '');
+          copyBtn.textContent = '✓ COPIED';
+          setTimeout(() => { copyBtn.textContent = '📋 COPY'; }, 1500);
         }
       };
     }
