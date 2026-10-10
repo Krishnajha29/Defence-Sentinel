@@ -379,6 +379,22 @@
           <div class="cam-feed-full-box">
             <canvas id="cameraPageCanvas"></canvas>
           </div>
+          
+<div class="panel-section-title">FACE AUTHENTICATION</div>
+<div class="rf-receiver-card" style="padding:12px; display:flex; flex-direction:column; gap:10px;">
+  <label for="faceAuthName">Team member name</label>
+  <input id="faceAuthName" type="text" placeholder="Enter full name">
+  <label style="display:flex; gap:8px; align-items:center;">
+    <input id="faceAuthConsent" type="checkbox">
+    I have consent to enroll this person
+  </label>
+  <button id="faceAuthEnroll" type="button">ENROLL VISIBLE FACE</button>
+  <button id="faceAuthClear" type="button">CLEAR LOCAL ENROLLMENTS</button>
+  <div id="faceAuthStatus" role="status" aria-live="polite">
+    Face authentication not initialized
+  </div>
+</div>
+
         </div>
 
         <aside class="cam-side-col">
