@@ -235,12 +235,18 @@ class TacticalC2App {
   handleTelemetry(data) {
     if (data.simState) {
       this.simState = data.simState;
+      if (this.entities && this.entities.length && !this.simState.entities) {
+        this.simState.entities = this.entities;
+      }
       try { this.updateGlobalHeader(data.simState); } catch (err) { console.error('Error in updateGlobalHeader:', err); }
       try { this.updateSchedulerPage(data.simState); } catch (err) { console.error('Error in updateSchedulerPage:', err); }
       try { this.updateSimulationPage(data.simState); } catch (err) { console.error('Error in updateSimulationPage:', err); }
     }
     if (data.entities) {
       this.entities = data.entities;
+      if (this.simState) {
+        this.simState.entities = this.entities;
+      }
       try { this.renderRadarPageTrackCards(data.entities); } catch (err) { console.error('Error rendering track cards:', err); }
       try { this.renderRfEmitterTable(data.entities); } catch (err) { console.error('Error rendering RF table:', err); }
       try { this.renderCameraDetections(data.entities); } catch (err) { console.error('Error rendering camera detections:', err); }
