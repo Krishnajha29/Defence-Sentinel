@@ -224,6 +224,67 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
   display: inline-block;
 }
 
+.data-source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-default);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.data-source-badge:hover {
+  border-color: var(--radar-cyan);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.source-tag {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.hw-tag {
+  color: var(--state-warning);
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.freshness-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.freshness-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--state-verified);
+  display: inline-block;
+  transition: background var(--transition-fast);
+}
+
+.freshness-stale {
+  color: var(--state-warning);
+}
+.freshness-stale .freshness-dot {
+  background: var(--state-warning);
+}
+
+.freshness-offline {
+  color: var(--state-critical);
+}
+.freshness-offline .freshness-dot {
+  background: var(--state-critical);
+}
+
 .btn-ops {
   background: var(--bg-panel-subtle);
   border: 1px solid var(--border-default);

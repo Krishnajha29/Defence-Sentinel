@@ -95,6 +95,53 @@ const CAMERAS = {
   }
 };
 
+// =========================================================================
+// Hardware Adapter Registry & Device Interface Contracts
+// Explicit demarcation between simulation sources and physical devices
+// =========================================================================
+const HARDWARE_REGISTRY = {
+  dataSource: 'SIMULATION_SYNTHETIC',
+  telemetryMode: 'SIMULATION',
+  isHardwareConnected: false,
+  hardwareVerificationState: 'UNVERIFIED',
+  devices: {
+    rfReceiver: {
+      id: 'DEV-RF-SDR-01',
+      name: 'Physical SDR RF Receiver Tuner',
+      driverAdapter: 'USRP_UHD_SDR_ADAPTER',
+      status: 'DEVICE_UNAVAILABLE',
+      physicalDevicePresent: false,
+      dataFlow: 'SIMULATION_SYNTHETIC',
+      verified: false,
+      targetBandGhz: [9.0, 10.0],
+      instantaneousBwMhz: 50,
+      diagnosticMessage: 'No physical SDR transceiver detected on host bus. Emulating via PRNG synthetic RF testbed.'
+    },
+    tacticalRadar: {
+      id: 'DEV-RADAR-EXT-01',
+      name: 'Primary Surveillance Radar Ingest',
+      driverAdapter: 'ASTERIX_CAT048_ADAPTER',
+      status: 'DEVICE_UNAVAILABLE',
+      physicalDevicePresent: false,
+      dataFlow: 'SIMULATION_SYNTHETIC',
+      verified: false,
+      azimuthCoverageDeg: 360,
+      diagnosticMessage: 'No physical ASTERIX CAT048 radar stream detected. Ingesting from 7-entity kinematic simulator.'
+    },
+    opticalPtz: {
+      id: 'DEV-CAM-ONVIF-01',
+      name: 'Perimeter Optical / Thermal PTZ Network',
+      driverAdapter: 'ONVIF_RTSP_PTZ_ADAPTER',
+      status: 'DEVICE_UNAVAILABLE',
+      physicalDevicePresent: false,
+      dataFlow: 'PROCEDURAL_IR_SYNTHETIC',
+      verified: false,
+      cameraChannels: 4,
+      diagnosticMessage: 'No physical ONVIF / RTSP IP camera connected. Operating procedural thermal IR renderer.'
+    }
+  }
+};
+
 // Authorized Personnel Database — full details shown in radar track cards
 const PERSONNEL_DB = [
   {
@@ -518,6 +565,9 @@ const simState = {
   // Diagnostics
   operatingMode: 'TACTICAL MONITORING',
   systemStatus: 'ONLINE',
+  dataSource: 'SIMULATION_SYNTHETIC',
+  isHardwareConnected: false,
+  hardwareVerificationState: 'UNVERIFIED',
   receiverStatus: 'ACTIVE',
   cameraNetwork: '4 / 4 ONLINE',
   schedulerEngineStatus: 'HEALTHY',
@@ -947,6 +997,7 @@ function broadcastState() {
     sosLogs: getFormattedSosLogs(),
     incidents: incidentEngine.getIncidents(),
     analytics: analyticsState,
+    hardware: HARDWARE_REGISTRY,
     timestamp: Date.now()
   });
 
@@ -969,7 +1020,8 @@ wss.on('connection', ws => {
     opticalEventTimeline,
     sosLogs: getFormattedSosLogs(),
     incidents: incidentEngine.getIncidents(),
-    analytics: analyticsState
+    analytics: analyticsState,
+    hardware: HARDWARE_REGISTRY
   }));
 
   ws.on('message', raw => {
@@ -1556,7 +1608,17 @@ app.get('/api/status', (req, res) => {
   res.json({
     system: 'ESM-ASTRA // Adaptive RF/ESM Receiver Scheduler & Situational Platform (SIH26055)',
     simState,
-    entitiesCount: masterEntities.length
+    entitiesCount: masterEntities.length,
+    hardware: HARDWARE_REGISTRY
+  });
+});
+
+app.get('/api/hardware/status', (req, res) => {
+  res.json({
+    ...HARDWARE_REGISTRY,
+    serverUptimeSec: Math.floor(process.uptime()),
+    activeSimulationId: simState.simulationId,
+    timestamp: Date.now()
   });
 });
 

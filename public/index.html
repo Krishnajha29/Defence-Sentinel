@@ -55,6 +55,16 @@
         <span id="globalSysStatus" style="font-weight:600;">ONLINE</span>
       </div>
       <span class="nav-sep">|</span>
+      <div class="data-source-badge" id="globalDataSourceBadge" title="Click to view Hardware Readiness & Adapter Diagnostics">
+        <span class="source-tag">SRC: SIMULATION</span>
+        <span class="hw-tag" id="globalHwStatusTag">HW: UNVERIFIED</span>
+      </div>
+      <span class="nav-sep">|</span>
+      <div class="freshness-indicator" id="globalDataFreshness" title="WebSocket Telemetry Health">
+        <span class="freshness-dot" id="freshnessDot"></span>
+        <span id="freshnessLabel">FRESH (20Hz)</span>
+      </div>
+      <span class="nav-sep">|</span>
       <div style="color:var(--radar-cyan); font-weight:600;" id="globalOpMode">TACTICAL MONITORING</div>
       <span class="nav-sep">|</span>
       <div id="globalUtcTime" style="color:#fff; font-weight:600;">14:20:24 UTC</div>
@@ -1534,6 +1544,71 @@
       </div>
       <div style="display:flex; justify-content:flex-end; margin-top:8px;">
         <button id="btnClosePersonnelDetails" class="btn-ops">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hardware Readiness & Adapter Diagnostics Modal -->
+  <div class="modal-backdrop" id="modalHardwareDiagnostics" style="display:none;">
+    <div class="modal-dialog" style="width:680px; max-width:92vw;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-default); padding-bottom:8px;">
+        <div style="font-weight:700; color:#fff; font-size:12px; letter-spacing:0.5px;">
+          HARDWARE-READY ADAPTER INTERFACES & CONNECTIVITY SPECIFICATION
+        </div>
+        <button id="btnCloseHardwareDiagnostics" class="btn-ops" style="padding:2px 8px;">✕</button>
+      </div>
+      <div style="font-size:11px; color:var(--text-secondary); line-height:1.45; margin-top:8px;">
+        <div style="background:rgba(239, 68, 68, 0.08); border-left:3px solid var(--state-critical); padding:6px 10px; margin-bottom:10px; color:#fca5a5;">
+          <strong>HARDWARE VERIFICATION POLICY:</strong> Physical devices are currently marked <strong>UNVERIFIED / UNAVAILABLE</strong>. The system strictly ingests from validated deterministic mathematical models and PRNG synthetic generators. Physical sensor integration will only be reported as active once tested on physical hardware buses.
+        </div>
+        
+        <table class="tactical-table" style="width:100%; margin-bottom:10px;">
+          <thead>
+            <tr>
+              <th>SUBSYSTEM</th>
+              <th>ADAPTER INTERFACE</th>
+              <th>DATA FLOW</th>
+              <th>PHYSICAL BUS</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="hwModalTableBody">
+            <tr>
+              <td style="font-weight:700; color:#fff;">RF / ESM RECEIVER</td>
+              <td><code>USRP_UHD_SDR_ADAPTER</code></td>
+              <td>SYNTHETIC TESTBED</td>
+              <td>USB 3.0 / PCIe</td>
+              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700; color:#fff;">TACTICAL RADAR</td>
+              <td><code>ASTERIX_CAT048_ADAPTER</code></td>
+              <td>KINEMATIC ENGINE</td>
+              <td>UDP MULTICAST</td>
+              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
+            </tr>
+            <tr>
+              <td style="font-weight:700; color:#fff;">PTZ OPTICAL CAMERA</td>
+              <td><code>ONVIF_RTSP_PTZ_ADAPTER</code></td>
+              <td>PROCEDURAL IR</td>
+              <td>ETHERNET RTSP</td>
+              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:var(--radius-sm); padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div><strong>C2 LINK:</strong> <span id="hwModalWsUrl">ws://localhost:8080/ws/c2</span></div>
+            <div style="font-size:10px; color:var(--text-muted);">TRANSPORT: WebSocket JSON Frame Stream (20 Hz)</div>
+          </div>
+          <button id="btnForceReconnectWs" class="btn-ops" style="border-color:var(--radar-cyan);">
+            RECONNECT C2 LINK
+          </button>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; margin-top:10px;">
+        <button id="btnDismissHwModal" class="btn-ops">CLOSE</button>
       </div>
     </div>
   </div>

@@ -22,6 +22,13 @@ class TacticalC2App {
     this.opticalEventTimeline = [];
     this.sosLogs = [];
 
+    // Hardware-ready connectivity & data-freshness tracking
+    this.lastTelemetryTimestamp = Date.now();
+    this.reconnectTimer = null;
+    this.reconnectAttempts = 0;
+    this.connectionState = 'DISCONNECTED';
+    this.hardwareRegistry = null;
+
     this.init();
   }
 
@@ -114,9 +121,42 @@ class TacticalC2App {
     const update = () => {
       const now = new Date();
       if (clockEl) clockEl.textContent = now.toTimeString().split(' ')[0] + ' UTC';
+      this.checkDataFreshness();
     };
     update();
     setInterval(update, 1000);
+  }
+
+  checkDataFreshness() {
+    const label = document.getElementById('freshnessLabel');
+    const dot = document.getElementById('freshnessDot');
+    const container = document.getElementById('globalDataFreshness');
+    if (!label || !dot) return;
+
+    if (this.connectionState === 'CONNECTED') {
+      const elapsed = Date.now() - (this.lastTelemetryTimestamp || 0);
+      if (elapsed > 2500) {
+        label.textContent = `STALE (${(elapsed / 1000).toFixed(1)}s)`;
+        dot.style.background = 'var(--state-warning)';
+        if (container) {
+          container.classList.add('freshness-stale');
+          container.classList.remove('freshness-offline');
+        }
+      } else {
+        label.textContent = 'FRESH (20Hz)';
+        dot.style.background = 'var(--state-verified)';
+        if (container) {
+          container.classList.remove('freshness-stale', 'freshness-offline');
+        }
+      }
+    } else {
+      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'NO TELEMETRY';
+      dot.style.background = 'var(--state-critical)';
+      if (container) {
+        container.classList.add('freshness-offline');
+        container.classList.remove('freshness-stale');
+      }
+    }
   }
 
   /* --------------------------------------------------------------------------
@@ -188,25 +228,43 @@ class TacticalC2App {
   }
 
   connectWebSocket() {
+    // Prevent duplicate subscriptions or concurrent connections
+    if (this.ws && (this.ws.readyState === WebSocket.CONNECTING || this.ws.readyState === WebSocket.OPEN)) {
+      return;
+    }
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+
     const wsUrl = this.getBackendUrl();
+    this.connectionState = 'CONNECTING';
+    this.checkDataFreshness();
 
     try {
       this.ws = new WebSocket(wsUrl);
 
       this.ws.onopen = () => {
+        this.connectionState = 'CONNECTED';
+        this.reconnectAttempts = 0;
+        this.lastTelemetryTimestamp = Date.now();
         const st = document.getElementById('globalSysStatus');
         if (st) {
           st.textContent = 'ONLINE';
           st.style.color = 'var(--state-verified)';
         }
+        this.checkDataFreshness();
       };
 
       this.ws.onmessage = (e) => {
         try {
+          this.lastTelemetryTimestamp = Date.now();
+          this.checkDataFreshness();
           const data = JSON.parse(e.data);
           if (data.type === 'INCIDENT_FALSE_ALARM_TEST_RESULT') {
             this.handleIncidentTestResult(data.result);
           } else {
+            if (data.hardware) this.handleHardwareUpdate(data.hardware);
             this.handleTelemetry(data);
           }
         } catch (err) {
@@ -215,20 +273,54 @@ class TacticalC2App {
       };
 
       this.ws.onclose = () => {
+        this.connectionState = 'OFFLINE';
         const st = document.getElementById('globalSysStatus');
         if (st) {
           st.textContent = 'OFFLINE';
           st.style.color = 'var(--state-critical)';
         }
-        setTimeout(() => this.connectWebSocket(), 2000);
+        this.checkDataFreshness();
+        if (!this.reconnectTimer) {
+          this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
+          const delay = Math.min(2000 * Math.pow(1.2, Math.min(this.reconnectAttempts, 5)), 6000);
+          this.reconnectTimer = setTimeout(() => {
+            this.reconnectTimer = null;
+            this.connectWebSocket();
+          }, delay);
+        }
       };
 
       this.ws.onerror = () => {
         this.fetchRestSnapshot();
       };
     } catch (e) {
+      this.connectionState = 'OFFLINE';
       this.fetchRestSnapshot();
-      setTimeout(() => this.connectWebSocket(), 2000);
+      this.checkDataFreshness();
+      if (!this.reconnectTimer) {
+        this.reconnectTimer = setTimeout(() => {
+          this.reconnectTimer = null;
+          this.connectWebSocket();
+        }, 2000);
+      }
+    }
+  }
+
+  handleHardwareUpdate(hardware) {
+    this.hardwareRegistry = hardware;
+    const hwTag = document.getElementById('globalHwStatusTag');
+    if (hwTag) {
+      if (hardware.isHardwareConnected) {
+        hwTag.textContent = 'HW: CONNECTED';
+        hwTag.style.color = 'var(--state-verified)';
+      } else {
+        hwTag.textContent = 'HW: UNVERIFIED';
+        hwTag.style.color = 'var(--state-warning)';
+      }
+    }
+    const wsUrlEl = document.getElementById('hwModalWsUrl');
+    if (wsUrlEl) {
+      wsUrlEl.textContent = this.getBackendUrl();
     }
   }
 
@@ -2050,6 +2142,37 @@ class TacticalC2App {
 
     const closeDetails = document.getElementById('btnClosePersonnelDetails');
     if (closeDetails) closeDetails.onclick = () => modalDetails.classList.remove('open');
+
+    // Hardware Readiness & Diagnostics Modal Listeners
+    const modalHw = document.getElementById('modalHardwareDiagnostics');
+    const badgeHw = document.getElementById('globalDataSourceBadge');
+    const closeHw1 = document.getElementById('btnCloseHardwareDiagnostics');
+    const closeHw2 = document.getElementById('btnDismissHwModal');
+    const btnReconnect = document.getElementById('btnForceReconnectWs');
+
+    if (badgeHw && modalHw) {
+      badgeHw.onclick = () => {
+        modalHw.style.display = 'flex';
+        modalHw.classList.add('open');
+      };
+    }
+    const closeHwModal = () => {
+      if (modalHw) {
+        modalHw.style.display = 'none';
+        modalHw.classList.remove('open');
+      }
+    };
+    if (closeHw1) closeHw1.onclick = closeHwModal;
+    if (closeHw2) closeHw2.onclick = closeHwModal;
+
+    if (btnReconnect) {
+      btnReconnect.onclick = () => {
+        if (this.ws) {
+          try { this.ws.close(); } catch(e){}
+        }
+        this.connectWebSocket();
+      };
+    }
 
     // False Alarm Test button
     const falseAlarmBtn = document.getElementById('btnRunFalseAlarmTest');
