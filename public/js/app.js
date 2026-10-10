@@ -138,7 +138,22 @@ class TacticalC2App {
       if (pageId === 'camera' && this.camera) this.camera.resize();
       if (pageId === 'analytics' && this.analytics) {
         this.analytics.resize();
-        if (this.analyticsData) this.analytics.updateData({ analytics: this.analyticsData });
+        if (this.analyticsData) {
+          if (!this.analyticsData.suiteBreakdown || this.analyticsData.suiteBreakdown.length === 0) {
+            const base = this.getBackendHttpUrl();
+            fetch(`${base}/api/benchmark/suite?seed=42&runs=1000`)
+              .then(r => r.json())
+              .then(suite => {
+                if (suite && suite.breakdown) {
+                  this.analyticsData.suiteBreakdown = suite.breakdown;
+                  this.analytics.updateData({ analytics: this.analyticsData });
+                  this.analytics.render();
+                }
+              })
+              .catch(() => {});
+          }
+          this.analytics.updateData({ analytics: this.analyticsData });
+        }
         this.analytics.render();
       }
       if (pageId === 'fusion' && this.entities) this.renderSensorFusionPage(this.entities);

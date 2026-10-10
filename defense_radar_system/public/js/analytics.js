@@ -332,6 +332,7 @@ class SystemAnalyticsRenderer {
     tbody.innerHTML = breakdown.map(row => {
       const isPositive = row.deltaDetection && (row.deltaDetection.absoluteValue !== undefined ? row.deltaDetection.absoluteValue >= 0 : !String(row.deltaDetection.absolute || row.deltaDetection).startsWith('-'));
       const tagClass = isPositive ? 'positive' : 'negative';
+      const deltaText = typeof row.deltaDetection === 'object' ? `${row.deltaDetection.absolute} (${row.deltaDetection.relative})` : (row.deltaDetection || '--');
       const hashStr = row.configHash || '--';
       const truncHash = hashStr.length > 10 ? hashStr.substring(0, 8) + '…' : hashStr;
       return `
