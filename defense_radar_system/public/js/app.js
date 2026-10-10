@@ -211,26 +211,31 @@ class TacticalC2App {
     if (this.connectionState === 'CONNECTED') {
       const elapsed = Date.now() - (this.lastTelemetryTimestamp || 0);
       if (elapsed > 2500) {
-        label.textContent = `STALE (${(elapsed / 1000).toFixed(1)}s)`;
+        const secAgo = (elapsed / 1000).toFixed(1);
+        label.textContent = `STALE (${secAgo}s ago)`;
         dot.style.background = 'var(--state-warning)';
         if (container) {
           container.classList.add('freshness-stale');
           container.classList.remove('freshness-offline');
         }
+        document.querySelectorAll('.tactical-radar-main-col, .rf-panel, .camera-card, .fusion-matrix-panel').forEach(el => el.classList.add('is-stale'));
       } else {
-        label.textContent = 'FRESH (20Hz)';
+        const secAgo = elapsed < 100 ? '20Hz' : `${(elapsed / 1000).toFixed(1)}s ago`;
+        label.textContent = `SIMULATED (${secAgo})`;
         dot.style.background = 'var(--state-verified)';
         if (container) {
           container.classList.remove('freshness-stale', 'freshness-offline');
         }
+        document.querySelectorAll('.is-stale').forEach(el => el.classList.remove('is-stale'));
       }
     } else {
-      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'NO TELEMETRY';
+      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'DISCONNECTED';
       dot.style.background = 'var(--state-critical)';
       if (container) {
         container.classList.add('freshness-offline');
         container.classList.remove('freshness-stale');
       }
+      document.querySelectorAll('.tactical-radar-main-col, .rf-panel, .camera-card, .fusion-matrix-panel').forEach(el => el.classList.add('is-stale'));
     }
   }
 
@@ -386,16 +391,51 @@ class TacticalC2App {
     const hwTag = document.getElementById('globalHwStatusTag');
     if (hwTag) {
       if (hardware.isHardwareConnected) {
-        hwTag.textContent = 'HW: CONNECTED';
+        hwTag.textContent = 'HW: LIVE';
         hwTag.style.color = 'var(--state-verified)';
       } else {
-        hwTag.textContent = 'HW: UNVERIFIED';
-        hwTag.style.color = 'var(--state-warning)';
+        hwTag.textContent = 'HW: UNAVAILABLE';
+        hwTag.style.color = 'var(--state-critical)';
       }
     }
     const wsUrlEl = document.getElementById('hwModalWsUrl');
     if (wsUrlEl) {
       wsUrlEl.textContent = this.getBackendUrl();
+    }
+
+    const tbody = document.getElementById('hwModalTableBody');
+    if (tbody) {
+      const devices = hardware.devices || {};
+      const devKeys = Object.keys(devices);
+      if (devKeys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-tertiary); padding:12px;">No hardware adapters reported</td></tr>';
+      } else {
+        const now = Date.now();
+        tbody.innerHTML = devKeys.map(k => {
+          const dev = devices[k];
+          const isPresent = Boolean(dev.physicalDevicePresent);
+          const state = dev.status || (isPresent ? 'CONNECTED' : 'DEVICE_UNAVAILABLE');
+          const isError = state === 'ERROR' || state === 'DEVICE_ERROR';
+          const isConn = state === 'CONNECTED';
+          const tagClass = isConn ? 'ds-chip-verified' : (isError ? 'ds-chip-critical' : 'ds-chip-neutral');
+          const statusText = isConn ? 'LIVE' : (isError ? 'ERROR' : 'UNAVAILABLE');
+          const dataSource = dev.dataFlow || (isPresent ? 'HARDWARE (live)' : 'SIMULATION');
+          const lastAge = hardware.timestamp ? `${Math.max(0, Math.round((now - hardware.timestamp) / 1000))}s ago` : 'live';
+
+          return `
+            <tr>
+              <td style="font-weight:700; color:#fff;">
+                <div>${dev.name || k}</div>
+                <div style="font-size:9px; color:var(--text-tertiary); font-family:var(--font-mono);">${dev.id || ''}</div>
+              </td>
+              <td style="font-family:var(--font-mono); font-size:10px;"><code>${dev.driverAdapter || '--'}</code></td>
+              <td style="font-size:10px; color:var(--text-secondary);">${dataSource}</td>
+              <td style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${lastAge}</td>
+              <td><span class="ds-chip ${tagClass}" style="font-size:9.5px;">${statusText}</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
     }
   }
 
@@ -1703,31 +1743,31 @@ class TacticalC2App {
     // 1. Subsystem Engine Health Indicators
     const subsysRadar = document.getElementById('subsysRadarEngine');
     if (subsysRadar) {
-      subsysRadar.textContent = sim.isRunning ? `ONLINE (${sim.sweepRpm || 24} RPM)` : 'PAUSED (STANDBY)';
+      subsysRadar.textContent = sim.isRunning ? `SIMULATED ENGINE (${sim.sweepRpm || 24} RPM)` : 'SIMULATED ENGINE (PAUSED)';
       subsysRadar.style.color = sim.isRunning ? 'var(--state-verified)' : 'var(--state-warning)';
     }
 
     const subsysOptical = document.getElementById('subsysOpticalNet');
     if (subsysOptical) {
-      subsysOptical.textContent = sim.cameraNetwork || '4 / 4 ONLINE';
+      subsysOptical.textContent = 'SYNTHETIC CAM NET (4 / 4)';
       subsysOptical.style.color = 'var(--cam-blue)';
     }
 
     const subsysRf = document.getElementById('subsysRfReceiver');
     if (subsysRf) {
-      subsysRf.textContent = `${sim.receiverStatus || 'ACTIVE'} (${sim.rfIbwMhz || 50} MHz IBW // ${sim.receiverState || 'IDLE'})`;
+      subsysRf.textContent = `SIMULATED TESTBED (${sim.rfIbwMhz || 50} MHz IBW // ${sim.receiverState || 'IDLE'})`;
       subsysRf.style.color = sim.receiverState === 'HIT' ? 'var(--state-verified)' : 'var(--radar-cyan)';
     }
 
     const subsysFusion = document.getElementById('subsysFusion');
     if (subsysFusion) {
-      subsysFusion.textContent = sim.isRunning ? 'SYNCHRONIZED (25 Hz)' : 'PAUSED';
+      subsysFusion.textContent = sim.isRunning ? 'SYNTHESIZED (25 Hz Sim)' : 'PAUSED';
       subsysFusion.style.color = sim.isRunning ? 'var(--radar-cyan)' : 'var(--state-warning)';
     }
 
     const subsysSched = document.getElementById('subsysScheduler');
     if (subsysSched) {
-      subsysSched.textContent = `${sim.schedulerEngineStatus || 'HEALTHY'} (${sim.schedulerAblationMode || 'FULL_ADAPTIVE'})`;
+      subsysSched.textContent = `SIMULATED ENGINE (${sim.schedulerAblationMode || 'FULL_ADAPTIVE'})`;
       subsysSched.style.color = 'var(--radar-cyan)';
     }
 

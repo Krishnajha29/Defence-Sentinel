@@ -393,3 +393,50 @@
   outline: 2px solid var(--ds-border-focus);
   outline-offset: -1px;
 }
+
+/* ==========================================================================
+   PRIMITIVES: STALE DATA & TELEMETRY INDICATORS (Phase 9 & 10)
+   ========================================================================== */
+.is-stale {
+  opacity: 0.75;
+  transition: opacity var(--ds-transition-normal);
+  position: relative;
+}
+
+.is-stale::after {
+  content: "STALE TELEMETRY";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--ds-status-warning-dim);
+  color: var(--ds-status-warning);
+  border: 1px solid var(--ds-status-warning-border);
+  font-family: var(--ds-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--ds-radius-sm);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: HIT TARGETS & FOCUS RINGS (WCAG AA)
+   ========================================================================== */
+button, input, select, [role="button"], [role="tab"] {
+  min-height: 28px;
+}
+
+button:focus-visible, input:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--ds-border-focus) !important;
+  outline-offset: 1px !important;
+}
+
+/* Ensure data tables have clear column header borders and accessible contrast */
+.tactical-table th, .ds-table th {
+  font-family: var(--ds-font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+

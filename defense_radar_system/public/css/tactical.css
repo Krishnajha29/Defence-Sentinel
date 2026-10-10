@@ -2370,10 +2370,84 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
   padding-top: 4px;
 }
 
-/* Responsive adjustments */
+/* ==========================================================================
+   MULTI-VIEWPORT RESPONSIVE LAYOUT CONSTRAINTS (Phases 9 & 10)
+   1920x1080 | 1536x864 | 1440x900 | 1366x768 | 1280x720
+   ========================================================================== */
+
+@media (max-width: 1536px) {
+  .radar-primary-grid {
+    grid-template-columns: 300px 1fr 320px;
+  }
+  .fusion-grid-container {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .radar-primary-grid {
+    grid-template-columns: 280px 1fr 310px;
+  }
+  .scheduler-columns-grid {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .radar-primary-grid {
+    grid-template-columns: 260px 1fr 290px;
+  }
+  .nav-pages {
+    gap: 2px;
+  }
+  .nav-tab-btn {
+    padding: 0 10px;
+    font-size: 10.5px;
+  }
+  .nav-right-tools {
+    gap: 8px;
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .radar-primary-grid {
+    grid-template-columns: 240px 1fr 270px;
+  }
+  .analytics-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ps-panel-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .camera-matrix-grid {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .global-navbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    gap: 8px;
+  }
+  .nav-right-tools {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 4px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .radar-primary-grid {
+    grid-template-columns: 230px 1fr 250px;
+  }
+}
+
 @media (max-width: 1024px) {
   .radar-primary-grid {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 260px 1fr;
   }
   .radar-personnel-col {
     display: none;
@@ -2388,3 +2462,4 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
     grid-template-columns: 1fr;
   }
 }
+

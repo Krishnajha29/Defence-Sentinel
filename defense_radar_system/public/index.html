@@ -100,9 +100,9 @@
           <aside class="radar-track-col">
             <div class="panel-section-title">
               <span>LIVE TRACKS</span>
-              <span id="radarActiveCount" style="color:var(--radar-cyan);">07 ACTIVE</span>
+              <span id="radarActiveCount" style="color:var(--radar-cyan);" aria-live="polite">07 ACTIVE</span>
             </div>
-            <div class="track-cards-list" id="radarTrackListContainer">
+            <div class="track-cards-list" id="radarTrackListContainer" aria-live="polite">
               <!-- Dynamically populated -->
             </div>
             <div class="quick-info-box" id="radarQuickInfoBox">
@@ -141,12 +141,12 @@
 
             <div class="panel-section-title" style="margin-top:6px;">
               <span>SIMULATED SECURITY ALERTS</span>
-              <span style="color:var(--state-critical); font-weight:700;" id="sosAlertCount">0 ACTIVE</span>
+              <span style="color:var(--state-critical); font-weight:700;" id="sosAlertCount" aria-live="polite">0 ACTIVE</span>
             </div>
             <div style="font-size:10px; color:var(--text-tertiary); padding:3px 6px 5px; font-family:var(--font-mono);">
               ⚠ PROTOTYPE / SIMULATION ONLY — NOT CONNECTED TO REAL NETWORKS
             </div>
-            <div class="sos-logs-container" id="radarSosLogsContainer" style="max-height:200px; overflow-y:auto;">
+            <div class="sos-logs-container" id="radarSosLogsContainer" style="max-height:200px; overflow-y:auto;" aria-live="polite">
               <!-- Dynamically populated -->
             </div>
             <div style="display:flex; gap:6px; padding:4px 0;">
@@ -155,8 +155,8 @@
             </div>
 
             <div class="camera-status-strip">
-              <span>CAM NET: <b id="radarCamStatusText" style="color:var(--cam-blue);">4 / 4 ONLINE</b></span>
-              <span>RF RCVR: <b style="color:var(--state-verified);">ACTIVE</b></span>
+              <span>CAM NET: <b id="radarCamStatusText" style="color:var(--cam-blue);">4 / 4 SYNTHETIC</b></span>
+              <span>RF RCVR: <b id="radarRfStatusText" style="color:var(--state-verified);">SIMULATED</b></span>
             </div>
           </aside>
 
@@ -220,13 +220,13 @@
                 <table class="rf-emitter-table">
                   <thead>
                     <tr>
-                      <th>EMITTER ID</th>
-                      <th>FREQUENCY</th>
-                      <th>POWER</th>
-                      <th>ACTIVITY</th>
-                      <th>CONFIDENCE</th>
-                      <th>ASSOCIATED RADAR</th>
-                      <th>LAST OBSERVED</th>
+                      <th scope="col">EMITTER ID</th>
+                      <th scope="col">FREQUENCY</th>
+                      <th scope="col">POWER</th>
+                      <th scope="col">ACTIVITY</th>
+                      <th scope="col">CONFIDENCE</th>
+                      <th scope="col">ASSOCIATED RADAR</th>
+                      <th scope="col">LAST OBSERVED</th>
                     </tr>
                   </thead>
                   <tbody id="rfEmitterTableBody">
@@ -527,13 +527,13 @@
             <table class="rf-emitter-table ds-table">
               <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
                 <tr>
-                  <th>TRACK</th>
-                  <th>RADAR</th>
-                  <th>OPTICAL / CAMERA</th>
-                  <th>RF / ESM</th>
-                  <th>PERSONNEL</th>
-                  <th>CLASSIFICATION</th>
-                  <th>CONFIDENCE</th>
+                  <th scope="col">TRACK</th>
+                  <th scope="col">RADAR</th>
+                  <th scope="col">OPTICAL / CAMERA</th>
+                  <th scope="col">RF / ESM</th>
+                  <th scope="col">PERSONNEL</th>
+                  <th scope="col">CLASSIFICATION</th>
+                  <th scope="col">CONFIDENCE</th>
                 </tr>
               </thead>
               <tbody id="fusionMatrixBody">
@@ -888,16 +888,16 @@
               <table class="per-band-state-table" id="perBandStateTable">
                 <thead>
                   <tr>
-                    <th>BAND</th>
-                    <th>VISITS</th>
-                    <th>HITS</th>
-                    <th>MISSES</th>
-                    <th>EST. REWARD</th>
-                    <th>ACTIVITY P(θ)</th>
-                    <th>UNCERTAINTY</th>
-                    <th>LAST SEEN</th>
-                    <th>AGING</th>
-                    <th>SCORE Q(b)</th>
+                    <th scope="col">BAND</th>
+                    <th scope="col">VISITS</th>
+                    <th scope="col">HITS</th>
+                    <th scope="col">MISSES</th>
+                    <th scope="col">EST. REWARD</th>
+                    <th scope="col">ACTIVITY P(θ)</th>
+                    <th scope="col">UNCERTAINTY</th>
+                    <th scope="col">LAST SEEN</th>
+                    <th scope="col">AGING</th>
+                    <th scope="col">SCORE Q(b)</th>
                   </tr>
                 </thead>
                 <tbody id="schedPerBandTableBody">
@@ -1421,16 +1421,16 @@
             <table class="tactical-table ds-table" id="suiteBreakdownTable">
               <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
                 <tr>
-                  <th style="position:sticky; left:0; background:var(--bg-panel); z-index:3;">SCENARIO</th>
-                  <th>ADAPTIVE P(D)</th>
-                  <th>BASELINE P(D)</th>
-                  <th>DELTA P(D) [pp / %]</th>
-                  <th>ADAPTIVE LATENCY</th>
-                  <th>BASELINE LATENCY</th>
-                  <th>BURST SENSITIVITY</th>
-                  <th>MISSED BURSTS</th>
-                  <th>UTILIZATION</th>
-                  <th>CONFIG HASH</th>
+                  <th scope="col" style="position:sticky; left:0; background:var(--bg-panel); z-index:3;">SCENARIO</th>
+                  <th scope="col">ADAPTIVE P(D)</th>
+                  <th scope="col">BASELINE P(D)</th>
+                  <th scope="col">DELTA P(D) [pp / %]</th>
+                  <th scope="col">ADAPTIVE LATENCY</th>
+                  <th scope="col">BASELINE LATENCY</th>
+                  <th scope="col">BURST SENSITIVITY</th>
+                  <th scope="col">MISSED BURSTS</th>
+                  <th scope="col">UTILIZATION</th>
+                  <th scope="col">CONFIG HASH</th>
                 </tr>
               </thead>
               <tbody id="suiteBreakdownTbody">
@@ -1531,23 +1531,23 @@
           <div class="rf-receiver-card">
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">360° PPI RADAR ENGINE:</span>
-              <span style="color:var(--state-verified); font-weight:700;" id="subsysRadarEngine">ONLINE (24 RPM)</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRadarEngine">SIMULATED ENGINE (24 RPM)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">OPTICAL SURVEILLANCE NETWORK:</span>
-              <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">4 / 4 ONLINE</span>
+              <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">SYNTHETIC CAM NET (4 / 4)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">RF / ESM RECEIVER (SIH26055):</span>
-              <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">ACTIVE (50 MHz IBW)</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">SIMULATED TESTBED (50 MHz IBW // IDLE)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">SENSOR FUSION SYNTHESIS:</span>
-              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysFusion">SYNCHRONIZED (25 Hz)</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysFusion">SYNTHESIZED (25 Hz Sim)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">ADAPTIVE SCHEDULER (UCB1):</span>
-              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">HEALTHY (Simulated Engine)</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">SIMULATED ENGINE (HEALTHY)</span>
             </div>
           </div>
 
@@ -1625,11 +1625,11 @@
         <table class="tactical-table" style="width:100%; margin-bottom:10px;">
           <thead>
             <tr>
-              <th>SUBSYSTEM</th>
-              <th>ADAPTER INTERFACE</th>
-              <th>DATA FLOW</th>
-              <th>PHYSICAL BUS</th>
-              <th>STATUS</th>
+              <th scope="col">SUBSYSTEM</th>
+              <th scope="col">ADAPTER INTERFACE</th>
+              <th scope="col">DATA FLOW</th>
+              <th scope="col">LAST SEEN</th>
+              <th scope="col">STATUS</th>
             </tr>
           </thead>
           <tbody id="hwModalTableBody">
