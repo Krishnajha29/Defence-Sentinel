@@ -485,6 +485,10 @@ class TacticalC2App {
       else if (cls === 'UNIDENTIFIED') { classSuffix = 'unknown';   clsColor = '#8a9ab5';               icon = '□'; }
 
       card.className = `track-card ${classSuffix} ${isSelected ? 'selected' : ''}`;
+      card.setAttribute('data-track-id', ent.id);
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       card.onclick = () => this.selectEntity(ent.id);
 
       // Authorized person details from personnelDb
@@ -494,7 +498,7 @@ class TacticalC2App {
       const personZone   = pRecord?.zone   || ent.personnel?.zone  || '—';
       const personStatus = pRecord?.status || (cls === 'ANOMALOUS' ? 'THREAT' : cls === 'WILDLIFE' ? 'FAUNA' : 'UNKNOWN');
 
-      // Extra detail block based on classification
+      // Extra detail block based on classification (rendered only when selected)
       const authorizedRows = pRecord ? `
         <div style="border-top:1px solid rgba(16,185,129,0.25); margin-top:6px; padding-top:6px;">
           <div style="color:${clsColor}; font-size:10px; font-weight:700; letter-spacing:0.05em; margin-bottom:3px;">✓ AUTHORIZED PERSONNEL</div>
@@ -548,7 +552,6 @@ class TacticalC2App {
           </div>
         </div>`;
 
-
       card.innerHTML = `
         <div class="track-card-header">
           <span class="track-card-id" style="color:${isSelected ? 'var(--radar-cyan)' : clsColor};">${icon} ${ent.id} <span style="font-size:10px; color:var(--text-secondary); font-weight:600; margin-left:3px;">[${ent.type}]</span></span>
@@ -560,7 +563,7 @@ class TacticalC2App {
           <span>Speed: <b>${ent.radar.speedKmh} km/h</b></span>
           <span>Hdg: <b>${ent.radar.heading}°</b></span>
         </div>
-        ${authorizedRows}
+        ${isSelected ? authorizedRows : ''}
       `;
       container.appendChild(card);
     });
@@ -568,8 +571,6 @@ class TacticalC2App {
     const countEl = document.getElementById('radarActiveCount');
     if (countEl) countEl.textContent = `${String(entities.length).padStart(2, '0')} ACTIVE`;
   }
-
-
 
   renderPersonnelList(db) {
     const container = document.getElementById('radarPersonnelListContainer');
@@ -593,7 +594,6 @@ class TacticalC2App {
       modalContainer.innerHTML = db.map(renderRow).join('');
     }
   }
-
 
   renderSosLogs(logs, incidents) {
     const container = document.getElementById('radarSosLogsContainer');
@@ -629,11 +629,14 @@ class TacticalC2App {
           inc.sensorEvidence.unauthorized ? 'UNAUTH' : null
         ].filter(Boolean).join(' | ') : '';
 
+        // Format timestamp in UTC to match header UTC clock
+        const alertTime = inc.timestamp ? (new Date(inc.timestamp).toISOString().substring(11, 19) + ' UTC') : (inc.timeStr || inc.time || '—');
+
         return `
-          <div class="sos-log-entry" style="background:${bgColor}; border-left:3px solid ${levelColor}; padding-left:8px; margin-bottom:5px;">
+          <div class="sos-log-entry sos-log-item" style="background:${bgColor}; border-left:3px solid ${levelColor}; padding-left:8px; margin-bottom:5px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; align-items:center;">
               <span style="color:${levelColor}; font-size:11px;">${inc.incidentId || inc.id}</span>
-              <span style="color:var(--text-tertiary); font-size:10px;">${inc.timeStr || inc.time}</span>
+              <span style="color:var(--text-tertiary); font-size:10px; font-variant-numeric:tabular-nums;">${alertTime}</span>
             </div>
             <div style="color:#fff; margin-top:2px; font-size:11px; font-weight:600;">${inc.entityId || inc.targetId} — ${inc.alertLevel || inc.level || 'NONE'}</div>
             <div style="color:var(--text-secondary); font-size:10px; margin-top:2px;">${inc.range ? `Range ${inc.range}m | Az ${inc.azimuth}° | ${inc.speed?.toFixed(1)} km/h` : (inc.location || '')}</div>
@@ -641,14 +644,14 @@ class TacticalC2App {
             ${inc.riskScore !== undefined ? `<div style="color:${levelColor}; font-size:10px; font-family:var(--font-mono); font-weight:600;">RISK: ${inc.riskScore}/100</div>` : ''}
             <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
               <span style="font-size:10px; color:${isActive ? 'var(--state-critical)' : 'var(--state-verified)'}; font-weight:700;">${inc.status}</span>
-              ${isActive && hasAlert ? `<button class="btn-ops" style="font-size:10px; padding:2px 8px; height:20px; line-height:1.2;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
+              ${isActive && hasAlert ? `<button class="btn-ops ds-btn ds-btn-sm" style="font-size:10px; padding:2px 8px; height:20px; line-height:1.2;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
     } else {
       container.innerHTML = logs.map(l => `
-        <div class="sos-log-entry">
+        <div class="sos-log-entry sos-log-item">
           <div style="display:flex; justify-content:space-between; font-weight:700;">
             <span style="color:var(--state-critical);">${l.id} // ${l.targetId}</span>
             <span style="color:var(--text-tertiary);">${l.time}</span>

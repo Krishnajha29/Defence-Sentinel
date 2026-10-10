@@ -378,10 +378,16 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 
 .radar-primary-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 22%) 1fr minmax(280px, 25%);
+  grid-template-columns: 320px 1fr 340px;
   height: calc(100% - 44px);
   background: var(--bg-deep);
   overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+  .radar-primary-grid {
+    grid-template-columns: 280px 1fr 300px;
+  }
 }
 
 /* Left Column: Live Radar Track Cards */

@@ -193,10 +193,14 @@ class TacticalRadarScope {
       }
       ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = isPerimeter ? '#d7a84b' : '#496270';
-      ctx.font = '8px "JetBrains Mono", monospace';
+      ctx.font = '9px "JetBrains Mono", monospace';
       ctx.textAlign = 'left';
-      ctx.fillText(`${rMeters}m${isPerimeter ? ' PERIMETER' : ''}`, this.centerX + 6, this.centerY - rPx + 10);
+      const ringText = `${rMeters}m${isPerimeter ? ' PERIMETER' : ''}`;
+      ctx.strokeStyle = '#070b12';
+      ctx.lineWidth = 3;
+      ctx.strokeText(ringText, this.centerX + 6, this.centerY - rPx + 10);
+      ctx.fillStyle = isPerimeter ? '#d7a84b' : '#718796';
+      ctx.fillText(ringText, this.centerX + 6, this.centerY - rPx + 10);
       ctx.restore();
     });
 
@@ -425,6 +429,9 @@ class TacticalRadarScope {
       }
 
       // ── 6. TRACK LABEL ──────────────────────────────────────────────────
+      const isRightEdge = pos.px > this.centerX + this.radius * 0.45;
+      const isTopEdge = pos.py < this.centerY - this.radius * 0.55;
+
       if (isSelected) {
         ctx.save();
         const classLabel =
@@ -434,41 +441,62 @@ class TacticalRadarScope {
 
         const idText  = ent.id;
         const kinText = `${ent.radar.range}m  ${ent.radar.speedKmh}kph  ${ent.radar.azimuth}°`;
-        ctx.font = '700 10px "JetBrains Mono", monospace';
+        ctx.font = '700 11px "JetBrains Mono", monospace';
         const boxW = Math.max(
           ctx.measureText(idText).width,
           ctx.measureText(classLabel).width,
           ctx.measureText(kinText).width
-        ) + 14;
+        ) + 16;
+        const boxH = 42;
 
-        ctx.fillStyle = 'rgba(4,8,14,0.92)';
-        ctx.strokeStyle = color + 'bb';
-        ctx.lineWidth = 1.2;
-        ctx.fillRect(pos.px + 12, pos.py - 18, boxW, 40);
-        ctx.strokeRect(pos.px + 12, pos.py - 18, boxW, 40);
+        const boxX = isRightEdge ? (pos.px - boxW - 14) : (pos.px + 14);
+        const boxY = isTopEdge ? (pos.py + 4) : (pos.py - 20);
 
-        ctx.font = '700 10px "JetBrains Mono", monospace';
+        ctx.fillStyle = 'rgba(11,18,32,0.94)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.4;
+        ctx.fillRect(boxX, boxY, boxW, boxH);
+        ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+        // Haloed text
+        ctx.strokeStyle = '#070b12';
+        ctx.lineWidth = 3;
+
+        ctx.font = '700 11px "JetBrains Mono", monospace';
+        ctx.strokeText(idText, boxX + 6, boxY + 13);
         ctx.fillStyle = color;
-        ctx.textAlign = 'left';
-        ctx.fillText(idText, pos.px + 16, pos.py - 5);
+        ctx.fillText(idText, boxX + 6, boxY + 13);
+
+        ctx.font = '600 9px "JetBrains Mono", monospace';
+        ctx.strokeText(classLabel, boxX + 6, boxY + 25);
+        ctx.fillStyle = color + 'dd';
+        ctx.fillText(classLabel, boxX + 6, boxY + 25);
 
         ctx.font = '8px "JetBrains Mono", monospace';
-        ctx.fillStyle = color + 'dd';
-        ctx.fillText(classLabel, pos.px + 16, pos.py + 7);
-
-        ctx.font = '7.5px "JetBrains Mono", monospace';
+        ctx.strokeText(kinText, boxX + 6, boxY + 36);
         ctx.fillStyle = '#9cb1c5';
-        ctx.fillText(kinText, pos.px + 16, pos.py + 18);
+        ctx.fillText(kinText, boxX + 6, boxY + 36);
         ctx.restore();
       } else {
         ctx.save();
-        ctx.font = '600 9px "JetBrains Mono", monospace';
+        const offsetX = isRightEdge ? -10 : 8;
+        const textAlign = isRightEdge ? 'right' : 'left';
+        ctx.textAlign = textAlign;
+
+        // Halo
+        ctx.strokeStyle = '#070b12';
+        ctx.lineWidth = 3;
+
+        ctx.font = '700 9.5px "JetBrains Mono", monospace';
+        ctx.strokeText(ent.id, pos.px + offsetX, pos.py - 3);
         ctx.fillStyle = color;
-        ctx.textAlign = 'left';
-        ctx.fillText(ent.id, pos.px + 8, pos.py - 3);
-        ctx.font = '7.5px "JetBrains Mono", monospace';
-        ctx.fillStyle = '#7a8b9e';
-        ctx.fillText(`${ent.radar.range}m ${ent.radar.speedKmh}kph`, pos.px + 8, pos.py + 7);
+        ctx.fillText(ent.id, pos.px + offsetX, pos.py - 3);
+
+        ctx.font = '8px "JetBrains Mono", monospace';
+        const kinStr = `${ent.radar.range}m ${ent.radar.speedKmh}kph`;
+        ctx.strokeText(kinStr, pos.px + offsetX, pos.py + 8);
+        ctx.fillStyle = '#94a7bc';
+        ctx.fillText(kinStr, pos.px + offsetX, pos.py + 8);
         ctx.restore();
       }
     });

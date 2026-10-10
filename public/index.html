@@ -89,6 +89,9 @@
          PAGE 1: TACTICAL RADAR (RESTORED ORIGINAL EXPERIENCE)
          ------------------------------------------------------------------ -->
     <section id="view-radar" class="view-page active">
+      <div class="page-sim-banner" role="status">
+        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SIH26055 SYNTHETIC TELEMETRY</span>
+      </div>
       <div class="radar-page-layout">
         
         <div class="radar-primary-grid">
@@ -126,11 +129,11 @@
           <aside class="radar-personnel-col">
             <div class="panel-section-title">
               <span>AUTHORIZED PERSONNEL</span>
-              <span style="color:var(--state-verified);">DB SYNC</span>
+              <span style="color:var(--state-verified);" id="dbSyncStatusTag">✓ DB SYNC</span>
             </div>
             <div class="personnel-tools">
-              <button id="btnOpenAddPersonnel" class="btn-ops" style="flex:1;">+ ADD PERSONNEL</button>
-              <button id="btnViewPersonnelDetails" class="btn-ops" style="flex:1;">VIEW DETAILS</button>
+              <button id="btnOpenAddPersonnel" class="btn-ops ds-btn ds-btn-sm" style="flex:1;">+ ADD PERSONNEL</button>
+              <button id="btnViewPersonnelDetails" class="btn-ops ds-btn ds-btn-sm" style="flex:1;">VIEW DETAILS</button>
             </div>
             <div class="personnel-list-scroll" id="radarPersonnelListContainer">
               <!-- Dynamically populated -->
@@ -147,8 +150,8 @@
               <!-- Dynamically populated -->
             </div>
             <div style="display:flex; gap:6px; padding:4px 0;">
-              <button class="btn-ops" style="flex:1;" id="btnRunFalseAlarmTest">▶ FALSE ALARM TEST</button>
-              <button class="btn-ops" style="flex:1;" onclick="window.location='/api/incidents/sitrep'">📄 INCIDENT SITREP</button>
+              <button class="btn-ops ds-btn ds-btn-sm" style="flex:1;" id="btnRunFalseAlarmTest">▶ FALSE ALARM TEST</button>
+              <button class="btn-ops ds-btn ds-btn-sm" style="flex:1;" onclick="window.location='/api/incidents/sitrep'">📄 INCIDENT SITREP</button>
             </div>
 
             <div class="camera-status-strip">
@@ -159,23 +162,27 @@
 
         </div>
 
-        <!-- Bottom Scenario Toolbar (Original Style) -->
+        <!-- Bottom Scenario Toolbar (Restrained Tactical Command Bar) -->
         <footer class="radar-bottom-scenario-bar">
           <div class="scenario-buttons-group">
             <span style="color:var(--text-tertiary); font-weight:700; margin-right:4px;">SCENARIO:</span>
-            <button class="btn-scenario active" data-scenario="STANDARD BASE MONITORING">STANDARD MONITORING</button>
-            <button class="btn-scenario" data-scenario="SENTRY PATROL">SENTRY PATROL</button>
-            <button class="btn-scenario" data-scenario="NIGHT PERIMETER">NIGHT MONITORING</button>
-            <button class="btn-scenario" data-scenario="MULTI-SENSOR EVENT">MULTI-SENSOR EVENT</button>
-            <button class="btn-scenario" data-scenario="UNKNOWN CONTACT">UNKNOWN CONTACT</button>
-            <button class="btn-scenario" data-scenario="WILDLIFE">WILDLIFE</button>
+            <div class="ds-segmented">
+              <button class="btn-scenario ds-segmented-btn active" data-scenario="STANDARD BASE MONITORING">STANDARD MONITORING</button>
+              <button class="btn-scenario ds-segmented-btn" data-scenario="SENTRY PATROL">SENTRY PATROL</button>
+              <button class="btn-scenario ds-segmented-btn" data-scenario="NIGHT PERIMETER">NIGHT MONITORING</button>
+              <button class="btn-scenario ds-segmented-btn" data-scenario="MULTI-SENSOR EVENT">MULTI-SENSOR EVENT</button>
+              <button class="btn-scenario ds-segmented-btn" data-scenario="UNKNOWN CONTACT">UNKNOWN CONTACT</button>
+              <button class="btn-scenario ds-segmented-btn" data-scenario="WILDLIFE">WILDLIFE</button>
+            </div>
           </div>
 
           <div style="display:flex; align-items:center; gap:8px;">
-            <button id="btnRadarPauseResume" class="btn-ops">PAUSE</button>
-            <button id="btnRadarReset" class="btn-ops">RESET</button>
-            <button id="btnRadarTriggerDemo" class="btn-ops btn-demo-amber">
-              ▶ DEMO: NIGHT PERIMETER MONITORING (12-STEP)
+            <div style="display:flex; gap:4px;">
+              <button id="btnRadarPauseResume" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary">PAUSE</button>
+              <button id="btnRadarReset" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary">RESET</button>
+            </div>
+            <button id="btnRadarTriggerDemo" class="btn-ops btn-demo-amber ds-btn ds-btn-sm ds-btn-primary">
+              ▶ 12-STEP DEMO: NIGHT PERIMETER MONITORING
             </button>
           </div>
         </footer>
