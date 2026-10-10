@@ -1114,7 +1114,11 @@ class TacticalC2App {
     const container = document.getElementById('fusionReasoningTimeline');
     if (!container || !sel) return;
 
-    const timeStr = new Date().toTimeString().split(' ')[0];
+    const now = new Date();
+    const timeStr = now.toISOString().substring(11, 19) + ' UTC';
+    const stampEl = document.getElementById('fusionReasoningTimestamp');
+    if (stampEl) stampEl.textContent = `DATA AS OF ${timeStr}`;
+
     const steps = [];
 
     // Step 1: Radar Acquisition

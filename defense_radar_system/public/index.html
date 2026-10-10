@@ -523,9 +523,9 @@
           <div class="panel-section-title">
             <span>MULTI-ENTITY CORRELATION MATRIX</span>
           </div>
-          <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; overflow-x:auto;">
-            <table class="rf-emitter-table">
-              <thead>
+          <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; max-height:380px; overflow:auto;">
+            <table class="rf-emitter-table ds-table">
+              <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
                 <tr>
                   <th>TRACK</th>
                   <th>RADAR</th>
@@ -657,6 +657,7 @@
 
           <div class="panel-section-title">
             <span>FUSION REASONING TRACE</span>
+            <span style="color:var(--text-tertiary); font-family:var(--font-mono); font-size:9px;" id="fusionReasoningTimestamp">DATA AS OF LIVE UTC</span>
           </div>
           <div class="sos-logs-container" id="fusionReasoningTimeline">
             <!-- Dynamically populated -->
