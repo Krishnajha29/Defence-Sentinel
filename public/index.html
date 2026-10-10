@@ -13,51 +13,56 @@
        1. GLOBAL PERSISTENT NAVIGATION BAR
        ==================================================================== -->
   <header class="global-navbar">
-    <div class="nav-brand">
-      <div class="brand-badge">SIH</div>
+    <div class="nav-brand" title="Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context">
+      <div class="brand-badge">DS</div>
       <div class="brand-titles">
         <div class="brand-title">
-          ESM-ASTRA
-          <span class="tag-sim">SIH26055 // ADAPTIVE EW RECEIVER SCHEDULING</span>
+          DEFENCE SENTINEL
+          <span class="tag-sim" title="Adaptive Electronic Warfare Receiver Scheduling">ESM-ASTRA</span>
         </div>
-        <div class="brand-desc">Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context</div>
+        <div class="brand-desc" title="Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context">Adaptive RF/ESM C2 Console (SIH26055)</div>
       </div>
     </div>
 
     <!-- 7 Dedicated Page Navigation Tabs -->
-    <nav class="nav-pages">
-      <button class="nav-tab-btn active" data-view="radar">
-        <span>TACTICAL CONTEXT</span>
+    <nav class="nav-pages" role="tablist" aria-label="Command Workspaces">
+      <button class="nav-tab-btn active" role="tab" id="tab-tactical" data-view="radar" aria-selected="true" aria-current="page" tabindex="0" title="Tactical Situation & Radar Context">
+        <span>Tactical</span>
       </button>
-      <button class="nav-tab-btn" data-view="rf">
-        <span>RF / ESM (SIH CORE)</span>
+      <button class="nav-tab-btn" role="tab" id="tab-rf" data-view="rf" aria-selected="false" tabindex="-1" title="RF Spectrum & ESM Intercept (SIH Core)">
+        <span>RF / ESM</span>
       </button>
-      <button class="nav-tab-btn" data-view="camera">
-        <span>OPTICAL CONTEXT</span>
+      <button class="nav-tab-btn" role="tab" id="tab-optical" data-view="camera" aria-selected="false" tabindex="-1" title="Optical & Thermal Sensor Context">
+        <span>Optical</span>
       </button>
-      <button class="nav-tab-btn" data-view="fusion">
-        <span>SENSOR FUSION</span>
+      <button class="nav-tab-btn" role="tab" id="tab-fusion" data-view="fusion" aria-selected="false" tabindex="-1" title="Multi-Sensor Bayesian Correlation">
+        <span>Fusion</span>
       </button>
-      <button class="nav-tab-btn" data-view="scheduler">
-        <span>ADAPTIVE SCHEDULER (SIH CORE)</span>
+      <button class="nav-tab-btn" role="tab" id="tab-scheduler" data-view="scheduler" aria-selected="false" tabindex="-1" title="Adaptive Multi-Armed Bandit Scheduler (SIH Core)">
+        <span>Scheduler</span>
       </button>
-      <button class="nav-tab-btn" data-view="analytics">
-        <span>ANALYTICS & BENCHMARK</span>
+      <button class="nav-tab-btn" role="tab" id="tab-analytics" data-view="analytics" aria-selected="false" tabindex="-1" title="Performance Analytics & Benchmark Suite">
+        <span>Analytics</span>
       </button>
-      <button class="nav-tab-btn" data-view="simulation">
-        <span>MULTI-SENSOR DEMO</span>
+      <button class="nav-tab-btn" role="tab" id="tab-simulation" data-view="simulation" aria-selected="false" tabindex="-1" title="Multi-Sensor Demo & Simulation Controls">
+        <span>Simulation</span>
       </button>
     </nav>
 
     <!-- Global Diagnostics & Utilities -->
     <div class="nav-right-tools">
-      <div class="status-indicator">
+      <div class="status-indicator" id="httpStatusIndicator" title="HTTP Backend API Link Status">
+        <span class="status-dot"></span>
+        <span id="httpStatusLabel" style="font-weight:600;">HTTP OK</span>
+      </div>
+      <span class="nav-sep">|</span>
+      <div class="status-indicator" title="WebSocket Stream State">
         <span class="status-dot"></span>
         <span id="globalSysStatus" style="font-weight:600;">ONLINE</span>
       </div>
       <span class="nav-sep">|</span>
       <div class="data-source-badge" id="globalDataSourceBadge" title="Click to view Hardware Readiness & Adapter Diagnostics">
-        <span class="source-tag">SRC: SIMULATION</span>
+        <span class="source-tag" id="globalDataSourceTag">SRC: SIMULATION</span>
         <span class="hw-tag" id="globalHwStatusTag">HW: UNVERIFIED</span>
       </div>
       <span class="nav-sep">|</span>
@@ -69,7 +74,7 @@
       <div style="color:var(--radar-cyan); font-weight:600;" id="globalOpMode">TACTICAL MONITORING</div>
       <span class="nav-sep">|</span>
       <div id="globalUtcTime" style="color:#fff; font-weight:600;">14:20:24 UTC</div>
-      <button id="btnExportSitrepGlobal" class="btn-ops" title="Export Operational Situation Report">
+      <button id="btnExportSitrepGlobal" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary" title="Export Operational Situation Report">
         EXPORT SITREP
       </button>
     </div>

@@ -66,7 +66,7 @@ class TacticalC2App {
   setupPageRouting() {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '').toLowerCase();
-      const validPages = ['radar', 'rf', 'camera', 'fusion', 'scheduler', 'analytics', 'simulation'];
+      const validPages = ['radar', 'rf', 'camera', 'fusion', 'scheduler', 'analytics', 'simulation', 'tactical'];
       if (validPages.includes(hash)) {
         this.switchPage(hash);
       }
@@ -74,12 +74,34 @@ class TacticalC2App {
 
     window.addEventListener('hashchange', handleHash);
 
-    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+    const tabButtons = Array.from(document.querySelectorAll('.nav-tab-btn'));
+    tabButtons.forEach((btn, index) => {
       btn.onclick = () => {
         const pageId = btn.getAttribute('data-view');
         window.location.hash = pageId;
         this.switchPage(pageId);
       };
+
+      btn.addEventListener('keydown', (e) => {
+        let newIndex = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          newIndex = (index + 1) % tabButtons.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          newIndex = (index - 1 + tabButtons.length) % tabButtons.length;
+        } else if (e.key === 'Home') {
+          newIndex = 0;
+        } else if (e.key === 'End') {
+          newIndex = tabButtons.length - 1;
+        }
+
+        if (newIndex >= 0) {
+          e.preventDefault();
+          tabButtons[newIndex].focus();
+          const targetPageId = tabButtons[newIndex].getAttribute('data-view');
+          window.location.hash = targetPageId;
+          this.switchPage(targetPageId);
+        }
+      });
     });
 
     if (window.location.hash) {
@@ -88,11 +110,20 @@ class TacticalC2App {
   }
 
   switchPage(pageId) {
+    if (pageId === 'tactical') pageId = 'radar';
     this.activeView = pageId;
 
     // 1. Update Navigation Tabs
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-view') === pageId);
+      const isCur = btn.getAttribute('data-view') === pageId;
+      btn.classList.toggle('active', isCur);
+      btn.setAttribute('aria-selected', isCur ? 'true' : 'false');
+      btn.setAttribute('tabindex', isCur ? '0' : '-1');
+      if (isCur) {
+        btn.setAttribute('aria-current', 'page');
+      } else {
+        btn.removeAttribute('aria-current');
+      }
     });
 
     // 2. Switch Active Viewport
@@ -125,6 +156,35 @@ class TacticalC2App {
     };
     update();
     setInterval(update, 1000);
+
+    // Periodic HTTP health check for status cluster
+    this.checkHttpBackendHealth();
+    setInterval(() => this.checkHttpBackendHealth(), 10000);
+  }
+
+  checkHttpBackendHealth() {
+    const httpLabel = document.getElementById('httpStatusLabel');
+    const httpIndicator = document.getElementById('httpStatusIndicator');
+    const base = this.getBackendHttpUrl();
+    fetch(`${base}/api/status`)
+      .then(r => {
+        if (r.ok) {
+          if (httpLabel) httpLabel.textContent = 'HTTP 200';
+          if (httpIndicator) {
+            httpIndicator.classList.remove('offline');
+            httpIndicator.title = 'Backend HTTP API Reachable (200 OK)';
+          }
+        } else {
+          if (httpLabel) httpLabel.textContent = `HTTP ${r.status}`;
+        }
+      })
+      .catch(() => {
+        if (httpLabel) httpLabel.textContent = 'HTTP ERR';
+        if (httpIndicator) {
+          httpIndicator.classList.add('offline');
+          httpIndicator.title = 'Backend HTTP API unreachable';
+        }
+      });
   }
 
   checkDataFreshness() {

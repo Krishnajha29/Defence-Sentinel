@@ -92,7 +92,7 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
    1. GLOBAL PERSISTENT NAVIGATION BAR
    ========================================================================== */
 .global-navbar {
-  height: 48px;
+  height: 56px;
   background: var(--bg-panel);
   border-bottom: 1px solid var(--border-default);
   display: flex;
@@ -187,6 +187,11 @@ code, kbd, samp, pre, .font-mono, [data-mono] {
 .nav-tab-btn:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-tab-btn:focus-visible {
+  outline: 2px solid var(--ds-border-focus);
+  outline-offset: -2px;
 }
 
 .nav-tab-btn.active {
