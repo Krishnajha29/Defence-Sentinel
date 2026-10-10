@@ -123,13 +123,13 @@ class CompactSpectrumAnalyzer {
 
     ctx.clearRect(0, 0, w, h);
 
-    const padL = 46;
-    const padR = 20;
-    const padT = 26;
-    const splitRatio = 0.56; // Upper 56% spectrum analyzer, lower 44% waterfall
-    const specH = Math.round((h - padT - 30) * splitRatio);
-    const wfTop = padT + specH + 20;
-    const wfH = Math.max(40, h - wfTop - 16);
+    const padL = 48;
+    const padR = 24;
+    const padT = 28;
+    const splitRatio = 0.54; // Upper 54% spectrum analyzer, lower 46% waterfall
+    const specH = Math.round((h - padT - 44) * splitRatio);
+    const wfTop = padT + specH + 32; // Generous 32px gap so waterfall never overlaps frequency axis
+    const wfH = Math.max(40, h - wfTop - 18);
     const plotW = w - padL - padR;
 
     if (plotW <= 10 || specH <= 10) return;
@@ -146,8 +146,12 @@ class CompactSpectrumAnalyzer {
     // -------------------------------------------------------------------------
     ctx.strokeStyle = '#14202c';
     ctx.lineWidth = 1;
-    ctx.fillStyle = '#5c6f80';
+    ctx.fillStyle = '#6b7e90';
     ctx.font = '9px "JetBrains Mono", monospace';
+
+    // Top dBm axis label
+    ctx.textAlign = 'right';
+    ctx.fillText('PWR [dBm]', padL - 4, padT - 8);
 
     [-90, -80, -70, -60, -50].forEach(p => {
       const y = powerToY(p);
@@ -157,7 +161,7 @@ class CompactSpectrumAnalyzer {
       ctx.stroke();
 
       ctx.textAlign = 'right';
-      ctx.fillText(`${p} dBm`, padL - 6, y + 3);
+      ctx.fillText(`${p}`, padL - 6, y + 3);
     });
 
     for (let f = 9.0; f <= 10.001; f += 0.1) {
@@ -171,8 +175,8 @@ class CompactSpectrumAnalyzer {
 
       if (isMajor) {
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#5c6f80';
-        ctx.fillText(`${f.toFixed(1)}G`, x, padT + specH + 12);
+        ctx.fillStyle = '#6b7e90';
+        ctx.fillText(`${f.toFixed(1)} GHz`, x, padT + specH + 14);
       }
     }
 
@@ -200,17 +204,18 @@ class CompactSpectrumAnalyzer {
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    // Receiver Badge Header
-    const badgeW = 84;
+    // Receiver Badge Header (Non-clipping, clamped inside plot area)
+    const badgeW = 92;
+    const badgeX = Math.max(padL + badgeW / 2, Math.min(w - padR - badgeW / 2, cx));
     const badgeText = isHit ? `RCVR ${curGhz.toFixed(3)}G [HIT]` : `RCVR ${curGhz.toFixed(3)}G [SCAN]`;
     ctx.fillStyle = isHit ? '#42c47a' : '#d7a84b';
-    ctx.fillRect(cx - badgeW / 2, padT - 18, badgeW, 14);
+    ctx.fillRect(badgeX - badgeW / 2, padT - 20, badgeW, 16);
     ctx.fillStyle = '#070b10';
     ctx.font = '700 8.5px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText(badgeText, cx, padT - 8);
+    ctx.fillText(badgeText, badgeX, padT - 9);
 
-    // Next anticipated scan band (from UCB scheduler decision)
+    // Next anticipated scan band (from UCB scheduler decision, clamped)
     if (this.simState?.rfNextScanGhz) {
       const nextGhz = this.simState.rfNextScanGhz;
       const nx = freqToX(nextGhz);
@@ -223,11 +228,13 @@ class CompactSpectrumAnalyzer {
       ctx.lineWidth = 1.2;
       ctx.stroke();
 
+      const nextBadgeW = 80;
+      const nextBadgeX = Math.max(padL + nextBadgeW / 2, Math.min(w - padR - nextBadgeW / 2, nx));
       ctx.fillStyle = '#18b8d6';
-      ctx.fillRect(nx - 36, padT - 18, 72, 14);
+      ctx.fillRect(nextBadgeX - nextBadgeW / 2, padT - 20, nextBadgeW, 16);
       ctx.fillStyle = '#070b10';
       ctx.font = '700 8px "JetBrains Mono", monospace';
-      ctx.fillText(`NEXT ${nextGhz.toFixed(3)}G`, nx, padT - 8);
+      ctx.fillText(`NEXT ${nextGhz.toFixed(3)}G`, nextBadgeX, padT - 9);
       ctx.restore();
     }
 
@@ -452,6 +459,31 @@ class CompactSpectrumAnalyzer {
     ctx.fillText('-3s', padL - 4, wfTop + wfH * 0.35);
     ctx.fillText('-6s', padL - 4, wfTop + wfH * 0.70);
     ctx.fillText('-9s', padL - 4, wfTop + wfH - 2);
+
+    // Waterfall intensity color scale legend
+    const legW = 90;
+    const legH = 6;
+    const legX = w - padR - legW - 44;
+    const legY = wfTop + wfH + 4;
+
+    const grad = ctx.createLinearGradient(legX, legY, legX + legW, legY);
+    grad.addColorStop(0, '#0a1622');
+    grad.addColorStop(0.3, '#103046');
+    grad.addColorStop(0.6, '#18b8d6');
+    grad.addColorStop(0.85, '#d7a84b');
+    grad.addColorStop(1.0, '#42c47a');
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(legX, legY, legW, legH);
+    ctx.strokeStyle = '#24354e';
+    ctx.strokeRect(legX, legY, legW, legH);
+
+    ctx.font = '7.5px "JetBrains Mono", monospace';
+    ctx.fillStyle = '#6b7e90';
+    ctx.textAlign = 'right';
+    ctx.fillText('-90 dBm', legX - 4, legY + 5);
+    ctx.textAlign = 'left';
+    ctx.fillText('-40 dBm', legX + legW + 4, legY + 5);
 
     ctx.restore();
   }

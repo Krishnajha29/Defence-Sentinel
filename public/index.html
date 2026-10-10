@@ -194,89 +194,12 @@
          PAGE 2: RF / ESM INTELLIGENCE (SIH26055 WORKSPACE)
          ------------------------------------------------------------------ -->
     <section id="view-rf" class="view-page">
+      <div class="page-sim-banner" role="status">
+        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SIH26055 SYNTHETIC TELEMETRY</span>
+      </div>
       <div class="rf-page-layout">
         
-        <!-- SIH CORE: Technical Decision Pipeline Indicator -->
-        <div class="sih-core-banner">
-          <div class="sih-core-header-row">
-            <div class="sih-core-badge-wrap">
-              <span class="sih-tag-core">SIH CORE</span>
-              <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
-              <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
-            </div>
-            <div style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-tertiary);">
-              Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
-            </div>
-          </div>
-          <div class="sih-flow-pipeline">
-            <div class="sih-flow-step">
-              <span class="sfs-num">STEP 01</span>
-              <span class="sfs-title">Wideband Spectrum</span>
-              <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
-            </div>
-            <div class="sih-flow-arrow">➔</div>
-            <div class="sih-flow-step active">
-              <span class="sfs-num">STEP 02</span>
-              <span class="sfs-title">Limited Receiver Window</span>
-              <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
-            </div>
-            <div class="sih-flow-arrow">➔</div>
-            <div class="sih-flow-step">
-              <span class="sfs-num">STEP 03</span>
-              <span class="sfs-title">HIT / MISS Feedback</span>
-              <span class="sfs-sub">Detector Threshold Capture</span>
-            </div>
-            <div class="sih-flow-arrow">➔</div>
-            <div class="sih-flow-step">
-              <span class="sfs-num">STEP 04</span>
-              <span class="sfs-title">Policy Update</span>
-              <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
-            </div>
-            <div class="sih-flow-arrow">➔</div>
-            <div class="sih-flow-step">
-              <span class="sfs-num">STEP 05</span>
-              <span class="sfs-title">Next Scan Selection</span>
-              <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
-        <div class="ps-solution-panel">
-          <div class="ps-panel-header">
-            <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
-            <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
-          </div>
-          <div class="ps-panel-grid">
-            <div class="ps-panel-col">
-              <span class="ps-col-label problem">01. PROBLEM</span>
-              <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
-              <span class="ps-col-sub">Hardware Constraint</span>
-            </div>
-            <div class="ps-panel-col">
-              <span class="ps-col-label baseline">02. BASELINE</span>
-              <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
-              <span class="ps-col-sub">Traditional Method</span>
-            </div>
-            <div class="ps-panel-col">
-              <span class="ps-col-label proposed">03. PROPOSED</span>
-              <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
-              <span class="ps-col-sub">SIH26055 Core Algorithm</span>
-            </div>
-            <div class="ps-panel-col">
-              <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
-              <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
-              <span class="ps-col-sub">Closed-Loop Telemetry</span>
-            </div>
-            <div class="ps-panel-col">
-              <span class="ps-col-label objective">05. OBJECTIVES</span>
-              <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
-              <span class="ps-col-sub">Empirically Measured</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Dual Column Grid -->
+        <!-- Dual Column Grid (Instruments First Above Fold) -->
         <div class="rf-columns-grid">
           <!-- Main RF Column: High-Res Spectrum & Waterfall -->
           <div class="rf-main-col">
@@ -318,7 +241,7 @@
           <aside class="rf-side-col">
             <div class="panel-section-title">
               <span>CURRENT RECEIVER TELEMETRY</span>
-              <span style="color:var(--state-verified);" id="rfRxStateBadge">HIT</span>
+              <span class="ds-chip ds-chip-normal" id="rfRxStateBadge">HIT</span>
             </div>
             <div class="rf-receiver-card">
               <div class="rf-stat-row">
@@ -370,14 +293,102 @@
               </div>
             </div>
 
-            <div class="panel-section-title">
+            <div class="panel-section-title" style="position:sticky; top:0; z-index:2;">
               <span>RF SIGNAL BURST TIMELINE</span>
             </div>
-            <div class="sos-logs-container" id="rfBurstTimelineContainer" style="flex:1;">
+            <div class="sos-logs-container" id="rfBurstTimelineContainer" style="flex:1; max-height:260px; overflow-y:auto;">
               <!-- Dynamically populated -->
             </div>
           </aside>
         </div> <!-- .rf-columns-grid -->
+
+        <!-- Collapsible Method Overview Section (Content Unchanged) -->
+        <details class="method-overview-details ds-card" style="margin:12px; padding:8px 12px;">
+          <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); font-size:12px; outline:none; user-select:none;">
+            ▸ METHOD OVERVIEW: ADAPTIVE EW RECEIVER SCHEDULING (SIH26055 SPECIFICATION)
+          </summary>
+          <div style="margin-top:10px;">
+            <!-- SIH CORE: Technical Decision Pipeline Indicator -->
+            <div class="sih-core-banner">
+              <div class="sih-core-header-row">
+                <div class="sih-core-badge-wrap">
+                  <span class="sih-tag-core">SIH CORE</span>
+                  <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
+                  <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
+                </div>
+                <div style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-tertiary);">
+                  Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
+                </div>
+              </div>
+              <div class="sih-flow-pipeline">
+                <div class="sih-flow-step">
+                  <span class="sfs-num">STEP 01</span>
+                  <span class="sfs-title">Wideband Spectrum</span>
+                  <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
+                </div>
+                <div class="sih-flow-arrow">➔</div>
+                <div class="sih-flow-step active">
+                  <span class="sfs-num">STEP 02</span>
+                  <span class="sfs-title">Limited Receiver Window</span>
+                  <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
+                </div>
+                <div class="sih-flow-arrow">➔</div>
+                <div class="sih-flow-step">
+                  <span class="sfs-num">STEP 03</span>
+                  <span class="sfs-title">HIT / MISS Feedback</span>
+                  <span class="sfs-sub">Detector Threshold Capture</span>
+                </div>
+                <div class="sih-flow-arrow">➔</div>
+                <div class="sih-flow-step">
+                  <span class="sfs-num">STEP 04</span>
+                  <span class="sfs-title">Policy Update</span>
+                  <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
+                </div>
+                <div class="sih-flow-arrow">➔</div>
+                <div class="sih-flow-step">
+                  <span class="sfs-num">STEP 05</span>
+                  <span class="sfs-title">Next Scan Selection</span>
+                  <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
+            <div class="ps-solution-panel">
+              <div class="ps-panel-header">
+                <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
+                <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
+              </div>
+              <div class="ps-panel-grid">
+                <div class="ps-panel-col">
+                  <span class="ps-col-label problem">01. PROBLEM</span>
+                  <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
+                  <span class="ps-col-sub">Hardware Constraint</span>
+                </div>
+                <div class="ps-panel-col">
+                  <span class="ps-col-label baseline">02. BASELINE</span>
+                  <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
+                  <span class="ps-col-sub">Traditional Method</span>
+                </div>
+                <div class="ps-panel-col">
+                  <span class="ps-col-label proposed">03. PROPOSED</span>
+                  <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
+                  <span class="ps-col-sub">SIH26055 Core Algorithm</span>
+                </div>
+                <div class="ps-panel-col">
+                  <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
+                  <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
+                  <span class="ps-col-sub">Closed-Loop Telemetry</span>
+                </div>
+                <div class="ps-panel-col">
+                  <span class="ps-col-label objective">05. OBJECTIVES</span>
+                  <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
+                  <span class="ps-col-sub">Empirically Measured</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
 
       </div>
     </section>
