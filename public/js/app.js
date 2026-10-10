@@ -2068,12 +2068,18 @@ class TacticalC2App {
         const runs = runsSelect ? Number(runsSelect.value) || 1000 : 1000;
 
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          runBenchBtn.disabled = true;
+          runBenchBtn.textContent = '⏳ RUNNING...';
           this.ws.send(JSON.stringify({
             action: 'RUN_BENCHMARK',
             seed,
             scenario,
             runs
           }));
+          setTimeout(() => {
+            runBenchBtn.disabled = false;
+            runBenchBtn.textContent = '▶ RUN EXPERIMENT';
+          }, 1200);
         }
       };
     }

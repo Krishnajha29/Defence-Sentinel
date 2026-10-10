@@ -1417,11 +1417,11 @@
             </div>
           </div>
           
-          <div style="overflow-x:auto;">
-            <table class="tactical-table" id="suiteBreakdownTable">
-              <thead>
+          <div style="overflow-x:auto; max-height:360px;">
+            <table class="tactical-table ds-table" id="suiteBreakdownTable">
+              <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
                 <tr>
-                  <th>SCENARIO</th>
+                  <th style="position:sticky; left:0; background:var(--bg-panel); z-index:3;">SCENARIO</th>
                   <th>ADAPTIVE P(D)</th>
                   <th>BASELINE P(D)</th>
                   <th>DELTA P(D) [pp / %]</th>
