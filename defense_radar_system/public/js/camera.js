@@ -1,5 +1,5 @@
 /**
- * Defence Sentinel // ESM-ASTRA: Optical Surveillance Monitor
+ * ESM-ASTRA: Optical Surveillance Monitor (SIH26055 Demonstration Layer)
  * Real webcam feed with CV detection overlays + robust procedural tactical IR fallback
  */
 
@@ -141,12 +141,12 @@ class OpticalSurveillanceMonitor {
       // ── PROCEDURAL IR NIGHT-VISION SCENE ─────────────────────────────────
       this.drawProceduralCameraScene(ctx, w, h);
 
-      // Subtle Tactical Sensor Status & Provenance
+      // Subtle Tactical Sensor Status
       ctx.save();
       ctx.fillStyle = '#42c47a';
       ctx.font = '700 9.5px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('● SYNTHETIC IR RENDER (SIMULATION) // DETECTIONS: SIMULATED', w / 2, 22);
+      ctx.fillText('● IR THERMAL OPTICAL SENSOR [PROCEDURAL IR ONLINE]', w / 2, 22);
       ctx.restore();
     }
 
@@ -534,32 +534,32 @@ class OpticalSurveillanceMonitor {
       }
     });
 
-    // If selected entity is currently in another sector or out of FOV, display non-occluding status pill
+    // If selected entity is currently in another sector or out of FOV, display informative banner
     const sel = this.entities.find(e => e.id === this.selectedEntityId);
     if (sel && sel.camera && sel.camera.visibleCamId !== this.activeCamId) {
       ctx.save();
-      const bannerW = Math.min(460, w - 40);
-      const bannerH = 34;
+      const bannerW = 440;
+      const bannerH = 46;
       const bx = (w - bannerW) / 2;
-      const by = h - bannerH - 18; // Placed unobtrusively near bottom
+      const by = 26;
 
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+      ctx.fillStyle = 'rgba(9, 14, 20, 0.90)';
       ctx.fillRect(bx, by, bannerW, bannerH);
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#d7a84b';
+      ctx.lineWidth = 1.2;
       ctx.strokeRect(bx, by, bannerW, bannerH);
 
-      ctx.font = '700 8.5px "JetBrains Mono", monospace';
-      ctx.fillStyle = '#f59e0b';
+      ctx.font = '700 9.5px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#d7a84b';
       ctx.textAlign = 'center';
-      const visibleMsg = sel.camera.isVisuallyConfirmed && sel.camera.visibleCamId 
-        ? `VISIBLE IN ${sel.camera.visibleCamId}` 
-        : `${sel.radar?.range || 0}m / ${sel.radar?.azimuth || 0}°`;
-      ctx.fillText(`TARGET ${sel.id} OUTSIDE ${this.activeCamId} FOV [${visibleMsg}]`, w / 2, by + 15);
+      ctx.fillText(`[ ⚠️ TARGET OUT OF CURRENT OPTICAL FOV ]`, w / 2, by + 16);
 
-      ctx.font = '8px "JetBrains Mono", monospace';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText('Switch sector tab or adjust radar bearing to correlate', w / 2, by + 26);
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillStyle = '#e6edf3';
+      const visibleMsg = sel.camera.isVisuallyConfirmed && sel.camera.visibleCamId 
+        ? `(CURRENTLY VISIBLE IN SECTOR ${sel.camera.visibleCamId})` 
+        : `(RANGE: ${sel.radar?.range || 0}m / AZ: ${sel.radar?.azimuth || 0}°)`;
+      ctx.fillText(`TARGET ${sel.id} OUTSIDE ${this.activeCamId} SECTOR ${visibleMsg}`, w / 2, by + 32);
 
       ctx.restore();
     }
@@ -629,15 +629,15 @@ class OpticalSurveillanceMonitor {
 
     ctx.textAlign = 'right';
     ctx.fillText(`${this.activeCamId} // ${timeStr}`, w - 16, 16);
-    ctx.fillText('SYNTHETIC IR / 30 FPS / 70° FOV // SIMULATION', w - 16, 28);
+    ctx.fillText('IR THERMAL NIGHT VISION // 30 FPS // 70° FOV', w - 16, 28);
 
-    // Honest Simulation Feed Indicator
-    ctx.fillStyle = '#38bdf8';
+    // REC Indicator
+    ctx.fillStyle = '#d45858';
     ctx.beginPath();
     ctx.arc(w - 240, 13, 3, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText('SIM FEED', w - 192, 16);
+    ctx.fillStyle = '#e6edf3';
+    ctx.fillText('REC [HD]', w - 198, 16);
 
     ctx.restore();
   }

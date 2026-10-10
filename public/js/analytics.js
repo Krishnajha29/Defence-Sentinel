@@ -1,5 +1,5 @@
 /**
- * Defence Sentinel // ESM-ASTRA: System Analytics & Performance Benchmarking
+ * ESM-ASTRA: System Analytics & Performance Benchmarking (SIH26055)
  * Cumulative Interceptions Over Time Performance Monitor
  * Strictly dark-themed (#0B1117), live telemetry driven, high-precision C2 chart.
  */
@@ -332,12 +332,10 @@ class SystemAnalyticsRenderer {
     tbody.innerHTML = breakdown.map(row => {
       const isPositive = row.deltaDetection && (row.deltaDetection.absoluteValue !== undefined ? row.deltaDetection.absoluteValue >= 0 : !String(row.deltaDetection.absolute || row.deltaDetection).startsWith('-'));
       const tagClass = isPositive ? 'positive' : 'negative';
-      const deltaText = typeof row.deltaDetection === 'object' ? `${row.deltaDetection.absolute} (${row.deltaDetection.relative})` : (row.deltaDetection || '--');
-      const hashStr = row.configHash || '--';
-      const truncHash = hashStr.length > 10 ? hashStr.substring(0, 8) + '…' : hashStr;
+      const deltaText = typeof row.deltaDetection === 'object' ? `${row.deltaDetection.absolute} (${row.deltaDetection.relative})` : row.deltaDetection;
       return `
         <tr>
-          <td style="font-weight:700; color:var(--text-primary); position:sticky; left:0; background:var(--bg-panel); z-index:1;">${row.scenario}</td>
+          <td style="font-weight:700; color:var(--text-primary);">${row.scenario}</td>
           <td style="color:var(--radar-cyan); font-weight:700;">${row.adaptiveDetection}%</td>
           <td style="color:var(--text-secondary);">${row.openLoopDetection}%</td>
           <td>
@@ -352,9 +350,7 @@ class SystemAnalyticsRenderer {
           </td>
           <td style="color:var(--text-secondary);">${row.adaptiveMissedBursts} missed vs ${row.openLoopMissedBursts} missed</td>
           <td style="color:var(--radar-cyan);">${row.adaptiveUtilization}% vs ${row.openLoopUtilization}%</td>
-          <td style="font-family:var(--font-mono); font-size:9px; color:var(--text-tertiary);">
-            <span title="${hashStr}" style="cursor:pointer;" onclick="navigator.clipboard?.writeText('${hashStr}')">${truncHash} 📋</span>
-          </td>
+          <td style="color:var(--text-tertiary); font-size:8px;">${row.configHash || '--'}</td>
         </tr>
       `;
     }).join('');

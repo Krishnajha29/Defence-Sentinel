@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Defence Sentinel // ESM-ASTRA — Adaptive RF/ESM Command & Monitoring System</title>
-  <link rel="stylesheet" href="css/design-system.css">
+  <title>ESM-ASTRA // Adaptive RF/ESM Receiver Scheduler & Situational Platform (SIH26055)</title>
   <link rel="stylesheet" href="css/tactical.css">
 </head>
 <body>
@@ -13,68 +12,53 @@
        1. GLOBAL PERSISTENT NAVIGATION BAR
        ==================================================================== -->
   <header class="global-navbar">
-    <div class="nav-brand" title="Defence Sentinel — Adaptive RF/ESM Command & Monitoring System">
-      <div class="brand-badge">DS</div>
+    <div class="nav-brand">
+      <div class="brand-badge" style="background:var(--radar-cyan); color:#070b0e; font-weight:800;">SIH</div>
       <div class="brand-titles">
         <div class="brand-title">
-          DEFENCE SENTINEL
-          <span class="tag-sim" title="Adaptive Electronic Warfare Receiver Scheduling">ESM-ASTRA</span>
+          ESM-ASTRA
+          <span class="tag-sim">SIH26055 // ADAPTIVE EW RECEIVER SCHEDULING</span>
         </div>
-        <div class="brand-desc" title="Multi-Sensor Monitoring & Adaptive Scanning">Adaptive RF/ESM Command & Monitoring System</div>
+        <div class="brand-desc">Smart Scan Strategy for Electronic Warfare (SIH26055) with Multi-Sensor Situational Context</div>
       </div>
     </div>
 
     <!-- 7 Dedicated Page Navigation Tabs -->
-    <nav class="nav-pages" role="tablist" aria-label="Command Workspaces">
-      <button class="nav-tab-btn active" role="tab" id="tab-tactical" data-view="radar" aria-selected="true" aria-current="page" tabindex="0" title="Tactical Situation & Radar Context">
-        <span>Tactical</span>
+    <nav class="nav-pages">
+      <button class="nav-tab-btn active" data-view="radar">
+        <span>TACTICAL CONTEXT</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-rf" data-view="rf" aria-selected="false" tabindex="-1" title="RF Spectrum & ESM Intercept">
-        <span>RF / ESM</span>
+      <button class="nav-tab-btn" data-view="rf">
+        <span style="color:var(--radar-cyan);">RF / ESM (SIH CORE)</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-optical" data-view="camera" aria-selected="false" tabindex="-1" title="Optical & Thermal Sensor Context">
-        <span>Optical</span>
+      <button class="nav-tab-btn" data-view="camera">
+        <span>OPTICAL CONTEXT</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-fusion" data-view="fusion" aria-selected="false" tabindex="-1" title="Multi-Sensor Bayesian Correlation">
-        <span>Fusion</span>
+      <button class="nav-tab-btn" data-view="fusion">
+        <span>SENSOR FUSION</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-scheduler" data-view="scheduler" aria-selected="false" tabindex="-1" title="Adaptive Multi-Armed Bandit Scheduler">
-        <span>Scheduler</span>
+      <button class="nav-tab-btn" data-view="scheduler">
+        <span style="color:var(--radar-cyan);">ADAPTIVE SCHEDULER (SIH CORE)</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-analytics" data-view="analytics" aria-selected="false" tabindex="-1" title="Performance Analytics & Benchmark Suite">
-        <span>Analytics</span>
+      <button class="nav-tab-btn" data-view="analytics">
+        <span>ANALYTICS & BENCHMARK</span>
       </button>
-      <button class="nav-tab-btn" role="tab" id="tab-simulation" data-view="simulation" aria-selected="false" tabindex="-1" title="Multi-Sensor Demo & Simulation Controls">
-        <span>Simulation</span>
+      <button class="nav-tab-btn" data-view="simulation">
+        <span>MULTI-SENSOR DEMO</span>
       </button>
     </nav>
 
     <!-- Global Diagnostics & Utilities -->
     <div class="nav-right-tools">
-      <div class="status-indicator" id="httpStatusIndicator" title="HTTP Backend API Link Status" style="display:none;">
+      <div class="status-indicator">
         <span class="status-dot"></span>
-        <span id="httpStatusLabel" style="font-weight:600;">HTTP OK</span>
+        <span id="globalSysStatus" style="color:var(--state-verified); font-weight:600;">ONLINE</span>
       </div>
-      <span class="nav-sep" id="httpNavSep" style="display:none;">|</span>
-      <div class="status-indicator" id="wsStatusIndicator" title="WebSocket Stream State">
-        <span class="status-dot"></span>
-        <span id="globalSysStatus" style="font-weight:600;">ONLINE</span>
-      </div>
-      <span class="nav-sep">|</span>
-      <div class="data-source-badge" id="globalDataSourceBadge" title="Click to view Hardware Readiness & Adapter Diagnostics">
-        <span class="source-tag" id="globalDataSourceTag">SRC: SIMULATION</span>
-        <span class="hw-tag" id="globalHwStatusTag">HW: UNAVAILABLE</span>
-      </div>
-      <span class="nav-sep" id="freshnessNavSep">|</span>
-      <div class="freshness-indicator" id="globalDataFreshness" title="WebSocket Telemetry Health">
-        <span class="freshness-dot" id="freshnessDot"></span>
-        <span id="freshnessLabel">SIMULATED (20Hz)</span>
-      </div>
-      <span class="nav-sep">|</span>
+      <div style="color:var(--text-tertiary);">|</div>
       <div style="color:var(--radar-cyan); font-weight:600;" id="globalOpMode">TACTICAL MONITORING</div>
-      <span class="nav-sep">|</span>
+      <div style="color:var(--text-tertiary);">|</div>
       <div id="globalUtcTime" style="color:#fff; font-weight:600;">14:20:24 UTC</div>
-      <button id="btnExportSitrepGlobal" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary" title="Export Operational Situation Report">
+      <button id="btnExportSitrepGlobal" class="btn-ops" title="Export Operational Situation Report">
         EXPORT SITREP
       </button>
     </div>
@@ -89,9 +73,6 @@
          PAGE 1: TACTICAL RADAR (RESTORED ORIGINAL EXPERIENCE)
          ------------------------------------------------------------------ -->
     <section id="view-radar" class="view-page active">
-      <div class="page-sim-banner" role="status">
-        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SYNTHETIC TELEMETRY</span>
-      </div>
       <div class="radar-page-layout">
         
         <div class="radar-primary-grid">
@@ -100,9 +81,9 @@
           <aside class="radar-track-col">
             <div class="panel-section-title">
               <span>LIVE TRACKS</span>
-              <span id="radarActiveCount" style="color:var(--radar-cyan);" aria-live="polite">07 ACTIVE</span>
+              <span id="radarActiveCount" style="color:var(--radar-cyan);">07 ACTIVE</span>
             </div>
-            <div class="track-cards-list" id="radarTrackListContainer" aria-live="polite">
+            <div class="track-cards-list" id="radarTrackListContainer">
               <!-- Dynamically populated -->
             </div>
             <div class="quick-info-box" id="radarQuickInfoBox">
@@ -114,7 +95,7 @@
           <!-- Center Column: Dominant 360° Circular PPI Radar -->
           <div class="radar-center-viewport">
             <div class="radar-floating-telemetry">
-              <div class="radar-telemetry-chip" style="font-weight:700; color:var(--radar-cyan);">CONTEXT: TACTICAL SIMULATION & SITUATIONAL AWARENESS LAYER</div>
+              <div class="radar-telemetry-chip" style="color:var(--radar-cyan); border-color:rgba(24, 184, 214, 0.4); font-weight:700;">CONTEXT: TACTICAL SIMULATION & SITUATIONAL AWARENESS LAYER</div>
               <div class="radar-telemetry-chip">SURVEILLANCE: 360° PPI CONTINUOUS</div>
               <div class="radar-telemetry-chip">MAX RANGE: 850 METERS</div>
               <div class="radar-telemetry-chip">PERIMETER WIRE: 450 METERS</div>
@@ -129,11 +110,11 @@
           <aside class="radar-personnel-col">
             <div class="panel-section-title">
               <span>AUTHORIZED PERSONNEL</span>
-              <span style="color:var(--state-verified);" id="dbSyncStatusTag">✓ DB SYNC</span>
+              <span style="color:var(--state-verified);">DB SYNC</span>
             </div>
             <div class="personnel-tools">
-              <button id="btnOpenAddPersonnel" class="btn-ops ds-btn ds-btn-sm" style="flex:1;">+ ADD PERSONNEL</button>
-              <button id="btnViewPersonnelDetails" class="btn-ops ds-btn ds-btn-sm" style="flex:1;">VIEW DETAILS</button>
+              <button id="btnOpenAddPersonnel" class="btn-ops" style="flex:1;">+ ADD PERSONNEL</button>
+              <button id="btnViewPersonnelDetails" class="btn-ops" style="flex:1;">VIEW DETAILS</button>
             </div>
             <div class="personnel-list-scroll" id="radarPersonnelListContainer">
               <!-- Dynamically populated -->
@@ -141,48 +122,44 @@
 
             <div class="panel-section-title" style="margin-top:6px;">
               <span>SIMULATED SECURITY ALERTS</span>
-              <span style="color:var(--state-critical); font-weight:700;" id="sosAlertCount" aria-live="polite">0 ACTIVE</span>
+              <span style="color:var(--state-critical); font-size:9px;" id="sosAlertCount">0 ACTIVE</span>
             </div>
-            <div style="font-size:10px; color:var(--text-tertiary); padding:3px 6px 5px; font-family:var(--font-mono);">
+            <div style="font-size:8px; color:var(--text-tertiary); padding:2px 6px 4px; font-family:var(--font-mono);">
               ⚠ PROTOTYPE / SIMULATION ONLY — NOT CONNECTED TO REAL NETWORKS
             </div>
-            <div class="sos-logs-container" id="radarSosLogsContainer" style="max-height:200px; overflow-y:auto;" aria-live="polite">
+            <div class="sos-logs-container" id="radarSosLogsContainer" style="max-height:200px; overflow-y:auto;">
               <!-- Dynamically populated -->
             </div>
-            <div style="display:flex; gap:6px; padding:4px 0;">
-              <button class="btn-ops ds-btn ds-btn-sm" style="flex:1;" id="btnRunFalseAlarmTest">▶ FALSE ALARM TEST</button>
-              <button class="btn-ops ds-btn ds-btn-sm" style="flex:1;" onclick="window.location='/api/incidents/sitrep'">📄 INCIDENT SITREP</button>
+            <div style="display:flex; gap:4px; padding:4px 0;">
+              <button class="btn-ops" style="flex:1; font-size:8.5px;" id="btnRunFalseAlarmTest">▶ FALSE ALARM TEST</button>
+              <button class="btn-ops" style="flex:1; font-size:8.5px;" onclick="window.location='/api/incidents/sitrep'">📄 INCIDENT SITREP</button>
             </div>
 
             <div class="camera-status-strip">
-              <span>CAM NET: <b id="radarCamStatusText" style="color:var(--cam-blue);">4 / 4 SYNTHETIC</b></span>
-              <span>RF RCVR: <b id="radarRfStatusText" style="color:var(--state-verified);">SIMULATED</b></span>
+              <span>CAM NET: <b id="radarCamStatusText" style="color:var(--cam-blue);">4 / 4 ONLINE</b></span>
+              <span>RF RCVR: <b style="color:var(--state-verified);">ACTIVE</b></span>
             </div>
           </aside>
 
         </div>
 
-        <!-- Bottom Scenario Toolbar (Restrained Tactical Command Bar) -->
+        <!-- Bottom Scenario Toolbar (Original Style) -->
         <footer class="radar-bottom-scenario-bar">
           <div class="scenario-buttons-group">
             <span style="color:var(--text-tertiary); font-weight:700; margin-right:4px;">SCENARIO:</span>
-            <div class="ds-segmented">
-              <button class="btn-scenario ds-segmented-btn active" data-scenario="STANDARD BASE MONITORING">STANDARD MONITORING</button>
-              <button class="btn-scenario ds-segmented-btn" data-scenario="SENTRY PATROL">SENTRY PATROL</button>
-              <button class="btn-scenario ds-segmented-btn" data-scenario="NIGHT PERIMETER">NIGHT MONITORING</button>
-              <button class="btn-scenario ds-segmented-btn" data-scenario="MULTI-SENSOR EVENT">MULTI-SENSOR EVENT</button>
-              <button class="btn-scenario ds-segmented-btn" data-scenario="UNKNOWN CONTACT">UNKNOWN CONTACT</button>
-              <button class="btn-scenario ds-segmented-btn" data-scenario="WILDLIFE">WILDLIFE</button>
-            </div>
+            <button class="btn-scenario active" data-scenario="STANDARD BASE MONITORING">STANDARD MONITORING</button>
+            <button class="btn-scenario" data-scenario="SENTRY PATROL">SENTRY PATROL</button>
+            <button class="btn-scenario" data-scenario="NIGHT PERIMETER">NIGHT MONITORING</button>
+            <button class="btn-scenario" data-scenario="MULTI-SENSOR EVENT">MULTI-SENSOR EVENT</button>
+            <button class="btn-scenario" data-scenario="UNKNOWN CONTACT">UNKNOWN CONTACT</button>
+            <button class="btn-scenario" data-scenario="WILDLIFE">WILDLIFE</button>
           </div>
 
           <div style="display:flex; align-items:center; gap:8px;">
-            <div style="display:flex; gap:4px;">
-              <button id="btnRadarPauseResume" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary">PAUSE</button>
-              <button id="btnRadarReset" class="btn-ops ds-btn ds-btn-sm ds-btn-secondary">RESET</button>
-            </div>
-            <button id="btnRadarTriggerDemo" class="btn-ops btn-demo-amber ds-btn ds-btn-sm ds-btn-primary">
-              ▶ 12-STEP DEMO: NIGHT PERIMETER MONITORING
+            <button id="btnRadarPauseResume" class="btn-ops">PAUSE</button>
+            <button id="btnRadarReset" class="btn-ops">RESET</button>
+            <button id="btnRadarTriggerDemo" class="btn-ops btn-demo-amber">
+              ▶ DEMO: NIGHT PERIMETER MONITORING (12-STEP)
             </button>
           </div>
         </footer>
@@ -191,15 +168,92 @@
     </section>
 
     <!-- ------------------------------------------------------------------
-         PAGE 2: RF / ESM INTELLIGENCE WORKSPACE
+         PAGE 2: RF / ESM INTELLIGENCE (SIH26055 WORKSPACE)
          ------------------------------------------------------------------ -->
     <section id="view-rf" class="view-page">
-      <div class="page-sim-banner" role="status">
-        <span class="ds-chip ds-chip-neutral"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SIMULATION ENVIRONMENT // SYNTHETIC TELEMETRY</span>
-      </div>
       <div class="rf-page-layout">
         
-        <!-- Dual Column Grid (Instruments First Above Fold) -->
+        <!-- SIH CORE: Technical Decision Pipeline Indicator -->
+        <div class="sih-core-banner">
+          <div class="sih-core-header-row">
+            <div class="sih-core-badge-wrap">
+              <span class="sih-tag-core">SIH CORE</span>
+              <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
+              <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);">
+              Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
+            </div>
+          </div>
+          <div class="sih-flow-pipeline">
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 01</span>
+              <span class="sfs-title">Wideband Spectrum</span>
+              <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step active">
+              <span class="sfs-num">STEP 02</span>
+              <span class="sfs-title">Limited Receiver Window</span>
+              <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 03</span>
+              <span class="sfs-title">HIT / MISS Feedback</span>
+              <span class="sfs-sub">Detector Threshold Capture</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 04</span>
+              <span class="sfs-title">Policy Update</span>
+              <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 05</span>
+              <span class="sfs-title">Next Scan Selection</span>
+              <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
+        <div class="ps-solution-panel">
+          <div class="ps-panel-header">
+            <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
+            <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
+          </div>
+          <div class="ps-panel-grid">
+            <div class="ps-panel-col">
+              <span class="ps-col-label problem">01. PROBLEM</span>
+              <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
+              <span class="ps-col-sub">Hardware Constraint</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label baseline">02. BASELINE</span>
+              <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
+              <span class="ps-col-sub">Traditional Method</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label proposed">03. PROPOSED</span>
+              <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
+              <span class="ps-col-sub">SIH26055 Core Algorithm</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
+              <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
+              <span class="ps-col-sub">Closed-Loop Telemetry</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label objective">05. OBJECTIVES</span>
+              <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
+              <span class="ps-col-sub">Empirically Measured</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dual Column Grid -->
         <div class="rf-columns-grid">
           <!-- Main RF Column: High-Res Spectrum & Waterfall -->
           <div class="rf-main-col">
@@ -220,13 +274,13 @@
                 <table class="rf-emitter-table">
                   <thead>
                     <tr>
-                      <th scope="col">EMITTER ID</th>
-                      <th scope="col">FREQUENCY</th>
-                      <th scope="col">POWER</th>
-                      <th scope="col">ACTIVITY</th>
-                      <th scope="col">CONFIDENCE</th>
-                      <th scope="col">ASSOCIATED RADAR</th>
-                      <th scope="col">LAST OBSERVED</th>
+                      <th>EMITTER ID</th>
+                      <th>FREQUENCY</th>
+                      <th>POWER</th>
+                      <th>ACTIVITY</th>
+                      <th>CONFIDENCE</th>
+                      <th>ASSOCIATED RADAR</th>
+                      <th>LAST OBSERVED</th>
                     </tr>
                   </thead>
                   <tbody id="rfEmitterTableBody">
@@ -241,7 +295,7 @@
           <aside class="rf-side-col">
             <div class="panel-section-title">
               <span>CURRENT RECEIVER TELEMETRY</span>
-              <span class="ds-chip ds-chip-normal" id="rfRxStateBadge">HIT</span>
+              <span style="color:var(--state-verified);" id="rfRxStateBadge">HIT</span>
             </div>
             <div class="rf-receiver-card">
               <div class="rf-stat-row">
@@ -293,102 +347,14 @@
               </div>
             </div>
 
-            <div class="panel-section-title" style="position:sticky; top:0; z-index:2;">
+            <div class="panel-section-title">
               <span>RF SIGNAL BURST TIMELINE</span>
             </div>
-            <div class="sos-logs-container" id="rfBurstTimelineContainer" style="flex:1; max-height:260px; overflow-y:auto;">
+            <div class="sos-logs-container" id="rfBurstTimelineContainer" style="flex:1;">
               <!-- Dynamically populated -->
             </div>
           </aside>
         </div> <!-- .rf-columns-grid -->
-
-        <!-- Collapsible Method Overview Section (Content Unchanged) -->
-        <details class="method-overview-details ds-card" style="margin:12px; padding:8px 12px;">
-          <summary style="cursor:pointer; font-weight:600; color:var(--text-secondary); font-size:12px; outline:none; user-select:none;">
-            ▸ METHOD OVERVIEW: ADAPTIVE EW RECEIVER SCHEDULING SPECIFICATION
-          </summary>
-          <div style="margin-top:10px;">
-            <!-- Technical Decision Pipeline Indicator -->
-            <div class="sih-core-banner">
-              <div class="sih-core-header-row">
-                <div class="sih-core-badge-wrap">
-                  <span class="sih-tag-core">SYSTEM ARCHITECTURE</span>
-                  <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
-                  <span class="sih-ps-tag">OPERATIONAL SPECIFICATION</span>
-                </div>
-                <div style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-tertiary);">
-                  Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
-                </div>
-              </div>
-              <div class="sih-flow-pipeline">
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 01</span>
-                  <span class="sfs-title">Wideband Spectrum</span>
-                  <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step active">
-                  <span class="sfs-num">STEP 02</span>
-                  <span class="sfs-title">Limited Receiver Window</span>
-                  <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 03</span>
-                  <span class="sfs-title">HIT / MISS Feedback</span>
-                  <span class="sfs-sub">Detector Threshold Capture</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 04</span>
-                  <span class="sfs-title">Policy Update</span>
-                  <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 05</span>
-                  <span class="sfs-title">Next Scan Selection</span>
-                  <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Comparative Reference Panel -->
-            <div class="ps-solution-panel">
-              <div class="ps-panel-header">
-                <span>WHY THIS ARCHITECTURE ADDRESSES ADAPTIVE SCAN CHALLENGES</span>
-                <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
-              </div>
-              <div class="ps-panel-grid">
-                <div class="ps-panel-col">
-                  <span class="ps-col-label problem">01. PROBLEM</span>
-                  <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
-                  <span class="ps-col-sub">Hardware Constraint</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label baseline">02. BASELINE</span>
-                  <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
-                  <span class="ps-col-sub">Traditional Method</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label proposed">03. PROPOSED</span>
-                  <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
-                  <span class="ps-col-sub">Adaptive Core Algorithm</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
-                  <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
-                  <span class="ps-col-sub">Closed-Loop Telemetry</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label objective">05. OBJECTIVES</span>
-                  <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
-                  <span class="ps-col-sub">Empirically Measured</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </details>
 
       </div>
     </section>
@@ -405,9 +371,8 @@
             <button class="cam-big-tab-btn" data-cam="CAM-02">CAM-02 EAST PERIMETER</button>
             <button class="cam-big-tab-btn" data-cam="CAM-03">CAM-03 SOUTH MAIN GATE</button>
             <button class="cam-big-tab-btn" data-cam="CAM-04">CAM-04 WEST PATROL</button>
-            <div style="margin-left:auto; display:flex; align-items:center; gap:8px; padding-right:10px;">
-              <span class="ds-chip ds-chip-neutral" style="border-color:var(--radar-cyan); color:var(--radar-cyan); font-size:9.5px;">SYNTHETIC IR RENDER (SIMULATION)</span>
-              <span class="ds-chip ds-chip-neutral" style="border-color:var(--state-verified); color:var(--state-verified); font-size:9.5px;">DETECTIONS: SIMULATED</span>
+            <div style="margin-left:auto; display:flex; align-items:center; padding-right:10px;">
+              <span class="tag-sim" style="background:rgba(24, 184, 214, 0.12); color:var(--radar-cyan); font-weight:700;">OPTICAL CONTEXT // MULTI-SENSOR DEMONSTRATION LAYER</span>
             </div>
           </div>
 
@@ -454,7 +419,7 @@
           <div class="panel-section-title">
             <span>OPTICAL EVENT LOG</span>
           </div>
-          <div class="sos-logs-container" id="camOpticalEventLog" style="flex:1; min-height:120px; max-height:220px; overflow-y:auto;">
+          <div class="sos-logs-container" id="camOpticalEventLog" style="flex:1;">
             <!-- Dynamically populated -->
           </div>
         </aside>
@@ -523,17 +488,17 @@
           <div class="panel-section-title">
             <span>MULTI-ENTITY CORRELATION MATRIX</span>
           </div>
-          <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; max-height:380px; overflow:auto;">
-            <table class="rf-emitter-table ds-table">
-              <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
+          <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; overflow-x:auto;">
+            <table class="rf-emitter-table">
+              <thead>
                 <tr>
-                  <th scope="col">TRACK</th>
-                  <th scope="col">RADAR</th>
-                  <th scope="col">OPTICAL / CAMERA</th>
-                  <th scope="col">RF / ESM</th>
-                  <th scope="col">PERSONNEL</th>
-                  <th scope="col">CLASSIFICATION</th>
-                  <th scope="col">CONFIDENCE</th>
+                  <th>TRACK</th>
+                  <th>RADAR</th>
+                  <th>OPTICAL / CAMERA</th>
+                  <th>RF / ESM</th>
+                  <th>PERSONNEL</th>
+                  <th>CLASSIFICATION</th>
+                  <th>CONFIDENCE</th>
                 </tr>
               </thead>
               <tbody id="fusionMatrixBody">
@@ -657,7 +622,6 @@
 
           <div class="panel-section-title">
             <span>FUSION REASONING TRACE</span>
-            <span style="color:var(--text-tertiary); font-family:var(--font-mono); font-size:9px;" id="fusionReasoningTimestamp">DATA AS OF LIVE UTC</span>
           </div>
           <div class="sos-logs-container" id="fusionReasoningTimeline">
             <!-- Dynamically populated -->
@@ -668,30 +632,97 @@
     </section>
 
     <!-- ------------------------------------------------------------------
-         PAGE 5: ADAPTIVE EW SCAN SCHEDULER
+         PAGE 5: ADAPTIVE EW SCAN SCHEDULER (SIH CORE)
          ------------------------------------------------------------------ -->
     <section id="view-scheduler" class="view-page">
       <div class="scheduler-page-layout">
         
-        <!-- Persistent Simulation Chip Banner -->
-        <div class="simulation-provenance-banner" style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,58,138,0.25); border:1px solid rgba(56,189,248,0.3); border-radius:4px; padding:6px 14px; margin-bottom:10px; font-family:var(--font-mono); font-size:10px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="ds-chip ds-chip-neutral" style="border-color:var(--radar-cyan); color:var(--radar-cyan);">SIMULATION MODE</span>
-            <span style="color:var(--text-secondary);">Synthesized EW receiver RF front-end · Closed-loop multi-armed bandit telemetry</span>
+        <!-- SIH CORE: Technical Decision Pipeline Indicator -->
+        <div class="sih-core-banner">
+          <div class="sih-core-header-row">
+            <div class="sih-core-badge-wrap">
+              <span class="sih-tag-core">SIH CORE</span>
+              <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
+              <span class="sih-ps-tag">PROBLEM STATEMENT SIH26055</span>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);">
+              Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
+            </div>
           </div>
-          <div style="display:flex; gap:12px; color:var(--text-tertiary);">
-            <span>IBW: <b style="color:var(--text-primary);">50 MHz</b></span>
-            <span>Dwell: <b style="color:var(--text-primary);">180 ms</b></span>
-            <span>Tuning Range: <b style="color:var(--text-primary);">9.00 - 10.00 GHz</b></span>
+          <div class="sih-flow-pipeline">
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 01</span>
+              <span class="sfs-title">Wideband Spectrum</span>
+              <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step active">
+              <span class="sfs-num">STEP 02</span>
+              <span class="sfs-title">Limited Receiver Window</span>
+              <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 03</span>
+              <span class="sfs-title">HIT / MISS Feedback</span>
+              <span class="sfs-sub">Detector Threshold Capture</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 04</span>
+              <span class="sfs-title">Policy Update</span>
+              <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
+            </div>
+            <div class="sih-flow-arrow">➔</div>
+            <div class="sih-flow-step">
+              <span class="sfs-num">STEP 05</span>
+              <span class="sfs-title">Next Scan Selection</span>
+              <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
+            </div>
           </div>
         </div>
 
-        <!-- Policy Inspector Bar & Ablation Controls -->
+        <!-- "WHY THIS SOLVES THE PS" Comparative Reference Panel -->
+        <div class="ps-solution-panel">
+          <div class="ps-panel-header">
+            <span>WHY THIS ARCHITECTURE SOLVES SIH PROBLEM STATEMENT SIH26055</span>
+            <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
+          </div>
+          <div class="ps-panel-grid">
+            <div class="ps-panel-col">
+              <span class="ps-col-label problem">01. PROBLEM</span>
+              <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
+              <span class="ps-col-sub">Hardware Constraint</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label baseline">02. BASELINE</span>
+              <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
+              <span class="ps-col-sub">Traditional Method</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label proposed">03. PROPOSED</span>
+              <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
+              <span class="ps-col-sub">SIH26055 Core Algorithm</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
+              <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
+              <span class="ps-col-sub">Closed-Loop Telemetry</span>
+            </div>
+            <div class="ps-panel-col">
+              <span class="ps-col-label objective">05. OBJECTIVES</span>
+              <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
+              <span class="ps-col-sub">Empirically Measured</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Policy Inspector Bar & Ablation Controls (SIH26055 Credibility Pass) -->
         <div class="policy-inspector-bar">
           <div class="pi-left-telemetry">
             <div class="pi-metric-item">
               <span class="pi-label">CURRENT POLICY:</span>
-              <span class="pi-value highlighted" id="piCurrentPolicy"><span id="schedPolicyBadge">Recency-Augmented UCB1</span></span>
+              <span class="pi-value highlighted" id="piCurrentPolicy">Recency-Augmented UCB1 (Adaptive EW Strategy)</span>
             </div>
             <div class="pi-metric-item">
               <span class="pi-label">EXPLORATION CONSTANT (c):</span>
@@ -701,7 +732,7 @@
               <span class="pi-label">LEARNING MECHANISM:</span>
               <span class="pi-value" id="piLearningRate">Conjugate Beta(α,β) (+1 per dwell)</span>
             </div>
-            <div class="pi-metric-item" title="Actively tuned instantaneous dwell frequency vs. highest Q vs. highest empirical rate">
+            <div class="pi-metric-item">
               <span class="pi-label">CURRENT BEST BAND:</span>
               <span class="pi-value best-band" id="piBestBand">9.420 GHz</span>
             </div>
@@ -713,109 +744,13 @@
           <div class="pi-ablation-controls">
             <span class="pi-ablation-label">POLICY ABLATION:</span>
             <div class="ablation-btn-group" id="ablationBtnGroup">
-              <button class="btn-ablation active" data-mode="FULL_ADAPTIVE" aria-pressed="true" title="Full Algorithm: UCB Exploration + Bounded Temporal Aging">FULL ADAPTIVE</button>
-              <button class="btn-ablation" data-mode="UCB_ONLY" aria-pressed="false" title="Stationary Bandit: Exploration bonus only (lambda = 0)">UCB ONLY</button>
-              <button class="btn-ablation" data-mode="NO_EXPLORATION" aria-pressed="false" title="Greedy Exploitation: Locks onto highest empirical mean (c = 0)">NO EXPLORATION</button>
-              <button class="btn-ablation" data-mode="OPEN_LOOP" aria-pressed="false" title="Open-Loop Baseline: Deterministic cyclic modulo progression">OPEN LOOP</button>
+              <button class="btn-ablation active" data-mode="FULL_ADAPTIVE" title="Full Algorithm: UCB Exploration + Bounded Temporal Aging">FULL ADAPTIVE</button>
+              <button class="btn-ablation" data-mode="UCB_ONLY" title="Stationary Bandit: Exploration bonus only (lambda = 0)">UCB ONLY</button>
+              <button class="btn-ablation" data-mode="NO_EXPLORATION" title="Greedy Exploitation: Locks onto highest empirical mean (c = 0)">NO EXPLORATION</button>
+              <button class="btn-ablation" data-mode="OPEN_LOOP" title="Open-Loop Baseline: Deterministic cyclic modulo progression">OPEN LOOP</button>
             </div>
           </div>
         </div>
-
-        <!-- Definition Note for Clarifying 'Best Band' Notions -->
-        <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:6px 12px; margin-bottom:10px; font-family:var(--font-mono); font-size:9.5px; display:flex; gap:16px; color:var(--text-secondary); flex-wrap:wrap;">
-          <span><b style="color:var(--text-primary);">Current Target:</b> Actively tuned instantaneous dwell frequency</span>
-          <span><b style="color:var(--text-primary);">Next Recommended:</b> Bandit decision maximizing composite Q(b)</span>
-          <span><b style="color:var(--text-primary);">Best Empirical Band:</b> Sub-band with highest historical hit rate</span>
-        </div>
-
-        <!-- Collapsible Methodology & Technical Decision Details -->
-        <details class="method-overview-details" style="margin-bottom:12px; background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:4px; padding:8px 12px;">
-          <summary style="font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--radar-cyan); cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px;">
-            <span>▶ ADAPTIVE SCAN METHODOLOGY & 5-STEP DECISION PIPELINE</span>
-            <span style="font-size:9px; color:var(--text-tertiary); font-weight:normal;">(Click to expand algorithm details & comparative reference)</span>
-          </summary>
-          <div style="margin-top:10px;">
-            <!-- Technical Decision Pipeline Indicator -->
-            <div class="sih-core-banner" style="margin-bottom:10px;">
-              <div class="sih-core-header-row">
-                <div class="sih-core-badge-wrap">
-                  <span class="sih-tag-core">SYSTEM ARCHITECTURE</span>
-                  <span class="sih-title-core">ADAPTIVE RECEIVER SCHEDULING</span>
-                  <span class="sih-ps-tag">OPERATIONAL SPECIFICATION</span>
-                </div>
-                <div style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);">
-                  Wide RF Search Space + Limited Instantaneous Bandwidth (50 MHz IBW) = Adaptive Decision Engine Required
-                </div>
-              </div>
-              <div class="sih-flow-pipeline">
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 01</span>
-                  <span class="sfs-title">Wideband Spectrum</span>
-                  <span class="sfs-sub">9.00 - 10.00 GHz Monitoring Span</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step active">
-                  <span class="sfs-num">STEP 02</span>
-                  <span class="sfs-title">Limited Receiver Window</span>
-                  <span class="sfs-sub">50 MHz IBW // 180 ms Dwell Lock</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 03</span>
-                  <span class="sfs-title">HIT / MISS Feedback</span>
-                  <span class="sfs-sub">Detector Threshold Capture</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 04</span>
-                  <span class="sfs-title">Policy Update</span>
-                  <span class="sfs-sub">Recency-Augmented UCB1 + Beta</span>
-                </div>
-                <div class="sih-flow-arrow">➔</div>
-                <div class="sih-flow-step">
-                  <span class="sfs-num">STEP 05</span>
-                  <span class="sfs-title">Next Scan Selection</span>
-                  <span class="sfs-sub">Band Optimization Argmax Q(b)</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Comparative Reference Panel -->
-            <div class="ps-solution-panel">
-              <div class="ps-panel-header">
-                <span>WHY THIS ARCHITECTURE ADDRESSES ADAPTIVE SCAN CHALLENGES</span>
-                <span style="color:var(--radar-cyan);">SMART SCAN STRATEGY FOR ELECTRONIC WARFARE</span>
-              </div>
-              <div class="ps-panel-grid">
-                <div class="ps-panel-col">
-                  <span class="ps-col-label problem">01. PROBLEM</span>
-                  <div class="ps-col-desc">Wide RF spectrum vs. limited receiver instantaneous bandwidth. Receiver cannot observe all candidate bands concurrently.</div>
-                  <span class="ps-col-sub">Hardware Constraint</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label baseline">02. BASELINE</span>
-                  <div class="ps-col-desc">Open-loop sequential scanning. Blind round-robin cycles through channels, causing high latency and missing agile emitter bursts.</div>
-                  <span class="ps-col-sub">Traditional Method</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label proposed">03. PROPOSED</span>
-                  <div class="ps-col-desc">Recency-Augmented UCB1 Scheduler. Balances empirical mean reward, exploration uncertainty bonus, and bounded recency aging.</div>
-                  <span class="ps-col-sub">Adaptive Core Algorithm</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label signal">04. LEARNING SIGNAL</span>
-                  <div class="ps-col-desc">Binary HIT / MISS observation per dwell updates empirical mean, Beta(alpha,beta) posterior, and dwell reward index in real time.</div>
-                  <span class="ps-col-sub">Closed-Loop Telemetry</span>
-                </div>
-                <div class="ps-panel-col">
-                  <span class="ps-col-label objective">05. OBJECTIVES</span>
-                  <div class="ps-col-desc">Improve intercept rate (+21% to +36%), reduce mean intercept latency, and maximize receiver dwell utilization without starvation.</div>
-                  <span class="ps-col-sub">Empirically Measured</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </details>
 
         <!-- 5-Stage Live Decision Flow Pipeline -->
         <div class="sched-pipeline-banner">
@@ -879,7 +814,7 @@
               </div>
             </div>
 
-            <!-- 10-Attribute Per-Band State Table (Real-Time Observables) -->
+            <!-- 10-Attribute Per-Band State Table (Mandatory SIH Observables) -->
             <div class="panel-section-title">
               <span>CANDIDATE BAND ALLOCATION STATE (10 REAL-TIME OBSERVABLES)</span>
               <span style="color:var(--radar-cyan);">SINGLE SOURCE OF TRUTH</span>
@@ -888,16 +823,16 @@
               <table class="per-band-state-table" id="perBandStateTable">
                 <thead>
                   <tr>
-                    <th scope="col">BAND</th>
-                    <th scope="col">VISITS</th>
-                    <th scope="col">HITS</th>
-                    <th scope="col">MISSES</th>
-                    <th scope="col">EST. REWARD</th>
-                    <th scope="col">ACTIVITY P(θ)</th>
-                    <th scope="col">UNCERTAINTY</th>
-                    <th scope="col">LAST SEEN</th>
-                    <th scope="col">AGING</th>
-                    <th scope="col">SCORE Q(b)</th>
+                    <th>BAND</th>
+                    <th>VISITS</th>
+                    <th>HITS</th>
+                    <th>MISSES</th>
+                    <th>EST. REWARD</th>
+                    <th>ACTIVITY P(θ)</th>
+                    <th>UNCERTAINTY</th>
+                    <th>LAST SEEN</th>
+                    <th>AGING</th>
+                    <th>SCORE Q(b)</th>
                   </tr>
                 </thead>
                 <tbody id="schedPerBandTableBody">
@@ -1035,7 +970,7 @@
           <!-- Right Column: Decision Trace, Interception History, Timeline -->
           <div class="scheduler-col">
 
-            <!-- Live Decision Trace Feed -->
+            <!-- Live Decision Trace Feed (SIH Mandate) -->
             <div class="panel-section-title">
               <span>LIVE DECISION TRACE (EXPLAINABLE C2 FEED)</span>
               <span style="color:var(--radar-cyan);" id="decisionTraceCount">ROLLING AUDIT</span>
@@ -1417,20 +1352,20 @@
             </div>
           </div>
           
-          <div style="overflow-x:auto; max-height:360px;">
-            <table class="tactical-table ds-table" id="suiteBreakdownTable">
-              <thead style="position:sticky; top:0; background:var(--bg-panel); z-index:2; box-shadow:0 1px 0 var(--border-default);">
+          <div style="overflow-x:auto;">
+            <table class="tactical-table" id="suiteBreakdownTable">
+              <thead>
                 <tr>
-                  <th scope="col" style="position:sticky; left:0; background:var(--bg-panel); z-index:3;">SCENARIO</th>
-                  <th scope="col">ADAPTIVE P(D)</th>
-                  <th scope="col">BASELINE P(D)</th>
-                  <th scope="col">DELTA P(D) [pp / %]</th>
-                  <th scope="col">ADAPTIVE LATENCY</th>
-                  <th scope="col">BASELINE LATENCY</th>
-                  <th scope="col">BURST SENSITIVITY</th>
-                  <th scope="col">MISSED BURSTS</th>
-                  <th scope="col">UTILIZATION</th>
-                  <th scope="col">CONFIG HASH</th>
+                  <th>SCENARIO</th>
+                  <th>ADAPTIVE P(D)</th>
+                  <th>BASELINE P(D)</th>
+                  <th>DELTA P(D) [pp / %]</th>
+                  <th>ADAPTIVE LATENCY</th>
+                  <th>BASELINE LATENCY</th>
+                  <th>BURST SENSITIVITY</th>
+                  <th>MISSED BURSTS</th>
+                  <th>UTILIZATION</th>
+                  <th>CONFIG HASH</th>
                 </tr>
               </thead>
               <tbody id="suiteBreakdownTbody">
@@ -1531,33 +1466,28 @@
           <div class="rf-receiver-card">
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">360° PPI RADAR ENGINE:</span>
-              <span style="color:var(--state-verified); font-weight:700;" id="subsysRadarEngine">SIMULATED ENGINE (24 RPM)</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRadarEngine">ONLINE (24 RPM)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">OPTICAL SURVEILLANCE NETWORK:</span>
-              <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">SYNTHETIC CAM NET (4 / 4)</span>
+              <span style="color:var(--cam-blue); font-weight:700;" id="subsysOpticalNet">4 / 4 ONLINE</span>
             </div>
             <div class="rf-stat-row">
-              <span style="color:var(--text-secondary);">RF / ESM RECEIVER TESTBED:</span>
-              <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">SIMULATED TESTBED (50 MHz IBW // IDLE)</span>
+              <span style="color:var(--text-secondary);">RF / ESM RECEIVER (SIH26055):</span>
+              <span style="color:var(--state-verified); font-weight:700;" id="subsysRfReceiver">ACTIVE (50 MHz IBW)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">SENSOR FUSION SYNTHESIS:</span>
-              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysFusion">SYNTHESIZED (25 Hz Sim)</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysFusion">SYNCHRONIZED (25 Hz)</span>
             </div>
             <div class="rf-stat-row">
               <span style="color:var(--text-secondary);">ADAPTIVE SCHEDULER (UCB1):</span>
-              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">SIMULATED ENGINE (HEALTHY)</span>
+              <span style="color:var(--radar-cyan); font-weight:700;" id="subsysScheduler">HEALTHY</span>
             </div>
           </div>
 
-          <div class="panel-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="panel-section-title">
             <span>LIVE JSON STATE & TELEMETRY</span>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <span style="font-family:var(--font-mono); font-size:8.5px; color:var(--text-tertiary);" id="jsonInspectorLastUpdated">--</span>
-              <button id="btnFreezeJsonInspector" class="btn-ops" style="font-size:9px; padding:1px 6px;">⏸ FREEZE</button>
-              <button id="btnCopyJsonState" class="btn-ops" style="font-size:9px; padding:1px 6px;">📋 COPY</button>
-            </div>
           </div>
           <pre id="simLiveJsonInspector" style="flex:1; background:#04070a; border:1px solid var(--border-default); border-radius:4px; padding:10px; font-family:var(--font-mono); font-size:9px; color:#88a2b5; overflow:auto;"></pre>
         </div>
@@ -1604,71 +1534,6 @@
       </div>
       <div style="display:flex; justify-content:flex-end; margin-top:8px;">
         <button id="btnClosePersonnelDetails" class="btn-ops">CLOSE</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hardware Readiness & Adapter Diagnostics Modal -->
-  <div class="modal-backdrop" id="modalHardwareDiagnostics" style="display:none;">
-    <div class="modal-dialog" style="width:680px; max-width:92vw;">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-default); padding-bottom:8px;">
-        <div style="font-weight:700; color:#fff; font-size:12px; letter-spacing:0.5px;">
-          HARDWARE-READY ADAPTER INTERFACES & CONNECTIVITY SPECIFICATION
-        </div>
-        <button id="btnCloseHardwareDiagnostics" class="btn-ops" style="padding:2px 8px;">✕</button>
-      </div>
-      <div style="font-size:11px; color:var(--text-secondary); line-height:1.45; margin-top:8px;">
-        <div style="background:rgba(239, 68, 68, 0.08); border-left:3px solid var(--state-critical); padding:6px 10px; margin-bottom:10px; color:#fca5a5;">
-          <strong>HARDWARE VERIFICATION POLICY:</strong> Physical devices are currently marked <strong>UNVERIFIED / UNAVAILABLE</strong>. The system strictly ingests from validated deterministic mathematical models and PRNG synthetic generators. Physical sensor integration will only be reported as active once tested on physical hardware buses.
-        </div>
-        
-        <table class="tactical-table" style="width:100%; margin-bottom:10px;">
-          <thead>
-            <tr>
-              <th scope="col">SUBSYSTEM</th>
-              <th scope="col">ADAPTER INTERFACE</th>
-              <th scope="col">DATA FLOW</th>
-              <th scope="col">LAST SEEN</th>
-              <th scope="col">STATUS</th>
-            </tr>
-          </thead>
-          <tbody id="hwModalTableBody">
-            <tr>
-              <td style="font-weight:700; color:#fff;">RF / ESM RECEIVER</td>
-              <td><code>USRP_UHD_SDR_ADAPTER</code></td>
-              <td>SYNTHETIC TESTBED</td>
-              <td>USB 3.0 / PCIe</td>
-              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#fff;">TACTICAL RADAR</td>
-              <td><code>ASTERIX_CAT048_ADAPTER</code></td>
-              <td>KINEMATIC ENGINE</td>
-              <td>UDP MULTICAST</td>
-              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
-            </tr>
-            <tr>
-              <td style="font-weight:700; color:#fff;">PTZ OPTICAL CAMERA</td>
-              <td><code>ONVIF_RTSP_PTZ_ADAPTER</code></td>
-              <td>PROCEDURAL IR</td>
-              <td>ETHERNET RTSP</td>
-              <td><span class="tag-anomalous" style="font-size:10px;">UNAVAILABLE</span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div style="background:var(--bg-panel-subtle); border:1px solid var(--border-default); border-radius:var(--radius-sm); padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div><strong>C2 LINK:</strong> <span id="hwModalWsUrl">ws://localhost:8080/ws/c2</span></div>
-            <div style="font-size:10px; color:var(--text-muted);">TRANSPORT: WebSocket JSON Frame Stream (20 Hz)</div>
-          </div>
-          <button id="btnForceReconnectWs" class="btn-ops" style="border-color:var(--radar-cyan);">
-            RECONNECT C2 LINK
-          </button>
-        </div>
-      </div>
-      <div style="display:flex; justify-content:flex-end; margin-top:10px;">
-        <button id="btnDismissHwModal" class="btn-ops">CLOSE</button>
       </div>
     </div>
   </div>

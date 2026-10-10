@@ -1,5 +1,5 @@
 /**
- * Defence Sentinel // ESM-ASTRA: Adaptive RF/ESM Receiver Scheduler & Situational Platform
+ * ESM-ASTRA: Adaptive RF/ESM Receiver Scheduler & Situational Platform (SIH26055)
  * Single Source of Truth: Synchronizes all 7 workspaces to master simulation entities
  */
 
@@ -21,13 +21,6 @@ class TacticalC2App {
     this.rfEventTimeline = [];
     this.opticalEventTimeline = [];
     this.sosLogs = [];
-
-    // Hardware-ready connectivity & data-freshness tracking
-    this.lastTelemetryTimestamp = Date.now();
-    this.reconnectTimer = null;
-    this.reconnectAttempts = 0;
-    this.connectionState = 'DISCONNECTED';
-    this.hardwareRegistry = null;
 
     this.init();
   }
@@ -66,7 +59,7 @@ class TacticalC2App {
   setupPageRouting() {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '').toLowerCase();
-      const validPages = ['radar', 'rf', 'camera', 'fusion', 'scheduler', 'analytics', 'simulation', 'tactical'];
+      const validPages = ['radar', 'rf', 'camera', 'fusion', 'scheduler', 'analytics', 'simulation'];
       if (validPages.includes(hash)) {
         this.switchPage(hash);
       }
@@ -74,34 +67,12 @@ class TacticalC2App {
 
     window.addEventListener('hashchange', handleHash);
 
-    const tabButtons = Array.from(document.querySelectorAll('.nav-tab-btn'));
-    tabButtons.forEach((btn, index) => {
+    document.querySelectorAll('.nav-tab-btn').forEach(btn => {
       btn.onclick = () => {
         const pageId = btn.getAttribute('data-view');
         window.location.hash = pageId;
         this.switchPage(pageId);
       };
-
-      btn.addEventListener('keydown', (e) => {
-        let newIndex = -1;
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          newIndex = (index + 1) % tabButtons.length;
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          newIndex = (index - 1 + tabButtons.length) % tabButtons.length;
-        } else if (e.key === 'Home') {
-          newIndex = 0;
-        } else if (e.key === 'End') {
-          newIndex = tabButtons.length - 1;
-        }
-
-        if (newIndex >= 0) {
-          e.preventDefault();
-          tabButtons[newIndex].focus();
-          const targetPageId = tabButtons[newIndex].getAttribute('data-view');
-          window.location.hash = targetPageId;
-          this.switchPage(targetPageId);
-        }
-      });
     });
 
     if (window.location.hash) {
@@ -110,20 +81,11 @@ class TacticalC2App {
   }
 
   switchPage(pageId) {
-    if (pageId === 'tactical') pageId = 'radar';
     this.activeView = pageId;
 
     // 1. Update Navigation Tabs
     document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-      const isCur = btn.getAttribute('data-view') === pageId;
-      btn.classList.toggle('active', isCur);
-      btn.setAttribute('aria-selected', isCur ? 'true' : 'false');
-      btn.setAttribute('tabindex', isCur ? '0' : '-1');
-      if (isCur) {
-        btn.setAttribute('aria-current', 'page');
-      } else {
-        btn.removeAttribute('aria-current');
-      }
+      btn.classList.toggle('active', btn.getAttribute('data-view') === pageId);
     });
 
     // 2. Switch Active Viewport
@@ -138,22 +100,7 @@ class TacticalC2App {
       if (pageId === 'camera' && this.camera) this.camera.resize();
       if (pageId === 'analytics' && this.analytics) {
         this.analytics.resize();
-        if (this.analyticsData) {
-          if (!this.analyticsData.suiteBreakdown || this.analyticsData.suiteBreakdown.length === 0) {
-            const base = this.getBackendHttpUrl();
-            fetch(`${base}/api/benchmark/suite?seed=42&runs=1000`)
-              .then(r => r.json())
-              .then(suite => {
-                if (suite && suite.breakdown) {
-                  this.analyticsData.suiteBreakdown = suite.breakdown;
-                  this.analytics.updateData({ analytics: this.analyticsData });
-                  this.analytics.render();
-                }
-              })
-              .catch(() => {});
-          }
-          this.analytics.updateData({ analytics: this.analyticsData });
-        }
+        if (this.analyticsData) this.analytics.updateData({ analytics: this.analyticsData });
         this.analytics.render();
       }
       if (pageId === 'fusion' && this.entities) this.renderSensorFusionPage(this.entities);
@@ -167,347 +114,60 @@ class TacticalC2App {
     const update = () => {
       const now = new Date();
       if (clockEl) clockEl.textContent = now.toTimeString().split(' ')[0] + ' UTC';
-      this.checkDataFreshness();
     };
     update();
     setInterval(update, 1000);
-
-    // Periodic HTTP health check for status cluster
-    this.checkHttpBackendHealth();
-    setInterval(() => this.checkHttpBackendHealth(), 10000);
-  }
-
-  checkHttpBackendHealth() {
-    const httpLabel = document.getElementById('httpStatusLabel');
-    const httpIndicator = document.getElementById('httpStatusIndicator');
-    const httpNavSep = document.getElementById('httpNavSep');
-    const base = this.getBackendHttpUrl();
-    fetch(`${base}/api/status`)
-      .then(r => {
-        if (r.ok) {
-          if (httpLabel) httpLabel.textContent = 'HTTP OK';
-          if (httpIndicator) {
-            httpIndicator.style.display = 'inline-flex';
-            httpIndicator.classList.remove('offline');
-            httpIndicator.title = 'Backend HTTP API Reachable (200 OK)';
-          }
-          if (httpNavSep) httpNavSep.style.display = 'inline';
-        } else {
-          if (httpLabel) httpLabel.textContent = `HTTP ${r.status}`;
-          if (httpIndicator) {
-            httpIndicator.style.display = 'inline-flex';
-            httpIndicator.classList.add('offline');
-          }
-          if (httpNavSep) httpNavSep.style.display = 'inline';
-        }
-      })
-      .catch(() => {
-        // When server is offline or reconnecting, hide redundant HTTP ERR badge
-        if (this.connectionState !== 'CONNECTED') {
-          if (httpIndicator) httpIndicator.style.display = 'none';
-          if (httpNavSep) httpNavSep.style.display = 'none';
-        } else {
-          if (httpLabel) httpLabel.textContent = 'HTTP ERR';
-          if (httpIndicator) {
-            httpIndicator.style.display = 'inline-flex';
-            httpIndicator.classList.add('offline');
-            httpIndicator.title = 'Backend HTTP API unreachable';
-          }
-          if (httpNavSep) httpNavSep.style.display = 'inline';
-        }
-      });
-  }
-
-  checkDataFreshness() {
-    const label = document.getElementById('freshnessLabel');
-    const dot = document.getElementById('freshnessDot');
-    const container = document.getElementById('globalDataFreshness');
-    if (!label || !dot) return;
-
-    if (this.connectionState === 'CONNECTED') {
-      const elapsed = Date.now() - (this.lastTelemetryTimestamp || 0);
-      if (elapsed > 2500) {
-        const secAgo = (elapsed / 1000).toFixed(1);
-        label.textContent = `STALE (${secAgo}s ago)`;
-        dot.style.background = 'var(--state-warning)';
-        if (container) {
-          container.classList.add('freshness-stale');
-          container.classList.remove('freshness-offline');
-        }
-        document.querySelectorAll('.tactical-radar-main-col, .rf-panel, .camera-card, .fusion-matrix-panel').forEach(el => el.classList.add('is-stale'));
-      } else {
-        const secAgo = elapsed < 100 ? '20Hz' : `${(elapsed / 1000).toFixed(1)}s ago`;
-        label.textContent = `SIMULATED (${secAgo})`;
-        dot.style.background = 'var(--state-verified)';
-        if (container) {
-          container.classList.remove('freshness-stale', 'freshness-offline');
-        }
-        document.querySelectorAll('.is-stale').forEach(el => el.classList.remove('is-stale'));
-      }
-    } else {
-      label.textContent = this.connectionState === 'CONNECTING' ? 'CONNECTING...' : 'STANDBY';
-      dot.style.background = 'var(--text-tertiary)';
-      if (container) {
-        container.classList.add('freshness-offline');
-        container.classList.remove('freshness-stale');
-      }
-      document.querySelectorAll('.tactical-radar-main-col, .rf-panel, .camera-card, .fusion-matrix-panel').forEach(el => el.classList.add('is-stale'));
-    }
   }
 
   /* --------------------------------------------------------------------------
      2. WEBSOCKET TELEMETRY SYNCHRONIZATION (SINGLE SOURCE OF TRUTH)
      -------------------------------------------------------------------------- */
-  getBackendUrl() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('ws')) return params.get('ws');
-    if (params.get('backend')) {
-      const b = params.get('backend');
-      const protocol = b.startsWith('http:') ? 'ws:' : (b.startsWith('https:') ? 'wss:' : (window.location.protocol === 'https:' ? 'wss:' : 'ws:'));
-      const host = b.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      return `${protocol}//${host}/ws/c2`;
-    }
+  connectWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/c2`;
 
-    const saved = localStorage.getItem('c2_backend_url');
-    if (saved) {
-      if (saved.startsWith('ws:') || saved.startsWith('wss:')) return saved;
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      return `${protocol}//${saved.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
-    }
+    this.ws = new WebSocket(wsUrl);
 
-    if (window.__C2_BACKEND_URL__) {
-      const b = window.__C2_BACKEND_URL__;
-      if (b.startsWith('ws:') || b.startsWith('wss:')) return b;
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      return `${protocol}//${b.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
-    }
+    this.ws.onopen = () => {
+      const st = document.getElementById('globalSysStatus');
+      if (st) {
+        st.textContent = 'ONLINE';
+        st.style.color = 'var(--state-verified)';
+      }
+    };
 
-    const meta = document.querySelector('meta[name="c2-backend-url"]');
-    if (meta && meta.content) {
-      const b = meta.content;
-      if (b.startsWith('ws:') || b.startsWith('wss:')) return b;
-      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      return `${protocol}//${b.replace(/^https?:\/\//, '').replace(/\/$/, '')}/ws/c2`;
-    }
-
-    const isSecure = window.location.protocol === 'https:';
-    const wsProto = isSecure ? 'wss:' : 'ws:';
-
-    // If running on port 8080 or standard origin:
-    if (window.location.port === '8080' || (window.location.hostname && !window.location.port && window.location.protocol.startsWith('http'))) {
-      return `${wsProto}//${window.location.host}/ws/c2`;
-    }
-
-    // Static dev server or file:// fallback to 8080
-    const targetHost = window.location.hostname || 'localhost';
-    return `${wsProto}//${targetHost}:8080/ws/c2`;
-  }
-
-  getBackendHttpUrl() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('backend')) {
-      const b = params.get('backend');
-      return b.startsWith('http') ? b.replace(/\/$/, '') : `${window.location.protocol}//${b.replace(/\/$/, '')}`;
-    }
-    const saved = localStorage.getItem('c2_backend_url');
-    if (saved) {
-      return saved.startsWith('http') ? saved.replace(/\/$/, '') : `${window.location.protocol}//${saved.replace(/\/$/, '')}`;
-    }
-    if (window.__C2_BACKEND_URL__) {
-      const b = window.__C2_BACKEND_URL__;
-      return b.startsWith('http') ? b.replace(/\/$/, '') : `${window.location.protocol}//${b.replace(/\/$/, '')}`;
-    }
-    // If running directly on port 8080 or standard origin:
-    if (window.location.port === '8080' || (window.location.hostname && !window.location.port && window.location.protocol.startsWith('http'))) {
-      return '';
-    }
-    // Static dev server or file:// fallback to 8080
-    const targetHost = window.location.hostname || 'localhost';
-    const httpProto = window.location.protocol.startsWith('http') ? window.location.protocol : 'http:';
-    return `${httpProto}//${targetHost}:8080`;
-  }
-
-  fetchRestSnapshot() {
-    const base = this.getBackendHttpUrl();
-    fetch(`${base}/api/status`)
-      .then(r => r.json())
-      .then(data => {
-        if (data && (data.entities || data.simState)) {
+    this.ws.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === 'INCIDENT_FALSE_ALARM_TEST_RESULT') {
+          this.handleIncidentTestResult(data.result);
+        } else {
           this.handleTelemetry(data);
         }
-      })
-      .catch(() => {});
-  }
+      } catch (err) {
+        console.error('Telemetry error:', err);
+      }
+    };
 
-  connectWebSocket() {
-    // Prevent duplicate subscriptions or concurrent connections
-    if (this.ws && (this.ws.readyState === WebSocket.CONNECTING || this.ws.readyState === WebSocket.OPEN)) {
-      return;
-    }
-    if (this.reconnectTimer) {
-      clearTimeout(this.reconnectTimer);
-      this.reconnectTimer = null;
-    }
-
-    const wsUrl = this.getBackendUrl();
-    this.connectionState = 'CONNECTING';
-    this.checkDataFreshness();
-
-    try {
-      this.ws = new WebSocket(wsUrl);
-
-      this.ws.onopen = () => {
-        this.connectionState = 'CONNECTED';
-        this.reconnectAttempts = 0;
-        this.lastTelemetryTimestamp = Date.now();
-        const st = document.getElementById('globalSysStatus');
-        if (st) {
-          st.textContent = 'ONLINE';
-          st.style.color = 'var(--state-verified)';
-        }
-        const httpIndicator = document.getElementById('httpStatusIndicator');
-        const httpNavSep = document.getElementById('httpNavSep');
-        if (httpIndicator) httpIndicator.style.display = 'inline-flex';
-        if (httpNavSep) httpNavSep.style.display = 'inline';
-        this.checkHttpBackendHealth();
-        this.checkDataFreshness();
-      };
-
-      this.ws.onmessage = (e) => {
-        try {
-          this.lastTelemetryTimestamp = Date.now();
-          this.checkDataFreshness();
-          const data = JSON.parse(e.data);
-          if (data.type === 'INCIDENT_FALSE_ALARM_TEST_RESULT') {
-            this.handleIncidentTestResult(data.result);
-          } else {
-            if (data.hardware) this.handleHardwareUpdate(data.hardware);
-            this.handleTelemetry(data);
-          }
-        } catch (err) {
-          console.error('Telemetry error:', err);
-        }
-      };
-
-      this.ws.onclose = () => {
-        this.connectionState = 'OFFLINE';
-        const st = document.getElementById('globalSysStatus');
-        if (st) {
-          st.textContent = 'OFFLINE';
-          st.style.color = 'var(--state-critical)';
-        }
-        const httpIndicator = document.getElementById('httpStatusIndicator');
-        const httpNavSep = document.getElementById('httpNavSep');
-        if (httpIndicator) httpIndicator.style.display = 'none';
-        if (httpNavSep) httpNavSep.style.display = 'none';
-        this.checkDataFreshness();
-        if (!this.reconnectTimer) {
-          this.reconnectAttempts = (this.reconnectAttempts || 0) + 1;
-          const delay = Math.min(2000 * Math.pow(1.2, Math.min(this.reconnectAttempts, 5)), 6000);
-          this.reconnectTimer = setTimeout(() => {
-            this.reconnectTimer = null;
-            if (st) {
-              st.textContent = 'RECONNECTING...';
-              st.style.color = 'var(--state-warning)';
-            }
-            this.connectWebSocket();
-          }, delay);
-        }
-      };
-
-      this.ws.onerror = () => {
-        this.fetchRestSnapshot();
-      };
-    } catch (e) {
-      this.connectionState = 'OFFLINE';
+    this.ws.onclose = () => {
       const st = document.getElementById('globalSysStatus');
       if (st) {
         st.textContent = 'OFFLINE';
         st.style.color = 'var(--state-critical)';
       }
-      const httpIndicator = document.getElementById('httpStatusIndicator');
-      const httpNavSep = document.getElementById('httpNavSep');
-      if (httpIndicator) httpIndicator.style.display = 'none';
-      if (httpNavSep) httpNavSep.style.display = 'none';
-      this.fetchRestSnapshot();
-      this.checkDataFreshness();
-      if (!this.reconnectTimer) {
-        this.reconnectTimer = setTimeout(() => {
-          this.reconnectTimer = null;
-          this.connectWebSocket();
-        }, 2000);
-      }
-    }
-  }
-
-  handleHardwareUpdate(hardware) {
-    this.hardwareRegistry = hardware;
-    const hwTag = document.getElementById('globalHwStatusTag');
-    if (hwTag) {
-      if (hardware.isHardwareConnected) {
-        hwTag.textContent = 'HW: LIVE';
-        hwTag.style.color = 'var(--state-verified)';
-      } else {
-        hwTag.textContent = 'HW: UNAVAILABLE';
-        hwTag.style.color = 'var(--state-critical)';
-      }
-    }
-    const wsUrlEl = document.getElementById('hwModalWsUrl');
-    if (wsUrlEl) {
-      wsUrlEl.textContent = this.getBackendUrl();
-    }
-
-    const tbody = document.getElementById('hwModalTableBody');
-    if (tbody) {
-      const devices = hardware.devices || {};
-      const devKeys = Object.keys(devices);
-      if (devKeys.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-tertiary); padding:12px;">No hardware adapters reported</td></tr>';
-      } else {
-        const now = Date.now();
-        tbody.innerHTML = devKeys.map(k => {
-          const dev = devices[k];
-          const isPresent = Boolean(dev.physicalDevicePresent);
-          const state = dev.status || (isPresent ? 'CONNECTED' : 'DEVICE_UNAVAILABLE');
-          const isError = state === 'ERROR' || state === 'DEVICE_ERROR';
-          const isConn = state === 'CONNECTED';
-          const tagClass = isConn ? 'ds-chip-verified' : (isError ? 'ds-chip-critical' : 'ds-chip-neutral');
-          const statusText = isConn ? 'LIVE' : (isError ? 'ERROR' : 'UNAVAILABLE');
-          const dataSource = dev.dataFlow || (isPresent ? 'HARDWARE (live)' : 'SIMULATION');
-          const lastAge = hardware.timestamp ? `${Math.max(0, Math.round((now - hardware.timestamp) / 1000))}s ago` : 'live';
-
-          return `
-            <tr>
-              <td style="font-weight:700; color:#fff;">
-                <div>${dev.name || k}</div>
-                <div style="font-size:9px; color:var(--text-tertiary); font-family:var(--font-mono);">${dev.id || ''}</div>
-              </td>
-              <td style="font-family:var(--font-mono); font-size:10px;"><code>${dev.driverAdapter || '--'}</code></td>
-              <td style="font-size:10px; color:var(--text-secondary);">${dataSource}</td>
-              <td style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${lastAge}</td>
-              <td><span class="ds-chip ${tagClass}" style="font-size:9.5px;">${statusText}</span></td>
-            </tr>
-          `;
-        }).join('');
-      }
-    }
+      setTimeout(() => this.connectWebSocket(), 2000);
+    };
   }
 
   handleTelemetry(data) {
     if (data.simState) {
       this.simState = data.simState;
-      if (this.entities && this.entities.length && !this.simState.entities) {
-        this.simState.entities = this.entities;
-      }
       try { this.updateGlobalHeader(data.simState); } catch (err) { console.error('Error in updateGlobalHeader:', err); }
       try { this.updateSchedulerPage(data.simState); } catch (err) { console.error('Error in updateSchedulerPage:', err); }
       try { this.updateSimulationPage(data.simState); } catch (err) { console.error('Error in updateSimulationPage:', err); }
     }
     if (data.entities) {
       this.entities = data.entities;
-      if (this.simState) {
-        this.simState.entities = this.entities;
-      }
       try { this.renderRadarPageTrackCards(data.entities); } catch (err) { console.error('Error rendering track cards:', err); }
       try { this.renderRfEmitterTable(data.entities); } catch (err) { console.error('Error rendering RF table:', err); }
       try { this.renderCameraDetections(data.entities); } catch (err) { console.error('Error rendering camera detections:', err); }
@@ -594,10 +254,6 @@ class TacticalC2App {
       else if (cls === 'UNIDENTIFIED') { classSuffix = 'unknown';   clsColor = '#8a9ab5';               icon = '□'; }
 
       card.className = `track-card ${classSuffix} ${isSelected ? 'selected' : ''}`;
-      card.setAttribute('data-track-id', ent.id);
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
       card.onclick = () => this.selectEntity(ent.id);
 
       // Authorized person details from personnelDb
@@ -607,72 +263,73 @@ class TacticalC2App {
       const personZone   = pRecord?.zone   || ent.personnel?.zone  || '—';
       const personStatus = pRecord?.status || (cls === 'ANOMALOUS' ? 'THREAT' : cls === 'WILDLIFE' ? 'FAUNA' : 'UNKNOWN');
 
-      // Extra detail block based on classification (rendered only when selected)
+      // Extra detail block based on classification
       const authorizedRows = pRecord ? `
-        <div style="border-top:1px solid rgba(16,185,129,0.25); margin-top:6px; padding-top:6px;">
-          <div style="color:${clsColor}; font-size:10px; font-weight:700; letter-spacing:0.05em; margin-bottom:3px;">✓ AUTHORIZED PERSONNEL</div>
-          <div style="color:#e8f4ff; font-size:11px; font-weight:700; margin-bottom:4px;">${personName}</div>
-          <div style="display:grid; grid-template-columns:auto 1fr; gap:3px 10px;">
-            <span style="color:var(--text-tertiary);font-size:10px;">TAG ID</span>
-            <span style="color:var(--radar-cyan);font-size:10px;font-weight:700;">${personTag}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">RANK</span>
-            <span style="color:#e0f0ff;font-size:10px;">${pRecord.rank || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">ROLE</span>
-            <span style="color:#e0f0ff;font-size:10px;">${pRecord.role || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">UNIT</span>
-            <span style="color:#e0f0ff;font-size:10px;">${pRecord.unit || '—'}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">ZONE</span>
-            <span style="color:#e0f0ff;font-size:10px;">${personZone}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">CLEARANCE</span>
-            <span style="color:${clsColor};font-size:10px;font-weight:700;">${pRecord.clearance || personStatus}</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">SHIFT</span>
-            <span style="color:#b0c8e0;font-size:10px;">${pRecord.shift || '—'}</span>
+        <div style="border-top:1px solid rgba(66,196,122,0.2); margin-top:5px; padding-top:5px;">
+          <div style="color:${clsColor}; font-size:7.5px; font-weight:700; letter-spacing:0.07em; margin-bottom:3px;">✓ AUTHORIZED PERSONNEL</div>
+          <div style="color:#e8f4ff; font-size:9.5px; font-weight:700; margin-bottom:4px;">${personName}</div>
+          <div style="display:grid; grid-template-columns:auto 1fr; gap:2px 8px;">
+            <span style="color:var(--text-tertiary);font-size:7.5px;">TAG ID</span>
+            <span style="color:var(--radar-cyan);font-size:7.5px;font-weight:700;">${personTag}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">RANK</span>
+            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.rank || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">ROLE</span>
+            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.role || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">UNIT</span>
+            <span style="color:#e0f0ff;font-size:7.5px;">${pRecord.unit || '—'}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">ZONE</span>
+            <span style="color:#e0f0ff;font-size:7.5px;">${personZone}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">CLEARANCE</span>
+            <span style="color:${clsColor};font-size:7.5px;font-weight:700;">${pRecord.clearance || personStatus}</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">SHIFT</span>
+            <span style="color:#b0c8e0;font-size:7.5px;">${pRecord.shift || '—'}</span>
           </div>
         </div>` : cls === 'ANOMALOUS' ? `
-        <div style="border-top:1px solid rgba(239,68,68,0.25); margin-top:6px; padding-top:6px;">
-          <div style="color:${clsColor};font-size:10px;font-weight:700;">⚠ UNAUTHORIZED — NO TAG MATCH</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
-            <span style="color:var(--text-tertiary);font-size:10px;">RISK</span>
-            <span style="color:#ff6666;font-size:10px;font-weight:700;">${ent.fusion.anomalyScore}/100</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">CONFIDENCE</span>
-            <span style="color:#ffaaaa;font-size:10px;">${ent.fusion.confidence}%</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">STATUS</span>
-            <span style="color:${clsColor};font-size:10px;font-weight:700;">RESTRICTED ZONE BREACH</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">ACTION</span>
-            <span style="color:#ffaaaa;font-size:10px;">${ent.fusion.recommendation}</span>
+        <div style="border-top:1px solid rgba(212,88,88,0.25); margin-top:5px; padding-top:5px;">
+          <div style="color:${clsColor};font-size:7.5px;font-weight:700;">⚠ UNAUTHORIZED — NO TAG MATCH</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
+            <span style="color:var(--text-tertiary);font-size:7.5px;">RISK</span>
+            <span style="color:#ff6666;font-size:7.5px;font-weight:700;">${ent.fusion.anomalyScore}/100</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">CONFIDENCE</span>
+            <span style="color:#ffaaaa;font-size:7.5px;">${ent.fusion.confidence}%</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">STATUS</span>
+            <span style="color:${clsColor};font-size:7.5px;font-weight:700;">RESTRICTED ZONE BREACH</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">ACTION</span>
+            <span style="color:#ffaaaa;font-size:7.5px;">${ent.fusion.recommendation}</span>
           </div>
         </div>` : cls === 'WILDLIFE' ? `
-        <div style="border-top:1px solid rgba(245,158,11,0.25); margin-top:6px; padding-top:6px;">
-          <div style="color:${clsColor};font-size:10px;font-weight:700;">▲ WILDLIFE / FAUNA CONTACT</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
-            <span style="color:var(--text-tertiary);font-size:10px;">ANOMALY</span>
-            <span style="color:#d7a84b;font-size:10px;">${ent.fusion.anomalyScore}/100</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">FILTER</span>
-            <span style="color:#b09050;font-size:10px;">FAUNA FILTERED — NO ALERT</span>
+        <div style="border-top:1px solid rgba(215,168,75,0.2); margin-top:5px; padding-top:5px;">
+          <div style="color:${clsColor};font-size:7.5px;font-weight:700;">▲ WILDLIFE / FAUNA CONTACT</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
+            <span style="color:var(--text-tertiary);font-size:7.5px;">ANOMALY</span>
+            <span style="color:#d7a84b;font-size:7.5px;">${ent.fusion.anomalyScore}/100</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">FILTER</span>
+            <span style="color:#b09050;font-size:7.5px;">FAUNA FILTERED — NO ALERT</span>
           </div>
         </div>` : `
-        <div style="border-top:1px solid rgba(138,154,181,0.15); margin-top:6px; padding-top:6px;">
-          <div style="color:${clsColor};font-size:10px;">□ UNIDENTIFIED — OUTSIDE PERIMETER</div>
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin-top:4px;">
-            <span style="color:var(--text-tertiary);font-size:10px;">CONFIDENCE</span>
-            <span style="color:#8a9ab5;font-size:10px;">${ent.fusion.confidence}%</span>
-            <span style="color:var(--text-tertiary);font-size:10px;">ACTION</span>
-            <span style="color:#8a9ab5;font-size:10px;">MONITOR</span>
+        <div style="border-top:1px solid rgba(138,154,181,0.15); margin-top:5px; padding-top:5px;">
+          <div style="color:${clsColor};font-size:7.5px;">□ UNIDENTIFIED — OUTSIDE PERIMETER</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:2px 8px;margin-top:3px;">
+            <span style="color:var(--text-tertiary);font-size:7.5px;">CONFIDENCE</span>
+            <span style="color:#8a9ab5;font-size:7.5px;">${ent.fusion.confidence}%</span>
+            <span style="color:var(--text-tertiary);font-size:7.5px;">ACTION</span>
+            <span style="color:#8a9ab5;font-size:7.5px;">MONITOR</span>
           </div>
         </div>`;
 
+
       card.innerHTML = `
         <div class="track-card-header">
-          <span class="track-card-id" style="color:${isSelected ? 'var(--radar-cyan)' : clsColor};">${icon} ${ent.id} <span style="font-size:10px; color:var(--text-secondary); font-weight:600; margin-left:3px;">[${ent.type}]</span></span>
+          <span class="track-card-id" style="color:${isSelected ? 'var(--radar-cyan)' : clsColor};">${icon} ${ent.id} <span style="font-size:7.5px; color:var(--text-secondary); font-weight:600; margin-left:2px;">[${ent.type}]</span></span>
           <span class="track-pill ${classSuffix}">${cls}</span>
         </div>
-        <div class="track-card-metrics" style="margin-top:4px;">
+        <div class="track-card-metrics" style="margin-top:3px;">
           <span>Range: <b>${ent.radar.range}m</b></span>
           <span>Brg: <b>${ent.radar.azimuth}°</b></span>
           <span>Speed: <b>${ent.radar.speedKmh} km/h</b></span>
           <span>Hdg: <b>${ent.radar.heading}°</b></span>
         </div>
-        ${isSelected ? authorizedRows : ''}
+        ${authorizedRows}
       `;
       container.appendChild(card);
     });
@@ -680,6 +337,8 @@ class TacticalC2App {
     const countEl = document.getElementById('radarActiveCount');
     if (countEl) countEl.textContent = `${String(entities.length).padStart(2, '0')} ACTIVE`;
   }
+
+
 
   renderPersonnelList(db) {
     const container = document.getElementById('radarPersonnelListContainer');
@@ -703,6 +362,7 @@ class TacticalC2App {
       modalContainer.innerHTML = db.map(renderRow).join('');
     }
   }
+
 
   renderSosLogs(logs, incidents) {
     const container = document.getElementById('radarSosLogsContainer');
@@ -738,29 +398,26 @@ class TacticalC2App {
           inc.sensorEvidence.unauthorized ? 'UNAUTH' : null
         ].filter(Boolean).join(' | ') : '';
 
-        // Format timestamp in UTC to match header UTC clock
-        const alertTime = inc.timestamp ? (new Date(inc.timestamp).toISOString().substring(11, 19) + ' UTC') : (inc.timeStr || inc.time || '—');
-
         return `
-          <div class="sos-log-entry sos-log-item" style="background:${bgColor}; border-left:3px solid ${levelColor}; padding-left:8px; margin-bottom:5px;">
+          <div class="sos-log-entry" style="background:${bgColor}; border-left:2px solid ${levelColor}; padding-left:6px; margin-bottom:4px;">
             <div style="display:flex; justify-content:space-between; font-weight:700; align-items:center;">
-              <span style="color:${levelColor}; font-size:11px;">${inc.incidentId || inc.id}</span>
-              <span style="color:var(--text-tertiary); font-size:10px; font-variant-numeric:tabular-nums;">${alertTime}</span>
+              <span style="color:${levelColor}; font-size:9px;">${inc.incidentId || inc.id}</span>
+              <span style="color:var(--text-tertiary); font-size:8px;">${inc.timeStr || inc.time}</span>
             </div>
-            <div style="color:#fff; margin-top:2px; font-size:11px; font-weight:600;">${inc.entityId || inc.targetId} — ${inc.alertLevel || inc.level || 'NONE'}</div>
-            <div style="color:var(--text-secondary); font-size:10px; margin-top:2px;">${inc.range ? `Range ${inc.range}m | Az ${inc.azimuth}° | ${inc.speed?.toFixed(1)} km/h` : (inc.location || '')}</div>
-            ${evidenceStr ? `<div style="color:var(--radar-cyan); font-size:10px; margin-top:2px; font-family:var(--font-mono);">${evidenceStr}</div>` : ''}
-            ${inc.riskScore !== undefined ? `<div style="color:${levelColor}; font-size:10px; font-family:var(--font-mono); font-weight:600;">RISK: ${inc.riskScore}/100</div>` : ''}
-            <div style="display:flex; align-items:center; gap:6px; margin-top:4px;">
-              <span style="font-size:10px; color:${isActive ? 'var(--state-critical)' : 'var(--state-verified)'}; font-weight:700;">${inc.status}</span>
-              ${isActive && hasAlert ? `<button class="btn-ops ds-btn ds-btn-sm" style="font-size:10px; padding:2px 8px; height:20px; line-height:1.2;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
+            <div style="color:#fff; margin-top:1px; font-size:9px; font-weight:600;">${inc.entityId || inc.targetId} — ${inc.alertLevel || inc.level || 'NONE'}</div>
+            <div style="color:var(--text-secondary); font-size:8px; margin-top:1px;">${inc.range ? `Range ${inc.range}m | Az ${inc.azimuth}° | ${inc.speed?.toFixed(1)} km/h` : (inc.location || '')}</div>
+            ${evidenceStr ? `<div style="color:var(--radar-cyan); font-size:7.5px; margin-top:1px; font-family:var(--font-mono);">${evidenceStr}</div>` : ''}
+            ${inc.riskScore !== undefined ? `<div style="color:${levelColor}; font-size:7.5px; font-family:var(--font-mono);">RISK: ${inc.riskScore}/100</div>` : ''}
+            <div style="display:flex; align-items:center; gap:4px; margin-top:3px;">
+              <span style="font-size:7.5px; color:${isActive ? 'var(--state-critical)' : 'var(--state-verified)'}; font-weight:700;">${inc.status}</span>
+              ${isActive && hasAlert ? `<button class="btn-ops" style="font-size:7px; padding:1px 6px; height:16px; line-height:1;" onclick="window.app.acknowledgeIncident('${inc.incidentId}')">ACKNOWLEDGE</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
     } else {
       container.innerHTML = logs.map(l => `
-        <div class="sos-log-entry sos-log-item">
+        <div class="sos-log-entry">
           <div style="display:flex; justify-content:space-between; font-weight:700;">
             <span style="color:var(--state-critical);">${l.id} // ${l.targetId}</span>
             <span style="color:var(--text-tertiary);">${l.time}</span>
@@ -773,7 +430,7 @@ class TacticalC2App {
 
 
   /* --------------------------------------------------------------------------
-     4. PAGE 2: RF / ESM INTELLIGENCE RENDERING (RF/ESM SUBSYSTEM)
+     4. PAGE 2: RF / ESM INTELLIGENCE RENDERING (SIH26055)
      -------------------------------------------------------------------------- */
   renderRfEmitterTable(entities) {
     const tbody = document.getElementById('rfEmitterTableBody');
@@ -896,16 +553,16 @@ class TacticalC2App {
       const dwellStr = e.dwellMs || 180;
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:68px;">
-            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${e.time}</span>
-            <span class="sos-tag ${tagClass}" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content;">${tagText}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:62px;">
+            <span class="sos-time" style="font-size:8.5px; color:var(--text-tertiary);">${e.time}</span>
+            <span class="sos-tag ${tagClass}" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content;">${tagText}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
-            <div class="sos-title" style="color:${isHit ? 'var(--state-verified)' : 'var(--state-warning)'}; font-size:11px; font-weight:700;">
+            <div class="sos-title" style="color:${isHit ? 'var(--state-verified)' : '#d7a84b'}; font-size:9.5px; font-weight:700;">
               ${freqStr} // ${isHit ? `INTERCEPT: ${emitterStr}` : 'DWELL SCAN — NO SIGNAL'}
             </div>
-            <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
+            <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
               ${isHit ? `SNR ${snrStr} | PWR ${pwrStr} | DWELL ${dwellStr}ms` : `NOISE FLOOR (${pwrStr}) | DWELL ${dwellStr}ms | POSTERIOR UPDATED`}
             </div>
           </div>
@@ -997,16 +654,16 @@ class TacticalC2App {
         : (e.sector ? `SECTOR: ${e.sector} | STATUS: STREAMING` : 'OPTICAL SURVEILLANCE ACTIVE');
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:65px;">
-            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${e.time}</span>
-            <span class="sos-tag" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(59,130,246,0.15); color:var(--cam-blue); border:1px solid rgba(59,130,246,0.35);">${tagText}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:55px;">
+            <span class="sos-time" style="font-size:8.5px; color:var(--text-tertiary);">${e.time}</span>
+            <span class="sos-tag" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(34,211,238,0.2); color:#22d3ee; border:1px solid rgba(34,211,238,0.4);">${tagText}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
-            <div class="sos-title" style="color:var(--cam-blue); font-size:11px; font-weight:700;">
+            <div class="sos-title" style="color:#22d3ee; font-size:9.5px; font-weight:700;">
               ${title}
             </div>
-            <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
+            <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
               ${meta}
             </div>
           </div>
@@ -1223,11 +880,7 @@ class TacticalC2App {
     const container = document.getElementById('fusionReasoningTimeline');
     if (!container || !sel) return;
 
-    const now = new Date();
-    const timeStr = now.toISOString().substring(11, 19) + ' UTC';
-    const stampEl = document.getElementById('fusionReasoningTimestamp');
-    if (stampEl) stampEl.textContent = `DATA AS OF ${timeStr}`;
-
+    const timeStr = new Date().toTimeString().split(' ')[0];
     const steps = [];
 
     // Step 1: Radar Acquisition
@@ -1332,19 +985,19 @@ class TacticalC2App {
     });
 
     container.innerHTML = steps.map(s => `
-      <div class="sos-log-item" style="border-left:3px solid ${s.tagColor}; margin-bottom:5px; padding:6px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
-        <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:68px;">
-          <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${timeStr}</span>
-          <span class="sos-tag" style="font-size:10px; padding:1px 5px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(255,255,255,0.06); color:${s.tagColor}; border:1px solid ${s.tagColor};">${s.tag}</span>
+      <div class="sos-log-item" style="border-left:3px solid ${s.tagColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
+        <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:62px;">
+          <span class="sos-time" style="font-size:8px; color:var(--text-tertiary); font-family:var(--font-mono);">${timeStr}</span>
+          <span class="sos-tag" style="font-size:7.5px; padding:1px 4px; border-radius:2px; font-weight:700; width:fit-content; background:rgba(255,255,255,0.06); color:${s.tagColor}; border:1px solid ${s.tagColor};">${s.tag}</span>
         </div>
         <div class="sos-desc-col" style="flex:1; margin-left:8px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="sos-title" style="color:${s.tagColor}; font-size:11px; font-weight:700;">
+            <div class="sos-title" style="color:${s.tagColor}; font-size:9.5px; font-weight:700;">
               ${s.title}
             </div>
-            <span style="font-family:var(--font-mono); font-size:10px; color:#fff; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 5px; border-radius:2px;">${s.status}</span>
+            <span style="font-family:var(--font-mono); font-size:8px; color:#fff; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 4px; border-radius:2px;">${s.status}</span>
           </div>
-          <div class="sos-meta" style="font-size:10px; color:var(--text-secondary); margin-top:2px;">
+          <div class="sos-meta" style="font-size:8px; color:var(--text-secondary); margin-top:2px;">
             ${s.meta}
           </div>
         </div>
@@ -1353,7 +1006,7 @@ class TacticalC2App {
   }
 
   /* --------------------------------------------------------------------------
-     7. PAGE 5: ADAPTIVE EW SCAN SCHEDULER RENDERING (ADAPTIVE EW SUBSYSTEM)
+     7. PAGE 5: ADAPTIVE EW SCAN SCHEDULER RENDERING (SIH CORE)
      -------------------------------------------------------------------------- */
   updateSchedulerPage(sim) {
     const curFreq = Number(sim.rfCurrentScanGhz || 9.420);
@@ -1393,10 +1046,8 @@ class TacticalC2App {
 
     // Policy Inspector Rendering
     const pi = sim.policyInspector || {};
-    const polName = sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1';
-    setEl('piCurrentPolicy', polName);
-    setEl('schedPolicyDisp', polName);
-    setEl('schedPolicyBadge', polName);
+    setEl('piCurrentPolicy', sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1');
+    setEl('schedPolicyDisp', sim.schedulerPolicy || pi.currentPolicy || 'Recency-Augmented UCB1');
     setEl('piExplorationC', pi.explorationConstant !== undefined ? pi.explorationConstant.toFixed(3) : '1.414');
     setEl('piLearningRate', pi.learningRate || 'Conjugate Beta(α,β) (+1 per dwell)');
     setEl('piBestBand', `${(pi.currentBestBand || 9.420).toFixed(3)} GHz`);
@@ -1452,10 +1103,7 @@ class TacticalC2App {
     if (!tbody) return;
 
     const bandsData = sim.perBandState || [];
-    if (bandsData.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:16px; color:var(--text-tertiary); font-family:var(--font-mono); font-size:11px;">Acquiring candidate band allocation telemetry...</td></tr>';
-      return;
-    }
+    if (bandsData.length === 0) return;
 
     const currentScan = Number(Number(sim.rfCurrentScanGhz || 9.420).toFixed(3));
     const bestBand = sim.policyInspector?.currentBestBand || 9.420;
@@ -1720,15 +1368,11 @@ class TacticalC2App {
 
     const currentScan = Number(Number(sim.rfCurrentScanGhz || 9.420).toFixed(3));
     const nextScan = Number(Number(sim.rfNextScanGhz || 9.675).toFixed(3));
-    const sortedBands = [...bands].sort((a, b) => b.currentScore - a.currentScore);
     const maxScore = Math.max(...bands.map(b => b.currentScore), 1.0);
 
     container.innerHTML = bands.map(b => {
       const isTarget = Math.abs(b.freqGhz - currentScan) < 0.005;
       const isNext = Math.abs(b.freqGhz - nextScan) < 0.005;
-      const rank = sortedBands.findIndex(sb => Math.abs(sb.freqGhz - b.freqGhz) < 0.005) + 1;
-      const deltaLeader = b.currentScore - maxScore;
-      const deltaStr = deltaLeader >= -0.001 ? 'Leader' : `Δ ${deltaLeader.toFixed(2)}`;
       const role = isTarget ? '(Primary Target)' : (isNext ? '(Secondary Agility)' : (b.visits === 0 ? '(Exploration Band)' : '(Auxiliary Sensor)'));
       const widthPct = Math.max(8, Math.min(100, Math.round((b.currentScore / maxScore) * 100)));
       const color = isTarget ? 'var(--radar-cyan)' : (isNext ? 'var(--state-warning)' : 'var(--text-secondary)');
@@ -1737,8 +1381,8 @@ class TacticalC2App {
       return `
         <div>
           <div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9.5px; margin-bottom:2px;">
-            <span style="color:${isTarget ? 'var(--radar-cyan)' : '#fff'}; font-weight:${isTarget ? '700' : '400'};">#${rank} · ${b.freqGhz.toFixed(3)} GHz ${role}</span>
-            <span style="color:${color}; font-weight:700;">Score Q: ${b.currentScore.toFixed(3)} <span style="font-size:8.5px; color:var(--text-tertiary); font-weight:normal;">(${deltaStr})</span></span>
+            <span style="color:${isTarget ? 'var(--radar-cyan)' : '#fff'}; font-weight:${isTarget ? '700' : '400'};">${b.freqGhz.toFixed(3)} GHz ${role}</span>
+            <span style="color:${color}; font-weight:700;">Score Q: ${b.currentScore.toFixed(3)}</span>
           </div>
           <div class="bar-track">
             <div class="${fillClass}" style="width:${widthPct}%; background:${color};"></div>
@@ -1762,28 +1406,28 @@ class TacticalC2App {
       const isLatest = idx === 0;
       const prevColor = d.previousOutcome === 'HIT' ? 'var(--state-verified)' : (d.previousOutcome === 'MISS' ? 'var(--state-critical)' : 'var(--text-secondary)');
       const borderColor = isLatest ? 'var(--radar-cyan)' : (d.previousOutcome === 'HIT' ? 'rgba(66,196,122,0.4)' : 'rgba(255,255,255,0.1)');
-      const factors = (d.topFactors || []).map(f => `<span style="font-size:10px; padding:2px 6px; border-radius:2px; background:rgba(56,189,248,0.1); color:var(--radar-cyan); border:1px solid rgba(56,189,248,0.25);">${f}</span>`).join(' ');
+      const factors = (d.topFactors || []).map(f => `<span style="font-size:7.5px; padding:1px 4px; border-radius:2px; background:rgba(24,184,214,0.1); color:var(--radar-cyan); border:1px solid rgba(24,184,214,0.25);">${f}</span>`).join(' ');
 
       return `
-        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:5px; padding:7px 10px; background:var(--bg-panel-subtle); border-radius:3px;">
-          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:70px;">
-            <span class="sos-time" style="font-size:10px; color:var(--text-tertiary); font-family:var(--font-mono);">${d.timestamp || '00:00:00'}</span>
-            <span class="sos-tag tag-normal" style="font-size:10px; padding:2px 6px; font-weight:700; width:fit-content; background:rgba(56,189,248,0.12); color:var(--radar-cyan); border:1px solid rgba(56,189,248,0.3);">${d.decisionId || ('DEC-#' + (1000 + idx))}</span>
+        <div class="sos-log-item" style="border-left:3px solid ${borderColor}; margin-bottom:4px; padding:6px 8px; background:rgba(12,20,30,0.6);">
+          <div class="sos-time-col" style="display:flex; flex-direction:column; gap:2px; min-width:65px;">
+            <span class="sos-time" style="font-size:8px; color:var(--text-tertiary); font-family:var(--font-mono);">${d.timestamp || '00:00:00'}</span>
+            <span class="sos-tag tag-normal" style="font-size:7.5px; padding:1px 4px; font-weight:700; width:fit-content; background:rgba(24,184,214,0.12); color:var(--radar-cyan); border:1px solid rgba(24,184,214,0.3);">${d.decisionId || ('DEC-#' + (1000 + idx))}</span>
           </div>
           <div class="sos-desc-col" style="flex:1; margin-left:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div class="sos-title" style="color:#fff; font-size:11.5px; font-weight:700;">
+              <div class="sos-title" style="color:#fff; font-size:9.5px; font-weight:700;">
                 ALLOCATE RECEIVER: <span style="color:var(--radar-cyan);">${d.selectedBand.toFixed(3)} GHz</span>
-                <span style="font-size:10.5px; color:var(--text-secondary); margin-left:4px;">(Q = ${d.selectedScore.toFixed(3)})</span>
+                <span style="font-size:8.5px; color:var(--text-secondary); margin-left:4px;">(Q = ${d.selectedScore.toFixed(3)})</span>
               </div>
-              <span style="font-family:var(--font-mono); font-size:10px; color:${prevColor}; font-weight:700; background:rgba(0,0,0,0.4); padding:2px 6px; border-radius:2px; border:1px solid ${prevColor};">
+              <span style="font-family:var(--font-mono); font-size:8px; color:${prevColor}; font-weight:700; background:rgba(0,0,0,0.4); padding:1px 5px; border-radius:2px; border:1px solid ${prevColor};">
                 PREV: ${d.previousOutcome || 'INITIAL_SURVEY'}
               </span>
             </div>
-            <div class="sos-meta" style="font-size:10.5px; color:var(--text-secondary); margin-top:3px; line-height:1.4;">
-              [<span style="color:var(--radar-cyan); font-weight:600;">${d.policy || 'Recency-Augmented UCB1'}</span>] ${d.reasoning || ''}
+            <div class="sos-meta" style="font-size:8.5px; color:var(--text-secondary); margin-top:2px;">
+              [<span style="color:var(--radar-cyan);">${d.policy || 'Recency-Augmented UCB1'}</span>] ${d.reasoning || ''}
             </div>
-            ${factors ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">${factors}</div>` : ''}
+            ${factors ? `<div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:3px;">${factors}</div>` : ''}
           </div>
         </div>
       `;
@@ -1797,31 +1441,31 @@ class TacticalC2App {
     // 1. Subsystem Engine Health Indicators
     const subsysRadar = document.getElementById('subsysRadarEngine');
     if (subsysRadar) {
-      subsysRadar.textContent = sim.isRunning ? `SIMULATED ENGINE (${sim.sweepRpm || 24} RPM)` : 'SIMULATED ENGINE (PAUSED)';
+      subsysRadar.textContent = sim.isRunning ? `ONLINE (${sim.sweepRpm || 24} RPM)` : 'PAUSED (STANDBY)';
       subsysRadar.style.color = sim.isRunning ? 'var(--state-verified)' : 'var(--state-warning)';
     }
 
     const subsysOptical = document.getElementById('subsysOpticalNet');
     if (subsysOptical) {
-      subsysOptical.textContent = 'SYNTHETIC CAM NET (4 / 4)';
+      subsysOptical.textContent = sim.cameraNetwork || '4 / 4 ONLINE';
       subsysOptical.style.color = 'var(--cam-blue)';
     }
 
     const subsysRf = document.getElementById('subsysRfReceiver');
     if (subsysRf) {
-      subsysRf.textContent = `SIMULATED TESTBED (${sim.rfIbwMhz || 50} MHz IBW // ${sim.receiverState || 'IDLE'})`;
+      subsysRf.textContent = `${sim.receiverStatus || 'ACTIVE'} (${sim.rfIbwMhz || 50} MHz IBW // ${sim.receiverState || 'IDLE'})`;
       subsysRf.style.color = sim.receiverState === 'HIT' ? 'var(--state-verified)' : 'var(--radar-cyan)';
     }
 
     const subsysFusion = document.getElementById('subsysFusion');
     if (subsysFusion) {
-      subsysFusion.textContent = sim.isRunning ? 'SYNTHESIZED (25 Hz Sim)' : 'PAUSED';
+      subsysFusion.textContent = sim.isRunning ? 'SYNCHRONIZED (25 Hz)' : 'PAUSED';
       subsysFusion.style.color = sim.isRunning ? 'var(--radar-cyan)' : 'var(--state-warning)';
     }
 
     const subsysSched = document.getElementById('subsysScheduler');
     if (subsysSched) {
-      subsysSched.textContent = `SIMULATED ENGINE (${sim.schedulerAblationMode || 'FULL_ADAPTIVE'})`;
+      subsysSched.textContent = `${sim.schedulerEngineStatus || 'HEALTHY'} (${sim.schedulerAblationMode || 'FULL_ADAPTIVE'})`;
       subsysSched.style.color = 'var(--radar-cyan)';
     }
 
@@ -1902,7 +1546,7 @@ class TacticalC2App {
 
     // 4. Comprehensive Live JSON State & Telemetry Inspector
     const inspector = document.getElementById('simLiveJsonInspector');
-    if (inspector && !this._freezeJsonInspector) {
+    if (inspector) {
       const activeEnt = (this.entities || []).find(e => e.id === sim.selectedEntityId) || null;
       const displayData = {
         simulation: {
@@ -1956,8 +1600,6 @@ class TacticalC2App {
         timestamp: new Date().toISOString()
       };
       inspector.textContent = JSON.stringify(displayData, null, 2);
-      const stampEl = document.getElementById('jsonInspectorLastUpdated');
-      if (stampEl) stampEl.textContent = `${new Date().toISOString().substring(11, 19)} UTC`;
     }
   }
 
@@ -2122,7 +1764,7 @@ class TacticalC2App {
       };
     }
 
-    // Policy Ablation Toggles (Adaptive Scan Policy Engine)
+    // Policy Ablation Toggles (SIH26055 Core)
     const ablationGroup = document.getElementById('ablationBtnGroup');
     if (ablationGroup) {
       ablationGroup.querySelectorAll('.btn-ablation').forEach(btn => {
@@ -2179,18 +1821,12 @@ class TacticalC2App {
         const runs = runsSelect ? Number(runsSelect.value) || 1000 : 1000;
 
         if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-          runBenchBtn.disabled = true;
-          runBenchBtn.textContent = '⏳ RUNNING...';
           this.ws.send(JSON.stringify({
             action: 'RUN_BENCHMARK',
             seed,
             scenario,
             runs
           }));
-          setTimeout(() => {
-            runBenchBtn.disabled = false;
-            runBenchBtn.textContent = '▶ RUN EXPERIMENT';
-          }, 1200);
         }
       };
     }
@@ -2235,9 +1871,8 @@ class TacticalC2App {
     const exportJsonBtn = document.getElementById('btnExportBenchmarkJson');
     if (exportJsonBtn) {
       exportJsonBtn.onclick = () => {
-        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `${base}/api/benchmark/export/json?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/json`;
+        const url = expId ? `/api/benchmark/export/json?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/json';
         downloadBenchmark(url, `BENCHMARK-${expId || 'LATEST'}.json`);
       };
     }
@@ -2245,9 +1880,8 @@ class TacticalC2App {
     const exportCsvBtn = document.getElementById('btnExportBenchmarkCsv');
     if (exportCsvBtn) {
       exportCsvBtn.onclick = () => {
-        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `${base}/api/benchmark/export/csv?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/csv`;
+        const url = expId ? `/api/benchmark/export/csv?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/csv';
         downloadBenchmark(url, `BENCHMARK-${expId || 'LATEST'}.csv`);
       };
     }
@@ -2255,9 +1889,8 @@ class TacticalC2App {
     const exportReportBtn = document.getElementById('btnExportBenchmarkReport');
     if (exportReportBtn) {
       exportReportBtn.onclick = () => {
-        const base = this.getBackendHttpUrl();
         const expId = this.analyticsData?.provenance?.experimentId || '';
-        const url = expId ? `${base}/api/benchmark/export/report?experimentId=${encodeURIComponent(expId)}` : `${base}/api/benchmark/export/report`;
+        const url = expId ? `/api/benchmark/export/report?experimentId=${encodeURIComponent(expId)}` : '/api/benchmark/export/report';
         downloadBenchmark(url, `BENCHMARK-AUDIT-${expId || 'LATEST'}.txt`);
       };
     }
@@ -2274,52 +1907,11 @@ class TacticalC2App {
       };
     }
 
-    // JSON Inspector Freeze & Copy
-    const freezeBtn = document.getElementById('btnFreezeJsonInspector');
-    if (freezeBtn) {
-      freezeBtn.onclick = () => {
-        this._freezeJsonInspector = !this._freezeJsonInspector;
-        freezeBtn.textContent = this._freezeJsonInspector ? '▶ UNFREEZE' : '⏸ FREEZE';
-        freezeBtn.style.color = this._freezeJsonInspector ? 'var(--state-warning)' : 'inherit';
-      };
-    }
-    const copyBtn = document.getElementById('btnCopyJsonState');
-    if (copyBtn) {
-      copyBtn.onclick = () => {
-        const inspector = document.getElementById('simLiveJsonInspector');
-        if (inspector) {
-          navigator.clipboard?.writeText(inspector.textContent || '');
-          copyBtn.textContent = '✓ COPIED';
-          setTimeout(() => { copyBtn.textContent = '📋 COPY'; }, 1500);
-        }
-      };
-    }
-
     // Export SITREP
     const sitrepBtn = document.getElementById('btnExportSitrepGlobal');
     if (sitrepBtn) {
       sitrepBtn.onclick = () => {
-        const base = this.getBackendHttpUrl();
-        window.location.href = `${base}/api/sitrep`;
-      };
-    }
-
-    // Configure backend URL by clicking status indicator
-    const statusEl = document.getElementById('globalSysStatus');
-    if (statusEl) {
-      statusEl.style.cursor = 'pointer';
-      statusEl.title = 'Click to configure C2 Backend URL';
-      statusEl.onclick = () => {
-        const current = localStorage.getItem('c2_backend_url') || window.location.host;
-        const input = prompt('Configure C2 Backend URL (or leave blank to use current origin):', current);
-        if (input !== null) {
-          if (input.trim()) {
-            localStorage.setItem('c2_backend_url', input.trim());
-          } else {
-            localStorage.removeItem('c2_backend_url');
-          }
-          window.location.reload();
-        }
+        window.location.href = '/api/sitrep';
       };
     }
 
@@ -2356,37 +1948,6 @@ class TacticalC2App {
 
     const closeDetails = document.getElementById('btnClosePersonnelDetails');
     if (closeDetails) closeDetails.onclick = () => modalDetails.classList.remove('open');
-
-    // Hardware Readiness & Diagnostics Modal Listeners
-    const modalHw = document.getElementById('modalHardwareDiagnostics');
-    const badgeHw = document.getElementById('globalDataSourceBadge');
-    const closeHw1 = document.getElementById('btnCloseHardwareDiagnostics');
-    const closeHw2 = document.getElementById('btnDismissHwModal');
-    const btnReconnect = document.getElementById('btnForceReconnectWs');
-
-    if (badgeHw && modalHw) {
-      badgeHw.onclick = () => {
-        modalHw.style.display = 'flex';
-        modalHw.classList.add('open');
-      };
-    }
-    const closeHwModal = () => {
-      if (modalHw) {
-        modalHw.style.display = 'none';
-        modalHw.classList.remove('open');
-      }
-    };
-    if (closeHw1) closeHw1.onclick = closeHwModal;
-    if (closeHw2) closeHw2.onclick = closeHwModal;
-
-    if (btnReconnect) {
-      btnReconnect.onclick = () => {
-        if (this.ws) {
-          try { this.ws.close(); } catch(e){}
-        }
-        this.connectWebSocket();
-      };
-    }
 
     // False Alarm Test button
     const falseAlarmBtn = document.getElementById('btnRunFalseAlarmTest');
